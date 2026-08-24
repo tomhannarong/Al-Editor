@@ -17,7 +17,9 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Delivery profile v1 | delivery contract + JSON Schema | verified |
 | Provenance/rights | asset provenance v1 | verified |
 | Model/prompt/model-artifact registry | versioned registry contract + JSON Schema | verified |
-| Cost/performance telemetry | versioned stage telemetry contract | next |
+| Cost/performance telemetry | stage telemetry contract + JSON Schema | verified |
+| ADR convention | `docs/adr/ADR-TEMPLATE.md` | verified |
+| CI quality gate | minimized single-job GitHub Actions workflow | evidence pending |
 | Concrete FFmpeg v2 adapter | worker adapter | waits canonical render/walking-skeleton dependencies |
 
-Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. Delivery/style policy cannot become timing authority; FFmpeg/FFprobe remains final media measurement authority. Model/prompt/scoring/deployment identities are pinned references; raw secrets and mutable aliases are not registry authority.
+Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. Telemetry is observational only; it cannot become correctness authority. Model/prompt/scoring/deployment identities are pinned references; raw secrets and mutable aliases are not registry authority.
