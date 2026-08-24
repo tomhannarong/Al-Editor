@@ -2,12 +2,13 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** persist normalized native stream metadata from ffprobe behind the verified media-catalog boundary without introducing derived-seconds authority
+**Current task:** obtain exact validation evidence for normalized ffprobe native stream-metadata ingest commit `705e1dc8c1b348b5b2189f23a239969368434412`
 
 ```text
 Standalone verified: 24 / 162 = 14.81%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:              2 / 14  = 14.29% verified
+Phase 1 pending:      P1-03 normalized ffprobe native stream metadata
 ```
 
 Phase 0 verified: P0-01 through P0-22.
@@ -16,37 +17,35 @@ Phase 0 verified: P0-01 through P0-22.
 
 ### P1-01 — stable media identity / mutable location boundary
 
-Implementation commit `c68362f7166aba1a33137b89474caa93a8cf163f` introduced `packages/contracts/src/media-catalog.contract.ts` and tests. Exact repository CI evidence is now observable: `ai-editor-ci/all = success`, run `32772298608`.
-
-Verified invariants:
-
-- `assetId` is canonicalized from SHA-256 bytes as `sha256:<64-hex>`;
-- mutable storage URI/location is separate state keyed to the stable asset;
-- identical immutable bytes remain the same logical asset after move/rename/re-ingest;
-- normalized stream metadata retains native PTS plus rational time base and omits decimal-second authority.
+Implementation commit `c68362f7166aba1a33137b89474caa93a8cf163f`; exact `ai-editor-ci/all = success`, run `32772298608`.
 
 ### P1-02 — streaming content-addressed ingest + deterministic persistence semantics
 
-Code landed as `2cba444a4890b81eb565ca22687fd8e7c2d43a86` and the required TypeScript environment repair as `b820fc809f99f438b8ff7b8681c6b983e26122ee`.
+Implementation `2cba444a4890b81eb565ca22687fd8e7c2d43a86`, repaired by `b820fc809f99f438b8ff7b8681c6b983e26122ee`; exact `ai-editor-ci/all = success`, run `32776732634`.
 
-`packages/media-catalog/src/index.ts` now provides:
+## Phase 1 implemented, verification pending
 
-- incremental SHA-256 over `Iterable`/`AsyncIterable<Uint8Array>` without whole-file buffering;
-- idempotent immutable asset registration;
-- mutable location rebinding independent of asset identity;
-- preservation of first-ingest evidence on byte-identical re-ingest;
-- defensive-copy persistence semantics so callers cannot mutate stored identity.
+### P1-03 — normalized ffprobe native stream metadata
 
-Vitest coverage proves chunk-boundary independence, async streaming equivalence, byte-identical idempotency, rename/re-location behavior, changed-byte location rebinding and persisted-identity immutability.
+Code commit `705e1dc8c1b348b5b2189f23a239969368434412` extends `packages/media-catalog/src/index.ts` and deterministic Vitest fixtures without changing the existing media-catalog contract.
 
-The first code commit triggered run `32776611559`, which failed specifically at the strict TypeScript gate before Vitest. It was not rerun unchanged. The repair commit added the missing Node type dependency required by the new `node:crypto` import, creating a legitimate code/config reason for a new gate. Exact final evidence for `b820fc8...` is `ai-editor-ci/all = success`, run `32776732634`.
+Implemented behavior:
+
+- parses ffprobe `stream.index`, `codec_type`, `codec_name`, `time_base`, `start_pts`, `duration_ts`, video dimensions and audio integer metadata;
+- preserves native integer PTS plus rational time base as authority and deliberately ignores decimal `start_time`/`duration` seconds;
+- rejects malformed rationals, decimal/unsafe PTS, invalid positive metadata and duplicate stream indexes;
+- maps ffprobe `N/A` native timing to explicit `null` rather than fabricating derived timing;
+- persists a deterministic per-asset stream projection only for a registered immutable asset;
+- replaces stale stream projections atomically at the persistence boundary and returns defensive copies.
+
+No canonical timeline v1/v2, centralized media-time conversion, renderer-neutral boundary, immutable revision/render evidence, style/delivery/provenance/model contracts or FFmpeg `-copyts` behavior changed.
 
 ## Validation / free-tier discipline
 
-The execution container still cannot resolve `github.com`, so no local runtime pass is claimed. GitHub Actions was used only as the final confidence gate for code-bearing commits. The failed commit was not rerun; the follow-up run was caused by a concrete dependency repair. No manual PostgreSQL/Qdrant or FFmpeg/media integration workflow was triggered. Documentation/checkpoint closure is path-filtered out of normal CI.
+A local clone/test attempt was made before claiming verification, but the execution environment still could not resolve `github.com`; therefore no local runtime pass is claimed. Static repository inspection found no separate implementation of `MediaCatalogPersistence` that would need migration. The implementation was pushed once as one coherent code commit so normal CI can act as the final confidence gate. No heavyweight FFmpeg/local-stack workflow was triggered and no failed job was rerun.
 
-Canonical timeline v1/v2 compatibility, media-time rounding authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence and FFmpeg `-copyts` semantics remain unchanged.
+At checkpoint time the exact commit had not yet published an observable `ai-editor-ci/*` status through the available connector, so P1-03 remains **implemented, not verified**. The verified count is intentionally unchanged.
 
 ## Next task
 
-Implement the next smallest Phase-1 dependency: normalized ffprobe stream-metadata ingestion into the media catalog, preserving integer native `startPts`/`durationPts` and rational `timeBase`. Parsing must fail closed for malformed or unsafe timing and must not promote seconds/milliseconds to canonical authority. Prefer deterministic parser fixtures first; real-media FFprobe validation can remain selective/manual until the Phase-1 runtime gate requires it.
+Inspect exact CI/status for `705e1dc8...`. If it passes, mark P1-03 verified and continue to the next smallest Phase-1 item. If it fails, repair only the reported code/config cause and do not rerun the unchanged failure.
