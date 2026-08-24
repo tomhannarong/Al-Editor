@@ -28,10 +28,11 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Idempotent asset registration | `InMemoryMediaCatalog.registerAsset` + ingest tests | verified deterministic semantics; first-ingest evidence preserved |
 | Normalized native stream metadata contract | `packages/contracts/src/media-catalog.contract.ts` | verified contract |
 | ffprobe native stream normalization/persistence | `packages/media-catalog/src/index.ts` | verified on `705e1dc8`, CI run `32782942297` |
-| Durable PostgreSQL media-catalog persistence | migrations + PostgreSQL adapter | next |
+| Durable PostgreSQL media-catalog schema | `db/migrations/0002_create_media_catalog.sql` | implemented; deterministic migration gate passes on repaired `7a93cb3` |
+| PostgreSQL media-catalog adapter | `packages/media-catalog/src/postgres.ts` + tests | repaired CI run `32788230358` passes; real PostgreSQL runtime proof pending |
 
-The verified ffprobe normalization path uses `time_base`, `start_pts` and `duration_ts` as source timing authority, ignores decimal `start_time`/`duration`, fails closed on malformed/unsafe timing, rejects duplicate stream indexes, and persists projections only for registered immutable assets.
+PostgreSQL persistence preserves the same authority boundary: `asset_id` is SHA-256 byte identity, storage URI is mutable location state, stream replacement is transactional, and only native integer PTS plus rational time-base columns represent source timing. Decimal seconds/milliseconds are absent from the durable schema.
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/ffprobe.
 
-Phase 0 is complete: 22/22 standalone items verified. Phase 1 is 3/14 verified. The next smallest durability slice is PostgreSQL-backed catalog persistence behind the already verified interfaces.
+Phase 0 is complete: 22/22 standalone items verified. Phase 1 remains 3/14 verified until the PostgreSQL durability slice has exact real-runtime evidence.
