@@ -1,28 +1,33 @@
 # AI Editor Bible -> Standalone Repository Mapping
 
-This document replaces the former Creator Intelligence OS integration mapping. `tomhannarong/Al-Editor` is now the only active implementation repository and `main` is the active implementation branch.
+`tomhannarong/Al-Editor` is the only active implementation repository and `main` is the active implementation branch.
 
 ## Migration rule
 
-Historical CIOS evidence remains useful as provenance, but standalone verification requires the corresponding code/contracts/tests to exist here and the relevant gates to pass on an exact `Al-Editor/main` HEAD.
+Historical CIOS evidence remains migration provenance. Standalone verification uses evidence appropriate to each checklist item on `Al-Editor/main`; repository-wide CI is owned by P0-20 and is not redundantly required for every contract/document item.
 
 ## Architecture mapping
 
 | Bible concept | Standalone target | Migration state | Action |
 |---|---|---|---|
-| HTTP/AI API | `apps/api` or equivalent standalone service | pending | Migrate only required AI Editor API boundaries; avoid CIOS-only modules. |
+| Repository/Bible authority | root + `docs/ai-editor/` | verified | Keep machine/human progress synchronized. |
+| PostgreSQL | `infra/docker-compose.yml` + future persistence/migrations | static config implemented; runtime pending | Boot and health-check before P0-03 verification. |
+| Qdrant | `infra/docker-compose.yml` + future retrieval boundary | static config implemented; runtime pending | Boot and health-check before P0-04 verification. |
+| HTTP/AI API | `apps/api` or equivalent standalone service | blocked by local service runtime gate | Add only after P0-03/P0-04 runtime proof. |
 | Review UI | `apps/studio` or equivalent standalone UI | pending | Migrate only AI Editor review UX boundaries. |
-| PostgreSQL | standalone persistence package + migrations | pending | Preserve durable/immutable state rules. |
-| Qdrant | standalone vector retrieval boundary | pending | Preserve collection/payload versioning and local-first operation. |
 | Durable jobs | standalone leased/idempotent job authority | pending | Preserve bounded retry, heartbeat and recoverability invariants. |
 | Model gateway | provider-neutral model boundary | pending | External model calls remain versioned and governed. |
 | Prompt registry | versioned prompt package | pending | No loose production prompt strings. |
 | Observability | AI Editor structured log/telemetry contract | pending migration | Migrate Phase-0 structured logging contract. |
-| Golden evaluation | standalone fixtures and CI gates | pending migration | Preserve exact timing/render fixtures and later retrieval/editorial benchmarks. |
+| Golden evaluation | standalone fixtures and release gates | pending migration | Preserve timing/render fixtures and later retrieval/editorial benchmarks. |
 | Canonical timeline | timeline v1 compatibility + v2 canonical contract | pending migration | Migrate additively; never rewrite historical v1 semantics. |
 | Preview renderer | renderer-neutral v2 adapter; FFmpeg first | pending migration | Preserve shell-free execution, path confinement and FFprobe verification. |
 | Human revision | immutable timeline revision semantics | pending migration | Preserve parent immutability and distinct render identities. |
-| Delivery/style/provenance | standalone versioned contracts | pending migration | Migrate Phase-0 contracts before dependent phases. |
+| Provenance/rights | `packages/contracts` asset provenance v1 | verified | Keep fail-closed publication semantics. |
+| ADR-008 | `docs/adr/ADR-008-CANONICAL-TIMEBASE.md` | accepted | Rational frames + native source PTS remain canonical. |
+| ADR-009 | `docs/adr/ADR-009-MEDIA-COLOR-AUDIO.md` | accepted | Delivery/color/audio/caption policy stays explicit and versioned. |
+| ADR-010 | `docs/adr/ADR-010-PROVENANCE-RIGHTS.md` | accepted | Rights/provenance remains first-class data. |
+| ADR-011 | `docs/adr/ADR-011-UNTRUSTED-INPUT-BOUNDARY.md` | accepted | Media/model content remains untrusted data. |
 
 ## Critical timeline invariant
 
@@ -40,16 +45,24 @@ Canonical Timeline v2
 
 No renderer may become canonical timeline authority, invent timing, bypass source confinement, or silently override color/audio/delivery policy.
 
-## Migration sequence
+## Current migration sequence
 
 ```text
-Bible/progress authority
- -> Phase-0 contracts/testing scaffold
- -> P0-15 provenance/rights
- -> revalidate migrated Phase-0 contract slices
- -> P0-18 ADR mapping
- -> Phase-0 completion gate
- -> Phase 1+
+P0-01/P0-02 repository authority        VERIFIED
+P0-15 provenance/rights                 VERIFIED
+P0-18 ADR-008..011                      VERIFIED
+        |
+        v
+P0-03/P0-04 local Postgres + Qdrant     STATIC PASS / RUNTIME PENDING
+        |
+        v
+P0-05 API health                        BLOCKED
+        |
+        v
+remaining Phase-0 migrated slices
+        |
+        v
+P0-20 repository CI + Phase-0 release gate
 ```
 
-The hourly build loop must commit directly to `main`, never create/wait for a PR, and stop on the first failed dependent gate.
+The build loop commits directly to `main`, never creates/waits for a PR, and stops on the first failed dependent gate.
