@@ -31,8 +31,8 @@
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","historicalStatus":"verified","standaloneStatus":"verified"},
     {"id":"P0-02","name":"Root README links PROJECT_BIBLE.md","historicalStatus":"verified","standaloneStatus":"verified"},
-    {"id":"P0-03","name":"PostgreSQL local stack","historicalStatus":"verified","standaloneStatus":"implemented-static-pass-runtime-boot-pending"},
-    {"id":"P0-04","name":"Qdrant local stack","historicalStatus":"verified","standaloneStatus":"implemented-static-pass-runtime-boot-pending"},
+    {"id":"P0-03","name":"PostgreSQL local stack","historicalStatus":"verified","standaloneStatus":"implemented-static-pass-runtime-verifier-added-boot-pending"},
+    {"id":"P0-04","name":"Qdrant local stack","historicalStatus":"verified","standaloneStatus":"implemented-static-pass-runtime-verifier-added-boot-pending"},
     {"id":"P0-05","name":"API health endpoint","historicalStatus":"verified","standaloneStatus":"blocked-by-p0-03-p0-04-runtime-gate"},
     {"id":"P0-06","name":"Review UI shell","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-07","name":"Renderer-neutral adapter boundary","historicalStatus":"verified","standaloneStatus":"migration-pending"},
