@@ -12,20 +12,20 @@
   },
   "status": "in-progress",
   "currentPhase": 0,
-  "currentTask": "p0-03-p0-04-runtime-boot-validation",
+  "currentTask": "p0-07-renderer-neutral-adapter-boundary-migration",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 4,
-    "standaloneRevalidatedPercent": 2.47
+    "standaloneRevalidated": 5,
+    "standaloneRevalidatedPercent": 3.09
   },
   "phase0": {
     "total": 22,
     "historicalVerified": 20,
     "historicalPartial": 2,
-    "standaloneRevalidated": 4,
-    "standaloneRevalidatedPercent": 18.18,
+    "standaloneRevalidated": 5,
+    "standaloneRevalidatedPercent": 22.73,
     "state": "migrating-revalidating"
   },
   "phase0Items": [
@@ -34,7 +34,7 @@
     {"id":"P0-03","name":"PostgreSQL local stack","historicalStatus":"verified","standaloneStatus":"implemented-static-pass-verifier-self-test-pass-runtime-boot-pending"},
     {"id":"P0-04","name":"Qdrant local stack","historicalStatus":"verified","standaloneStatus":"implemented-static-pass-verifier-self-test-pass-runtime-boot-pending"},
     {"id":"P0-05","name":"API health endpoint","historicalStatus":"verified","standaloneStatus":"blocked-by-p0-03-p0-04-runtime-gate"},
-    {"id":"P0-06","name":"Review UI shell","historicalStatus":"verified","standaloneStatus":"migration-pending"},
+    {"id":"P0-06","name":"Review UI shell","historicalStatus":"verified","standaloneStatus":"verified-local-static-shell-contract"},
     {"id":"P0-07","name":"Renderer-neutral adapter boundary","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-08","name":"Migration framework","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-09","name":"Canonical timeline schema v2 with rational FPS + native source PTS/time base","historicalStatus":"verified","standaloneStatus":"migration-pending"},
@@ -59,6 +59,8 @@
     "countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem": true,
     "repositoryCIGateOwnedBy": "P0-20",
     "doNotAdvanceDependentTaskAfterFailedGate": true,
+    "blockOnlyDirectDependents": true,
+    "continueIndependentPhaseItemsWhenPossible": true,
     "noDestructiveTimelineV1Rewrite": true,
     "hourlyContinuationReadsThisFileFirst": true,
     "minimizeGitHubActions": true,

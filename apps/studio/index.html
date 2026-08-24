@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Editor Review Studio</title>
+  <style>
+    :root { color-scheme: light dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: Canvas; color: CanvasText; }
+    header { display: flex; gap: 1rem; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid color-mix(in srgb, CanvasText 18%, transparent); }
+    header p { margin: .25rem 0 0; opacity: .7; }
+    main { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(20rem, .8fr); min-height: calc(100vh - 5rem); }
+    section, aside { padding: 1rem 1.25rem; }
+    aside { border-left: 1px solid color-mix(in srgb, CanvasText 18%, transparent); }
+    .panel { border: 1px solid color-mix(in srgb, CanvasText 18%, transparent); border-radius: .75rem; padding: 1rem; margin-bottom: 1rem; }
+    .viewport { aspect-ratio: 16 / 9; display: grid; place-items: center; background: color-mix(in srgb, CanvasText 8%, Canvas); border-radius: .5rem; }
+    .timeline { min-height: 7rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+    button { padding: .55rem .8rem; border-radius: .5rem; border: 1px solid color-mix(in srgb, CanvasText 24%, transparent); background: Canvas; color: CanvasText; }
+    button[disabled] { opacity: .45; }
+    dl { display: grid; grid-template-columns: max-content 1fr; gap: .45rem .8rem; margin: 0; }
+    dt { font-weight: 700; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    @media (max-width: 860px) { main { grid-template-columns: 1fr; } aside { border-left: 0; border-top: 1px solid color-mix(in srgb, CanvasText 18%, transparent); } }
+  </style>
+</head>
+<body>
+  <header data-role="review-shell-header">
+    <div>
+      <strong>AI Editor Review Studio</strong>
+      <p>Human review boundary for immutable canonical timeline revisions.</p>
+    </div>
+    <output data-role="review-status" aria-live="polite">No revision loaded</output>
+  </header>
+
+  <main data-role="review-shell">
+    <section aria-labelledby="preview-heading">
+      <h1 id="preview-heading">Preview & timeline</h1>
+      <div class="panel viewport" data-role="preview-viewport" aria-label="Preview viewport">
+        Preview adapter output appears here
+      </div>
+      <div class="panel timeline" data-role="timeline-review" aria-label="Canonical timeline review surface">
+        Timeline revision items appear here; this shell does not own canonical timing.
+      </div>
+      <div class="panel actions" data-role="review-actions" aria-label="Human review actions">
+        <button type="button" data-action="replace" disabled>Replace scene</button>
+        <button type="button" data-action="trim" disabled>Trim</button>
+        <button type="button" data-action="lock" disabled>Lock</button>
+        <button type="button" data-action="create-revision" disabled>Create revision</button>
+      </div>
+    </section>
+
+    <aside aria-labelledby="evidence-heading">
+      <h2 id="evidence-heading">Revision evidence</h2>
+      <div class="panel" data-role="revision-evidence">
+        <dl>
+          <dt>Revision</dt><dd data-field="revision-id">—</dd>
+          <dt>Schema</dt><dd data-field="schema-version">—</dd>
+          <dt>Frame rate</dt><dd data-field="frame-rate">—</dd>
+          <dt>Style profile</dt><dd data-field="style-profile-version">—</dd>
+          <dt>Delivery profile</dt><dd data-field="delivery-profile-version">—</dd>
+          <dt>Manifest</dt><dd data-field="manifest-sha256">—</dd>
+        </dl>
+      </div>
+      <div class="panel" data-role="decision-evidence">
+        <h2>Decision evidence</h2>
+        <p>Retrieval, model, scoring and provenance references are displayed here as versioned evidence only.</p>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>

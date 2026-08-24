@@ -4,7 +4,7 @@
 
 ## Migration rule
 
-Historical CIOS evidence remains migration provenance. Standalone verification uses evidence appropriate to each checklist item on `Al-Editor/main`; repository-wide CI is owned by P0-20 and is not redundantly required for every contract/document item.
+Historical CIOS evidence remains migration provenance. Standalone verification uses evidence appropriate to each checklist item on `Al-Editor/main`; repository-wide CI is owned by P0-20 and is not redundantly required for every contract/document item. A blocked task blocks only its direct dependents; independent Phase-0 work continues.
 
 ## Architecture mapping
 
@@ -14,7 +14,7 @@ Historical CIOS evidence remains migration provenance. Standalone verification u
 | PostgreSQL | `infra/docker-compose.yml` + future persistence/migrations | static config implemented; runtime pending | Boot and health-check before P0-03 verification. |
 | Qdrant | `infra/docker-compose.yml` + future retrieval boundary | static config implemented; runtime pending | Boot and health-check before P0-04 verification. |
 | HTTP/AI API | `apps/api` or equivalent standalone service | blocked by local service runtime gate | Add only after P0-03/P0-04 runtime proof. |
-| Review UI | `apps/studio` or equivalent standalone UI | pending | Migrate only AI Editor review UX boundaries. |
+| Review UI | `apps/studio/index.html` + static verifier | verified | Keep review UI a projection/human-decision boundary, never canonical authority. |
 | Durable jobs | standalone leased/idempotent job authority | pending | Preserve bounded retry, heartbeat and recoverability invariants. |
 | Model gateway | provider-neutral model boundary | pending | External model calls remain versioned and governed. |
 | Prompt registry | versioned prompt package | pending | No loose production prompt strings. |
@@ -51,18 +51,10 @@ No renderer may become canonical timeline authority, invent timing, bypass sourc
 P0-01/P0-02 repository authority        VERIFIED
 P0-15 provenance/rights                 VERIFIED
 P0-18 ADR-008..011                      VERIFIED
-        |
-        v
 P0-03/P0-04 local Postgres + Qdrant     STATIC PASS / RUNTIME PENDING
-        |
-        v
-P0-05 API health                        BLOCKED
-        |
-        v
-remaining Phase-0 migrated slices
-        |
-        v
-P0-20 repository CI + Phase-0 release gate
+P0-05 API health                        BLOCKED BY P0-03/P0-04
+P0-06 Review UI shell                   VERIFIED
+P0-07 Renderer-neutral boundary         NEXT INDEPENDENT ITEM
 ```
 
-The build loop commits directly to `main`, never creates/waits for a PR, and stops on the first failed dependent gate.
+The build loop commits directly to `main`, never creates/waits for a PR, blocks only direct dependents, and continues the smallest safe independent Phase-0 item.

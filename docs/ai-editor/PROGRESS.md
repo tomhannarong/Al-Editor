@@ -4,7 +4,7 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** validate the local PostgreSQL + Qdrant stack at runtime; do not advance to P0-05 until the services boot and health checks pass
+**Current task:** migrate/revalidate P0-07 Renderer-neutral adapter boundary while P0-03/P0-04 remain runtime-blocked
 
 ## Historical migration provenance
 
@@ -13,63 +13,44 @@
 [██░░░░░░░░░░░░░░░░░░░] 12.35%
 ```
 
-This is retained as provenance only; it is not standalone `Al-Editor/main` verification.
+This is retained as migration provenance only.
 
 ## Standalone revalidation
 
 ```text
-4 / 162 standalone-revalidated
-[█░░░░░░░░░░░░░░░░░░░░] 2.47%
+5 / 162 standalone-revalidated
+[█░░░░░░░░░░░░░░░░░░░░] 3.09%
 
 Phase 0
-4 / 22 standalone-revalidated
-[████░░░░░░░░░░░░░░░░] 18.18%
+5 / 22 standalone-revalidated
+[█████░░░░░░░░░░░░░░░] 22.73%
 ```
 
-Standalone-verified:
+Standalone-verified: P0-01, P0-02, P0-06, P0-15 and P0-18.
 
-- **P0-01** — repository structure is committed on `main`.
-- **P0-02** — root `README.md` links directly to `PROJECT_BIBLE.md`.
-- **P0-15** — provenance/rights contract is accepted from direct local contract evidence: strict TypeScript compile passed and focused P0-15 smoke validation passed 5 cases. Repository-wide CI remains a separate P0-20 gate and is not required redundantly for this contract item.
-- **P0-18** — ADR-008 through ADR-011 are accepted/adapted in `docs/adr/`.
+## P0-06 Review UI shell — VERIFIED
 
-## P0-03 / P0-04 current gate
+Added a dependency-free `apps/studio/index.html` review shell that establishes semantic surfaces for preview, canonical timeline review, human replace/trim/lock/create-revision actions, revision evidence and decision evidence. The controls remain disabled until immutable revision APIs are migrated, preventing the shell from pretending to perform side effects it cannot yet own.
 
-`infra/docker-compose.yml` defines pinned local services:
+The shell explicitly states that it does not own canonical timing. `scripts/verify-review-ui-shell.mjs` provides deterministic static verification of 14 required contract markers.
 
-- PostgreSQL `17.6-alpine` with `pg_isready` health check;
-- Qdrant `v1.15.4` with `/healthz` HTTP health check;
-- named persistent volumes;
-- configurable local ports and `infra/.env.example`.
-
-Static YAML parsing remains green. `infra/verify-local-stack.sh` is a fail-closed runtime verifier that requires a real container runtime before P0-03/P0-04 can be promoted.
-
-This run added `infra/test-verify-local-stack.sh`, a local control-flow self-test that substitutes a deterministic fake Docker command and exercises the verifier end-to-end without claiming real service boot. Local evidence for the self-test:
+Local evidence before commit:
 
 ```text
-bash -n infra/test-verify-local-stack.sh          PASS
-bash infra/test-verify-local-stack.sh            PASS
-PASS: verify-local-stack.sh control-flow self-test succeeded
+node scripts/verify-review-ui-shell.mjs
+PASS: review UI shell contract markers verified (14 markers)
 ```
 
-The self-test proves the verifier reaches and enforces compose validation, service startup, container health inspection and PostgreSQL readiness branches. It does **not** replace the required real PostgreSQL/Qdrant runtime gate.
+This evidence is sufficient for the Phase-0 UI-shell item; repository-wide CI remains P0-20.
 
-The current execution environment still has no Docker CLI, Podman, nerdctl, standalone PostgreSQL binaries or Qdrant binary. This remains an environment/tooling limitation rather than a service failure.
+## Runtime-blocked local services
 
-Therefore:
-
-- P0-03 = `implemented-static-pass-verifier-self-test-pass-runtime-boot-pending`
-- P0-04 = `implemented-static-pass-verifier-self-test-pass-runtime-boot-pending`
-- P0-05 remains blocked until the local service gate is executable and green.
+P0-03 PostgreSQL and P0-04 Qdrant remain implemented/static-pass/verifier-self-test-pass but require real service boot/health evidence. P0-05 remains directly blocked by that runtime gate. This blocker no longer stalls independent Phase-0 items.
 
 ## GitHub Actions free-tier policy
 
-No Actions rerun or workflow dispatch was requested. `infra/**` and `docs/**` remain outside normal CI path filters, so this verifier-test/progress/checkpoint work does not intentionally consume Actions minutes.
+This P0-06 implementation touches `apps/**` and `scripts/**`, so the existing minimized workflow may run once for this substantive commit. No manual rerun/dispatch is requested. Documentation-only follow-ups remain outside normal CI-trigger paths.
 
-## Current CI observation
+## Next smallest independent task
 
-The pre-run `main` head exposed no combined status contexts through the available GitHub status interface. No unavailable result is treated as pass or failure; P0-20 remains a separate pending repository-wide gate.
-
-## Next smallest task
-
-At the next run, first inspect whether a usable container runtime is available. If available, execute `bash infra/verify-local-stack.sh` and promote P0-03/P0-04 only on real health/readiness success. If no container runtime is available, preserve the blocker and do not begin P0-05.
+P0-07 Renderer-neutral adapter boundary migration/revalidation. Preserve canonical timeline authority and keep FFmpeg as the first adapter rather than making a renderer canonical.
