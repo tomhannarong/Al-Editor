@@ -12,7 +12,7 @@
   },
   "status": "in-progress",
   "currentPhase": 0,
-  "currentTask": "migrate-and-revalidate-p0-15-on-main",
+  "currentTask": "p0-15-single-ci-evidence-after-local-pass",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
@@ -42,12 +42,12 @@
     {"id":"P0-12","name":"Job state machine","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-13","name":"Structured logging convention","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-14","name":"Delivery profile schema v1","historicalStatus":"verified","standaloneStatus":"migration-pending"},
-    {"id":"P0-15","name":"Provenance/rights schema skeleton","historicalStatus":"partial","standaloneStatus":"next-to-migrate"},
+    {"id":"P0-15","name":"Provenance/rights schema skeleton","historicalStatus":"partial","standaloneStatus":"implemented-local-pass-ci-evidence-pending"},
     {"id":"P0-16","name":"Model/prompt/model-artifact registry convention","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-17","name":"Cost/performance telemetry contract","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-18","name":"Bible ADR-008 through ADR-011 decisions accepted/adapted","historicalStatus":"partial","standaloneStatus":"blocked-by-p0-15"},
     {"id":"P0-19","name":"ADR template","historicalStatus":"verified","standaloneStatus":"migration-pending"},
-    {"id":"P0-20","name":"CI lint/type/test/migration gates","historicalStatus":"verified","standaloneStatus":"migration-pending"},
+    {"id":"P0-20","name":"CI lint/type/test/migration gates","historicalStatus":"verified","standaloneStatus":"partial-minimized-workflow"},
     {"id":"P0-21","name":"3–5 second canonical timeline v2 walking skeleton -> preview render","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-22","name":"Edit creates new immutable v2 revision and rerenders","historicalStatus":"verified","standaloneStatus":"migration-pending"}
   ],
@@ -58,6 +58,9 @@
     "countStandaloneVerifiedOnlyWithExactHeadEvidence": true,
     "doNotAdvanceDependentTaskAfterFailedGate": true,
     "noDestructiveTimelineV1Rewrite": true,
-    "hourlyContinuationReadsThisFileFirst": true
+    "hourlyContinuationReadsThisFileFirst": true,
+    "minimizeGitHubActions": true,
+    "preferLocalValidationBeforePush": true,
+    "documentationOnlyCommitsMustNotTriggerCI": true
   }
 }
