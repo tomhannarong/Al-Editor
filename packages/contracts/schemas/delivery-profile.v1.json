@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-editor.local/schemas/delivery-profile.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion","profileId","profileVersion","status","platform","video","audio","captions","createdAt","updatedAt"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "profileId": { "type": "string", "minLength": 1 },
+    "profileVersion": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["draft","approved","archived"] },
+    "platform": { "enum": ["tiktok","instagram-reels","youtube-shorts","facebook-reels","other"] },
+    "video": {
+      "type": "object", "additionalProperties": false,
+      "required": ["container","codec","pixelFormat","width","height","frameRate","colorPrimaries","colorTransfer","colorMatrix","colorRange","hdrPolicy","maxVideoBitrateKbps"],
+      "properties": {
+        "container": { "enum": ["mp4","mov","webm"] }, "codec": { "enum": ["h264","hevc","av1","vp9"] }, "pixelFormat": { "enum": ["yuv420p","yuv420p10le","yuv422p10le"] },
+        "width": { "type": "integer", "minimum": 1 }, "height": { "type": "integer", "minimum": 1 },
+        "frameRate": { "type": "object", "additionalProperties": false, "required": ["numerator","denominator"], "properties": { "numerator": { "type": "integer", "minimum": 1 }, "denominator": { "type": "integer", "minimum": 1 } } },
+        "colorPrimaries": { "type": "string", "minLength": 1 }, "colorTransfer": { "type": "string", "minLength": 1 }, "colorMatrix": { "type": "string", "minLength": 1 },
+        "colorRange": { "enum": ["limited","full"] }, "hdrPolicy": { "enum": ["preserve","tone-map-to-sdr","reject-hdr"] },
+        "maxVideoBitrateKbps": { "anyOf": [{ "type": "integer", "minimum": 1 }, { "type": "null" }] }
+      }
+    },
+    "audio": { "type": "object", "additionalProperties": false, "required": ["codec","sampleRateHz","channels","integratedLufsTarget","truePeakDbtpMax"], "properties": { "codec": { "enum": ["aac","opus","pcm-s16le"] }, "sampleRateHz": { "type": "integer", "minimum": 1 }, "channels": { "enum": [1,2] }, "integratedLufsTarget": { "type": "number", "minimum": -40, "maximum": -5 }, "truePeakDbtpMax": { "type": "number", "minimum": -12, "maximum": 0 } } },
+    "captions": { "type": "object", "additionalProperties": false, "required": ["mode","safeAreaPercent","maxLines","sidecarFormat"], "properties": { "mode": { "enum": ["burned-in","sidecar","both","none"] }, "safeAreaPercent": { "type": "number", "minimum": 0, "maximum": 30 }, "maxLines": { "type": "integer", "minimum": 1 }, "sidecarFormat": { "anyOf": [{ "enum": ["srt","vtt"] }, { "type": "null" }] } } },
+    "createdAt": { "type": "string", "format": "date-time" }, "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -2,29 +2,29 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 0 — Foundation, Contracts and Reproducibility  
-**Current task:** P0-14 Delivery Profile Schema v1
+**Current task:** P0-16 Model/prompt/model-artifact registry convention
 
 ```text
-Standalone: 12 / 162 = 7.41%
-Phase 0:    12 / 22  = 54.55%
+Standalone: 13 / 162 = 8.02%
+Phase 0:    13 / 22  = 59.09%
 ```
 
-Verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-12, P0-13, P0-15, P0-18.
+Verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-12, P0-13, P0-14, P0-15, P0-18.
 
-## P0-13 Structured logging convention — VERIFIED
+## P0-14 Delivery Profile Schema v1 — VERIFIED
 
-Added canonical structured-log envelope with stable correlation IDs for workspace/project/job/timeline/media/scene/voiceover/retrieval/render/model/request/trace/span and explicit version refs for timeline/style/delivery/prompt/model/scoring policy. Failed events require stable `errorCode`; duration/attempt fields are bounded.
+Migrated a standalone, versioned delivery policy for measurable video, audio and caption requirements. It references the canonical rational time authority rather than owning timing, requires explicit color/HDR policy, loudness/true-peak targets and caption safe-area/sidecar behavior, and keeps encoder-specific implementation outside the contract.
 
-Data minimization is fail-closed. Forbidden fields include authorization/cookie/secret/token/apiKey, raw prompt, transcript/OCR, media paths/URLs and model hidden reasoning/chain-of-thought. A recursive runtime scanner catches forbidden keys even in deserialized nested objects.
-
-Local gates:
+Local evidence before commit:
 
 ```text
 strict TypeScript compile: PASS
-PASS: structured logging self-test succeeded (5 behavior/privacy cases)
-PASS: structured log JSON Schema authority markers verified
+PASS: delivery profile v1 behavioral self-test (9 cases)
+PASS: delivery profile JSON Schema authority markers verified
 ```
 
-P0-03/P0-04 remain runtime-pending; P0-05 remains directly blocked. Independent work continues.
+The validator additionally requires reduced canonical frame-rate rationals and valid monotonic createdAt/updatedAt timestamps.
 
-Next: P0-14 Delivery Profile Schema v1.
+P0-03/P0-04 remain runtime-pending; P0-05 remains directly blocked. No CI result is claimed for this item; repository-wide CI authority remains P0-20.
+
+Next: P0-16 Model/prompt/model-artifact registry convention.
