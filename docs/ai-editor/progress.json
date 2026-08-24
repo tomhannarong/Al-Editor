@@ -12,7 +12,7 @@
   },
   "status": "in-progress",
   "currentPhase": 0,
-  "currentTask": "p0-15-single-ci-evidence-after-local-pass",
+  "currentTask": "p0-15-await-observable-exact-main-ci-evidence",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
@@ -42,7 +42,7 @@
     {"id":"P0-12","name":"Job state machine","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-13","name":"Structured logging convention","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-14","name":"Delivery profile schema v1","historicalStatus":"verified","standaloneStatus":"migration-pending"},
-    {"id":"P0-15","name":"Provenance/rights schema skeleton","historicalStatus":"partial","standaloneStatus":"implemented-local-pass-ci-evidence-pending"},
+    {"id":"P0-15","name":"Provenance/rights schema skeleton","historicalStatus":"partial","standaloneStatus":"implemented-local-pass-exact-ci-evidence-unobservable"},
     {"id":"P0-16","name":"Model/prompt/model-artifact registry convention","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-17","name":"Cost/performance telemetry contract","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-18","name":"Bible ADR-008 through ADR-011 decisions accepted/adapted","historicalStatus":"partial","standaloneStatus":"blocked-by-p0-15"},
