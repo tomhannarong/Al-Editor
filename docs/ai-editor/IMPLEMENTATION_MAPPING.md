@@ -27,10 +27,11 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Streaming content-addressed ingest | `packages/media-catalog/src/index.ts` | verified on repaired exact head `b820fc8`, CI run `32776732634` |
 | Idempotent asset registration | `InMemoryMediaCatalog.registerAsset` + ingest tests | verified deterministic semantics; first-ingest evidence preserved |
 | Normalized native stream metadata contract | `packages/contracts/src/media-catalog.contract.ts` | verified contract |
-| ffprobe native stream normalization/persistence | `packages/media-catalog/src/index.ts` | implemented on `705e1dc8`; exact CI evidence pending, not yet verified |
+| ffprobe native stream normalization/persistence | `packages/media-catalog/src/index.ts` | verified on `705e1dc8`, CI run `32782942297` |
+| Durable PostgreSQL media-catalog persistence | migrations + PostgreSQL adapter | next |
 
-The ffprobe normalization path uses `time_base`, `start_pts` and `duration_ts` as canonical source timing inputs, ignores decimal `start_time`/`duration`, fails closed on malformed/unsafe timing, rejects duplicate stream indexes, and persists projections only for registered immutable assets.
+The verified ffprobe normalization path uses `time_base`, `start_pts` and `duration_ts` as source timing authority, ignores decimal `start_time`/`duration`, fails closed on malformed/unsafe timing, rejects duplicate stream indexes, and persists projections only for registered immutable assets.
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/ffprobe.
 
-Phase 0 is complete: 22/22 standalone items verified. Phase 1 remains 2/14 verified until exact evidence for `705e1dc8` is observable.
+Phase 0 is complete: 22/22 standalone items verified. Phase 1 is 3/14 verified. The next smallest durability slice is PostgreSQL-backed catalog persistence behind the already verified interfaces.
