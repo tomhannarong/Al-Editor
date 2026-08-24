@@ -24,7 +24,7 @@ const makeTimeline = (): CanonicalTimelineV2 => ({
 const config = { width: 320, height: 180, crf: 18, preset: 'ultrafast' as const, backgroundColor: '#000000' };
 
 describe('canonical v2 preview adapter', () => {
-  it('maps canonical native PTS and rational FPS directly to FFmpeg argv', () => {
+  it('maps canonical native PTS and rational FPS directly to FFmpeg argv while preserving timestamps', () => {
     const args = buildCanonicalPreviewV2Arguments({ timeline: makeTimeline(), verifiedAssetPaths: new Map([['asset-1', '/confined/source.mp4']]), outputPath: '/output/preview.mp4', config });
     const text = args.join(' ');
     expect(text).toContain('trim=start_pts=29010:end_pts=119100');
@@ -32,6 +32,8 @@ describe('canonical v2 preview adapter', () => {
     expect(text).toContain('-r 30000/1001');
     expect(text).toContain('-frames:v 90');
     expect(text).not.toContain('trim=start=');
+    expect(args).toContain('-copyts');
+    expect(args.indexOf('-copyts')).toBeLessThan(args.indexOf('-i'));
   });
 
   it('fails closed when a verified source path is absent', () => {

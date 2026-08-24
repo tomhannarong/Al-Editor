@@ -25,8 +25,10 @@ export interface CanonicalPreviewRenderConfigV1 {
 /**
  * Build a shell-free FFmpeg argv plan from canonical timeline v2.
  * Project placement remains integer frames + rational FPS. Source trims remain
- * absolute native PTS. `verifiedAssetPaths` must contain already-confined,
- * realpath-resolved paths; path authority is deliberately outside this planner.
+ * absolute native PTS. `-copyts` is mandatory so demuxer timestamp rebasing
+ * cannot silently change the native PTS domain before trim=start_pts/end_pts.
+ * `verifiedAssetPaths` must contain already-confined, realpath-resolved paths;
+ * path authority is deliberately outside this planner.
  */
 export function buildCanonicalPreviewV2Arguments(input: {
   timeline: CanonicalTimelineV2;
@@ -50,7 +52,7 @@ export function buildCanonicalPreviewV2Arguments(input: {
   if (!visual.length) throw new CanonicalPreviewPlanError('timeline has no asset-video items');
 
   let expectedStart = 0;
-  const args = ['-hide_banner', '-loglevel', 'error', '-nostdin', '-y'];
+  const args = ['-hide_banner', '-loglevel', 'error', '-nostdin', '-copyts', '-y'];
   const filters: string[] = [];
   const labels: string[] = [];
 
