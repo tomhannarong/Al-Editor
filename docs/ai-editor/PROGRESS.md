@@ -4,7 +4,7 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** migrate and revalidate the Phase-0 verified baseline on standalone `Al-Editor/main`, beginning with P0-15 Asset Provenance / Rights Schema v1
+**Current task:** obtain one exact-main GitHub CI evidence run for P0-15 after local validation passed; do not begin P0-18 before that gate
 
 ## Overall historical verified baseline
 
@@ -17,9 +17,9 @@ This number is preserved as migration provenance from the former `creator-intell
 
 ## Standalone migration state
 
-The new repository is now authoritative. New implementation work is committed directly to `main`; pull requests are not required.
+The new repository is authoritative. New implementation work is committed directly to `main`; pull requests are not required.
 
-During migration, each historical verified item must be backed by the corresponding code/contracts/tests and then revalidated on an exact `Al-Editor/main` HEAD before its evidence is considered standalone-native.
+Standalone revalidation remains `0 / 162` because P0-15 has passed local executable validation but still lacks observable exact-main GitHub CI evidence.
 
 ## Phase progress baseline
 
@@ -41,12 +41,34 @@ P13 Production Hardening          0/14                       0.0%  audit pending
 P14 Distribution Outcomes         0/09                       0.0%  audit pending
 ```
 
-## Current gate
+## Current gate — P0-15
 
-P0-15 Asset Provenance / Rights Schema v1 was implemented in the former repository but had not yet received exact-head executable verification before the split. It is therefore the first implementation slice to migrate and validate in this standalone repository.
+P0-15 Asset Provenance / Rights Schema v1 is migrated with TypeScript contract, JSON Schema, focused validation tests and package export.
 
-P0-18 remains the final Phase-0 decision/mapping item after P0-15.
+Local validation for the exact migrated contract passed on 2026-08-24:
+
+```text
+strict TypeScript compile: PASS
+P0-15 local smoke: PASS (5 cases)
+```
+
+The smoke cases cover a cleared owned asset, fail-closed unknown clearance, licensed-without-evidence rejection, obtained-consent-without-evidence rejection and malformed SHA-256 rejection.
+
+P0-15 remains **not VERIFIED** until exact-main CI evidence is observable.
+
+## GitHub Actions free-tier policy
+
+The main CI workflow has been reduced to one bounded validation job. It now:
+
+- runs only for code/config paths relevant to executable validation, plus manual dispatch;
+- does not run for progress/checkpoint/documentation-only commits;
+- uses concurrency cancellation so superseded runs are stopped;
+- uses an 8-minute hard timeout;
+- does not enable npm cache until a lockfile exists;
+- avoids matrices and heavyweight media integration in the ordinary commit loop.
+
+A concrete scaffold issue was found and repaired: the previous workflow enabled `actions/setup-node` npm caching even though the repository has no `package-lock.json`.
 
 ## Next smallest task
 
-Migrate the contracts/testing toolchain required by the Phase-0 slices into this repository, migrate P0-15 additively, run exact-head validation on `main`, and only then promote P0-15. If a gate fails, repair P0-15 only and do not begin P0-18.
+Inspect the single CI run associated with the optimized workflow/code state. If it fails, repair P0-15/scaffold only. If it passes, promote P0-15 and begin P0-18. Do not rerun unchanged failures and do not spend an Actions run for documentation-only evidence.
