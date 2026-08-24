@@ -74,6 +74,7 @@ jobs:
           CONTRACTS_OUTCOME: ${{ steps.contracts.outcome }}
         run: |
           state=success
+          stage=all
           description='all validation gates passed'
           for pair in \
             "install:${INSTALL_OUTCOME}" \
@@ -81,21 +82,24 @@ jobs:
             "unit-tests:${UNIT_TESTS_OUTCOME}" \
             "migration:${MIGRATION_OUTCOME}" \
             "contract-gates:${CONTRACTS_OUTCOME}"; do
-            stage="${pair%%:*}"
+            candidate_stage="${pair%%:*}"
             outcome="${pair#*:}"
             if [ "$outcome" = 'failure' ]; then
               state=failure
-              description="${stage} failed"
+              stage="$candidate_stage"
+              description="${candidate_stage} failed"
               break
             fi
             if [ "$outcome" = 'cancelled' ]; then
               state=error
-              description="${stage} cancelled"
+              stage="$candidate_stage"
+              description="${candidate_stage} cancelled"
               break
             fi
           done
 
-          payload=$(node -e "process.stdout.write(JSON.stringify({state:process.argv[1],context:'ai-editor-ci/observable',description:process.argv[2]}))" "$state" "$description")
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          payload=$(node -e "process.stdout.write(JSON.stringify({state:process.argv[1],context:'ai-editor-ci/'+process.argv[2],description:process.argv[3],target_url:process.argv[4]}))" "$state" "$stage" "$description" "$run_url")
           curl --fail-with-body --silent --show-error \
             --request POST \
             --header "Authorization: Bearer ${GH_TOKEN}" \
