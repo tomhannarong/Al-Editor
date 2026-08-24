@@ -4,7 +4,7 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** migrate/revalidate P0-07 Renderer-neutral adapter boundary while P0-03/P0-04 remain runtime-blocked
+**Current task:** migrate/revalidate P0-08 Migration framework while P0-03/P0-04 remain runtime-blocked
 
 ## Historical migration provenance
 
@@ -13,44 +13,43 @@
 [██░░░░░░░░░░░░░░░░░░░] 12.35%
 ```
 
-This is retained as migration provenance only.
-
 ## Standalone revalidation
 
 ```text
-5 / 162 standalone-revalidated
-[█░░░░░░░░░░░░░░░░░░░░] 3.09%
+6 / 162 standalone-revalidated
+[█░░░░░░░░░░░░░░░░░░░░] 3.70%
 
 Phase 0
-5 / 22 standalone-revalidated
-[█████░░░░░░░░░░░░░░░] 22.73%
+6 / 22 standalone-revalidated
+[██████░░░░░░░░░░░░░░] 27.27%
 ```
 
-Standalone-verified: P0-01, P0-02, P0-06, P0-15 and P0-18.
+Standalone-verified: P0-01, P0-02, P0-06, P0-07, P0-15 and P0-18.
 
-## P0-06 Review UI shell — VERIFIED
+## P0-07 Renderer-neutral adapter boundary — VERIFIED
 
-Added a dependency-free `apps/studio/index.html` review shell that establishes semantic surfaces for preview, canonical timeline review, human replace/trim/lock/create-revision actions, revision evidence and decision evidence. The controls remain disabled until immutable revision APIs are migrated, preventing the shell from pretending to perform side effects it cannot yet own.
+Added `packages/contracts/src/renderer-adapter.contract.ts`, exported it from `@ai-editor/contracts`, added a dependency-free static verifier and accepted ADR-012.
 
-The shell explicitly states that it does not own canonical timing. `scripts/verify-review-ui-shell.mjs` provides deterministic static verification of 14 required contract markers.
+The boundary fixes three authorities explicitly: canonical timeline owns timing, only confined/resolved source paths may enter render adapters, and final compliance measurement remains FFmpeg/FFprobe. Adapter kinds are renderer-neutral (`ffmpeg`, `remotion`, `otio`) and plan identity binds revision/manifest/artifact/render-plan hashes.
 
 Local evidence before commit:
 
 ```text
-node scripts/verify-review-ui-shell.mjs
-PASS: review UI shell contract markers verified (14 markers)
+tsc --strict --target ES2022 --module NodeNext --moduleResolution NodeNext --noEmit packages/contracts/src/renderer-adapter.contract.ts   PASS
+node scripts/verify-renderer-boundary.mjs
+PASS: renderer-neutral boundary markers verified (7 markers)
 ```
 
-This evidence is sufficient for the Phase-0 UI-shell item; repository-wide CI remains P0-20.
+The concrete FFmpeg v2 adapter is deliberately not migrated yet because it depends on P0-09/P0-10 canonical timeline/media-time contracts. This avoids duplicating or silently re-implementing canonical timing.
 
-## Runtime-blocked local services
+## Existing blockers
 
-P0-03 PostgreSQL and P0-04 Qdrant remain implemented/static-pass/verifier-self-test-pass but require real service boot/health evidence. P0-05 remains directly blocked by that runtime gate. This blocker no longer stalls independent Phase-0 items.
+P0-03/P0-04 remain runtime-pending and P0-05 remains directly blocked. Independent Phase-0 work continues.
 
 ## GitHub Actions free-tier policy
 
-This P0-06 implementation touches `apps/**` and `scripts/**`, so the existing minimized workflow may run once for this substantive commit. No manual rerun/dispatch is requested. Documentation-only follow-ups remain outside normal CI-trigger paths.
+This substantive contract commit may supersede/cancel the immediately preceding P0-06 workflow run through the existing concurrency group. No manual rerun or dispatch is requested; repository-wide CI evidence remains P0-20.
 
 ## Next smallest independent task
 
-P0-07 Renderer-neutral adapter boundary migration/revalidation. Preserve canonical timeline authority and keep FFmpeg as the first adapter rather than making a renderer canonical.
+P0-08 Migration framework.
