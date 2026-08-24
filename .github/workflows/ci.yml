@@ -3,7 +3,20 @@ name: AI Editor CI
 on:
   push:
     branches: [main]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - 'packages/**'
+      - 'workers/**'
+      - 'apps/**'
+      - 'scripts/**'
+      - '.github/workflows/ci.yml'
   workflow_dispatch:
+
+concurrency:
+  group: ai-editor-main-validation
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -11,12 +24,12 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
       - name: Install dependencies
         run: npm install --ignore-scripts --no-audit --no-fund
       - name: Validate
