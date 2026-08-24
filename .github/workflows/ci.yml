@@ -62,6 +62,7 @@ jobs:
           npm run registry:test
           npm run telemetry:verify
           npm run telemetry:test
+          npm run api:health:test
 
       - name: Publish observable commit status
         if: always()

@@ -8,6 +8,9 @@ on:
       - 'infra/docker-compose.yml'
       - 'infra/verify-local-stack.sh'
       - 'infra/test-verify-local-stack.sh'
+      - 'apps/api/health-server.mjs'
+      - 'scripts/test-api-health.mjs'
+      - 'scripts/verify-api-health-runtime.sh'
   workflow_dispatch:
 
 concurrency:
@@ -28,6 +31,9 @@ jobs:
       - name: Verify deterministic verifier control flow
         run: bash infra/test-verify-local-stack.sh
 
+      - name: Verify API health contract locally
+        run: node scripts/test-api-health.mjs
+
       - name: Verify Docker runtime
         run: |
           docker version
@@ -36,6 +42,10 @@ jobs:
       - name: Boot and verify PostgreSQL + Qdrant
         id: stack
         run: bash infra/verify-local-stack.sh
+
+      - name: Verify API health against real local dependencies
+        id: api_health
+        run: bash scripts/verify-api-health-runtime.sh
 
       - name: Cleanup local stack
         if: always()
@@ -46,14 +56,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           STACK_OUTCOME: ${{ steps.stack.outcome }}
+          API_HEALTH_OUTCOME: ${{ steps.api_health.outcome }}
         run: |
           state=success
           context='ai-editor-local-stack/all'
-          description='PostgreSQL and Qdrant runtime gate passed'
+          description='PostgreSQL, Qdrant and API health runtime gates passed'
           if [ "$STACK_OUTCOME" != 'success' ]; then
             state=failure
             context='ai-editor-local-stack/runtime'
             description='PostgreSQL or Qdrant runtime gate failed'
+          elif [ "$API_HEALTH_OUTCOME" != 'success' ]; then
+            state=failure
+            context='ai-editor-local-stack/api-health'
+            description='API dependency health runtime gate failed'
           fi
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           payload=$(node -e "process.stdout.write(JSON.stringify({state:process.argv[1],context:process.argv[2],description:process.argv[3],target_url:process.argv[4]}))" "$state" "$context" "$description" "$run_url")
