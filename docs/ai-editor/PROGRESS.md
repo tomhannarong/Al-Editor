@@ -42,26 +42,29 @@ Standalone-verified:
 - named persistent volumes;
 - configurable local ports and `infra/.env.example`.
 
-Static YAML parsing remains green. This run also added `infra/verify-local-stack.sh`, a fail-closed local verifier that:
+Static YAML parsing remains green. `infra/verify-local-stack.sh` is a fail-closed runtime verifier that requires a real container runtime before P0-03/P0-04 can be promoted.
 
-1. requires a reachable Docker daemon;
-2. runs `docker compose config -q`;
-3. boots PostgreSQL and Qdrant;
-4. waits for each container health check to become `healthy` within a bounded timeout;
-5. runs PostgreSQL `pg_isready` inside the container;
-6. emits service logs on unhealthy/timeout failures.
+This run added `infra/test-verify-local-stack.sh`, a local control-flow self-test that substitutes a deterministic fake Docker command and exercises the verifier end-to-end without claiming real service boot. Local evidence for the self-test:
 
-The verifier itself passes `bash -n` syntax validation. Runtime service boot is still **not executable in the current environment** because the Docker CLI is absent. This remains an environment/tooling limitation, not a PostgreSQL/Qdrant failure.
+```text
+bash -n infra/test-verify-local-stack.sh          PASS
+bash infra/test-verify-local-stack.sh            PASS
+PASS: verify-local-stack.sh control-flow self-test succeeded
+```
+
+The self-test proves the verifier reaches and enforces compose validation, service startup, container health inspection and PostgreSQL readiness branches. It does **not** replace the required real PostgreSQL/Qdrant runtime gate.
+
+The current execution environment still has no Docker CLI, Podman, nerdctl, standalone PostgreSQL binaries or Qdrant binary. This remains an environment/tooling limitation rather than a service failure.
 
 Therefore:
 
-- P0-03 = `implemented-static-pass-runtime-verifier-added-boot-pending`
-- P0-04 = `implemented-static-pass-runtime-verifier-added-boot-pending`
+- P0-03 = `implemented-static-pass-verifier-self-test-pass-runtime-boot-pending`
+- P0-04 = `implemented-static-pass-verifier-self-test-pass-runtime-boot-pending`
 - P0-05 remains blocked until the local service gate is executable and green.
 
 ## GitHub Actions free-tier policy
 
-No Actions rerun was requested. The runtime verifier lives under `infra/**`, which is outside normal CI path filters, and the accompanying progress/checkpoint commits are documentation-only. This run therefore does not intentionally consume an Actions run.
+No Actions rerun or workflow dispatch was requested. `infra/**` and `docs/**` remain outside normal CI path filters, so this verifier-test/progress/checkpoint work does not intentionally consume Actions minutes.
 
 ## Current CI observation
 
@@ -69,4 +72,4 @@ The pre-run `main` head exposed no combined status contexts through the availabl
 
 ## Next smallest task
 
-At the next run, first inspect whether Docker/runtime service validation is available. If available, execute `bash infra/verify-local-stack.sh` and promote P0-03/P0-04 only on success. If Docker remains unavailable, preserve the blocker and do not begin P0-05.
+At the next run, first inspect whether a usable container runtime is available. If available, execute `bash infra/verify-local-stack.sh` and promote P0-03/P0-04 only on real health/readiness success. If no container runtime is available, preserve the blocker and do not begin P0-05.
