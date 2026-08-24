@@ -2,43 +2,59 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 0 — Foundation, Contracts and Reproducibility  
-**Current task:** P0-21 canonical timeline v2 -> 3–5 second preview walking skeleton
+**Current task:** obtain real PostgreSQL + Qdrant runtime proof for P0-03/P0-04; P0-05 remains their dependent
 
 ```text
-Standalone: 17 / 162 = 10.49%
-Phase 0:    17 / 22  = 77.27%
+Standalone: 19 / 162 = 11.73%
+Phase 0:    19 / 22  = 86.36%
 ```
 
-Verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-12, P0-13, P0-14, P0-15, P0-16, P0-17, P0-18, P0-19, P0-20.
+Verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-12, P0-13, P0-14, P0-15, P0-16, P0-17, P0-18, P0-19, P0-20, P0-21, P0-22.
 
-## P0-20 CI quality gate — VERIFIED
+## P0-21 Canonical v2 real preview — VERIFIED
 
-The red push runs were investigated rather than rerun. A single-job diagnostic workflow exposed the failing stage as strict TypeScript. Exact run `32763431696` reported two missing barrel modules:
+The standalone FFmpeg adapter consumes canonical v2 directly: integer project frames + rational FPS and absolute native source PTS/time base. Source paths enter only through a pre-verified path map; the reproducible media fixture rejects traversal and an escaping symlink and launches FFmpeg/FFprobe shell-free via argv arrays.
+
+A correctness regression was found while preparing P0-22: MP4 input timestamps can be rebased by FFmpeg before `trim=start_pts/end_pts`. A shifted absolute-PTS window then produced only 76 frames. The adapter was repaired to place `-copyts` before input arguments, preserving the demuxed native PTS domain. After repair the same source-window semantics produce exactly 90 frames both at stream start and after a 15-frame source shift.
+
+Local real-media evidence after repair:
 
 ```text
-packages/contracts/src/index.ts(5,15): TS2307 ./durable-job.contract.js
-packages/contracts/src/index.ts(6,15): TS2307 ./structured-log.contract.js
+FFmpeg / FFprobe: 7.1.5
+source FPS:        30000/1001
+source time base:  1/30000
+source start PTS:  29010
+source end PTS:    119100
+preview:           320x180, 90 frames, 30000/1001, 3.003000 s
+preview SHA-256:   fc11e46389591aac1d3f38279c7b200a1faf81a677d6ee77a56bd58348cbc325
+traversal:         rejected
+escaping symlink:  rejected
+shell execution:   none
 ```
 
-The implementations existed under their canonical filenames `job-state-machine.contract.ts` and `ai-editor-observability.contract.ts`. Commit `dcfd194f5916e31cc6f8388ef604f0e8e9c466ec` repaired only those two barrel exports.
+## P0-22 Immutable edit -> rerender — VERIFIED
 
-Exact-main CI run `32763513474` then passed every named gate:
+Added `packages/timeline-revision` with `canonical-v2-source-window-editor-v1`. A child revision must use a new revision ID and manifest SHA-256, link `parentRevisionId`, preserve the authoritative native-PTS span for a source-window shift, use monotonic creation time, leave the parent untouched and become recursively frozen after validation.
+
+Real R1 -> R2 evidence shifts the native source window by 15 frames without changing project duration:
 
 ```text
-Install dependencies          PASS
-TypeScript strict gate        PASS
-Vitest behavioral gate        PASS
-Migration deterministic gate  PASS
-Contract and policy gates     PASS
-observable status             ai-editor-ci/all = success
+R1 revision:       revision-walk-1
+R1 source PTS:     29010 -> 119100
+R1 output SHA-256: fc11e46389591aac1d3f38279c7b200a1faf81a677d6ee77a56bd58348cbc325
+
+R2 revision:       revision-walk-2
+R2 parent:         revision-walk-1
+R2 source PTS:     44025 -> 134115
+R2 output SHA-256: 5674e364d69c173621c20badc1fcdf7ec0c6f427c28a6e8e68b7a3d0ea53bee8
+
+R1 after R2:       byte-for-byte unchanged
+outputs distinct:  yes
+R1/R2 probe:       90 frames, 30000/1001, 3.003000 s
 ```
 
-No failed historical run was rerun. The workflow remains one job, no matrix, bounded to 8 minutes and path-filtered; observable commit status now makes future push failures queryable without additional diagnostic runs.
+The pure adapter/revision tests and all repository gates passed on exact implementation commit `44140975b113c96eea4f7f05c9cdb59243d1b058`, GitHub Actions run `32764586496`, with `ai-editor-ci/all = success`. Heavy FFmpeg tests remain manual/local (`media:preview:test`, `media:revision:test`) and are intentionally excluded from normal CI to preserve free-tier minutes.
 
-## Existing runtime blockers
+## Remaining Phase-0 blockers
 
-P0-03 PostgreSQL and P0-04 Qdrant still require real local runtime boot/health evidence; P0-05 remains their direct dependent. They do not block independent P0-21 preparation.
-
-## Next
-
-P0-21: migrate the canonical-v2 FFmpeg preview adapter, preserve confined source-path + FFmpeg/FFprobe compliance authority, and prove a real 3–5 second preview when local media binaries are available.
+Only P0-03, P0-04 and P0-05 remain unverified. P0-03/P0-04 require a real Docker/Compose PostgreSQL + Qdrant boot/readiness proof. P0-05 remains directly blocked until those local services are healthy. Phase 1 must not start before the Phase-0 completion gate.

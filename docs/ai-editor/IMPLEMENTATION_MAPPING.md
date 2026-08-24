@@ -19,8 +19,10 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Model/prompt/model-artifact registry | versioned registry contract + JSON Schema | verified |
 | Cost/performance telemetry | stage telemetry contract + JSON Schema | verified |
 | ADR convention | `docs/adr/ADR-TEMPLATE.md` | verified |
-| CI quality gate | single-job named-stage workflow + observable status | verified: run 32763513474 / `dcfd194...` |
-| Canonical v2 preview | FFmpeg adapter + FFprobe evidence | next |
-| Immutable rerender revision | v2 revision edit/rerender proof | waits P0-21 |
+| CI quality gate | single-job named-stage workflow + observable status | verified |
+| Canonical v2 preview | `packages/preview-renderer` + manual real FFmpeg/FFprobe fixture | verified; `-copyts` preserves absolute native PTS |
+| Immutable rerender revision | `packages/timeline-revision` + manual R1/R2 real-media fixture | verified |
 
-Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/FFprobe.
+Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/FFprobe.
+
+Phase-0 remaining chain: P0-03 PostgreSQL runtime proof + P0-04 Qdrant runtime proof -> P0-05 API health. Phase 1 remains gated.
