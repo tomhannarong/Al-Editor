@@ -4,41 +4,37 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** P0-10 centralized media-time conversion/rounding migration; P0-03/P0-04 remain runtime-blocked
+**Current task:** P0-11 style profile schema migration; P0-03/P0-04 remain runtime-blocked
 
 ## Standalone revalidation
 
 ```text
-8 / 162 standalone-revalidated = 4.94%
-Phase 0: 8 / 22 = 36.36%
+9 / 162 standalone-revalidated = 5.56%
+Phase 0: 9 / 22 = 40.91%
 ```
 
-Standalone-verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-15 and P0-18.
+Standalone-verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-15 and P0-18.
 
-## P0-09 Canonical timeline v2 — VERIFIED
+## P0-10 Centralized media-time — VERIFIED
 
-Migrated the canonical timing boundary additively into `packages/contracts/src/canonical-timeline.contract.ts` while keeping an explicit compatibility-only v1 representation readable.
+Migrated the BigInt-based conversion authority into `packages/media-time/src/index.ts`. All frame/microsecond/native-PTS conversion paths require an explicit rounding mode (`floor`, `ceil`, `nearest-half-away-from-zero`) and normalize rational rates through the canonical P0-09 rational authority.
 
-V2 authority is integer `startFrame`/`endFrame` + rational project `frameRate`; source media selection is integer `sourceStartPts`/`sourceEndPts` + rational `sourceTimeBase`. V2 intentionally contains no authoritative decimal-second source fields. `ReadableCanonicalTimeline` accepts v1 or v2, and `isCanonicalTimelineV2` narrows without rewriting historical v1.
+Direct absolute frame↔PTS formulas are used instead of repeatedly adding rounded frame durations, preventing cumulative drift. JavaScript unsafe-integer overflow is rejected rather than silently rounded.
 
-Runtime validation rejects unsafe/non-integer frame and PTS values, invalid stream indexes/time bases/playback ratios, malformed manifests and invalid revision metadata. Rational values normalize deterministically by GCD.
-
-Local evidence before commit:
+Golden local evidence covers Bible rates 24, 25, 30, 50, 60, 24000/1001, 30000/1001 and 60000/1001 at approximately ten minutes, all round-tripping the chosen absolute frame exactly through a native 1/90000 time base. It also proves non-zero native PTS and explicit 24 fps floor/ceil behavior.
 
 ```text
-tsc --strict --target ES2022 --module NodeNext --moduleResolution NodeNext --noEmit packages/contracts/src/canonical-timeline.contract.ts
+tsc --strict ... canonical-timeline.contract.ts packages/media-time/src/index.ts
 PASS
-
-compiled validator runtime assertions
-PASS: canonical timeline v2 runtime validator + v1 readability (4 assertions)
+PASS: 8 Bible frame-rate goldens + non-zero PTS + explicit rounding
 ```
 
-A Vitest contract suite is committed for repository validation and covers valid 30000/1001 + native 1/90000 source timing, rational normalization, non-integer PTS rejection and legacy-v1 readability.
+Vitest fixtures are committed so repository validation rechecks the same rates.
 
 ## Existing blockers
 
-P0-03/P0-04 remain runtime-pending and P0-05 remains directly blocked. No runtime success is claimed.
+P0-03/P0-04 remain runtime-pending and P0-05 remains directly blocked. No runtime database/vector-store proof is claimed.
 
 ## Next smallest independent task
 
-P0-10 centralized media-time conversion and rounding package with golden fixtures.
+P0-11 Style profile schema v1.
