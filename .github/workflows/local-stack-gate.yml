@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/local-stack-gate.yml'
+      - 'infra/docker-compose.yml'
+      - 'infra/verify-local-stack.sh'
+      - 'infra/test-verify-local-stack.sh'
   workflow_dispatch:
 
 concurrency:
@@ -21,6 +24,9 @@ jobs:
     timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
+
+      - name: Verify deterministic verifier control flow
+        run: bash infra/test-verify-local-stack.sh
 
       - name: Verify Docker runtime
         run: |
