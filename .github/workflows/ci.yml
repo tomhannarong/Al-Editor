@@ -20,6 +20,7 @@ concurrency:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   validate:
@@ -30,7 +31,75 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - name: Install dependencies
+        id: install
         run: npm install --ignore-scripts --no-audit --no-fund
-      - name: Validate
-        run: npm run validate
+
+      - name: TypeScript strict gate
+        id: typecheck
+        run: npm run typecheck
+
+      - name: Vitest behavioral gate
+        id: unit_tests
+        run: npm test
+
+      - name: Migration deterministic gate
+        id: migration
+        run: npm run migration:verify && npm run migration:test
+
+      - name: Contract and policy gates
+        id: contracts
+        run: |
+          npm run style:verify
+          npm run style:test
+          npm run jobs:test
+          npm run logs:verify
+          npm run logs:test
+          npm run delivery:verify
+          npm run delivery:test
+          npm run registry:verify
+          npm run registry:test
+          npm run telemetry:verify
+          npm run telemetry:test
+
+      - name: Publish observable commit status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          TYPECHECK_OUTCOME: ${{ steps.typecheck.outcome }}
+          UNIT_TESTS_OUTCOME: ${{ steps.unit_tests.outcome }}
+          MIGRATION_OUTCOME: ${{ steps.migration.outcome }}
+          CONTRACTS_OUTCOME: ${{ steps.contracts.outcome }}
+        run: |
+          state=success
+          description='all validation gates passed'
+          for pair in \
+            "install:${INSTALL_OUTCOME}" \
+            "typecheck:${TYPECHECK_OUTCOME}" \
+            "unit-tests:${UNIT_TESTS_OUTCOME}" \
+            "migration:${MIGRATION_OUTCOME}" \
+            "contract-gates:${CONTRACTS_OUTCOME}"; do
+            stage="${pair%%:*}"
+            outcome="${pair#*:}"
+            if [ "$outcome" = 'failure' ]; then
+              state=failure
+              description="${stage} failed"
+              break
+            fi
+            if [ "$outcome" = 'cancelled' ]; then
+              state=error
+              description="${stage} cancelled"
+              break
+            fi
+          done
+
+          payload=$(node -e "process.stdout.write(JSON.stringify({state:process.argv[1],context:'ai-editor-ci/observable',description:process.argv[2]}))" "$state" "$description")
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            --data "$payload"
