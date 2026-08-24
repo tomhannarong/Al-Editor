@@ -2,36 +2,51 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** validate and extend the new stable media identity contract into executable content-addressed ingest persistence without weakening native PTS/time-base authority
+**Current task:** persist normalized native stream metadata from ffprobe behind the verified media-catalog boundary without introducing derived-seconds authority
 
 ```text
-Standalone verified: 22 / 162 = 13.58%
+Standalone verified: 24 / 162 = 14.81%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1 implemented slice: stable asset/content identity contract added; verification gate pending observable CI evidence
+Phase 1:              2 / 14  = 14.29% verified
 ```
 
 Phase 0 verified: P0-01 through P0-22.
 
-## Phase 1 — stable identity / mutable location boundary
+## Phase 1 verified slices
 
-Implementation commit `c68362f7166aba1a33137b89474caa93a8cf163f` adds `media-catalog.contract.ts` plus Vitest coverage and exports it through the contracts package.
+### P1-01 — stable media identity / mutable location boundary
 
-The contract establishes these Phase-1 invariants:
+Implementation commit `c68362f7166aba1a33137b89474caa93a8cf163f` introduced `packages/contracts/src/media-catalog.contract.ts` and tests. Exact repository CI evidence is now observable: `ai-editor-ci/all = success`, run `32772298608`.
 
-- stable `assetId` is canonicalized as `sha256:<64-hex>` from immutable file bytes;
-- mutable storage URI/location is a separate record keyed back to the stable asset;
-- identical immutable bytes remain the same logical asset even after move/rename/re-ingest;
-- normalized stream metadata carries native `startPts`, `durationPts` and rational `timeBase` and deliberately omits derived-seconds authority;
-- malformed/path-derived identities and invalid native timing are rejected.
+Verified invariants:
 
-This is additive and does not modify canonical timeline v1/v2 compatibility, media-time rounding rules, renderer adapters, revision evidence, or FFmpeg native-PTS behavior.
+- `assetId` is canonicalized from SHA-256 bytes as `sha256:<64-hex>`;
+- mutable storage URI/location is separate state keyed to the stable asset;
+- identical immutable bytes remain the same logical asset after move/rename/re-ingest;
+- normalized stream metadata retains native PTS plus rational time base and omits decimal-second authority.
 
-## Validation status
+### P1-02 — streaming content-addressed ingest + deterministic persistence semantics
 
-Repository inspection confirmed no existing standalone media-catalog/ingest implementation to adapt, so this slice does not duplicate a current capability.
+Code landed as `2cba444a4890b81eb565ca22687fd8e7c2d43a86` and the required TypeScript environment repair as `b820fc809f99f438b8ff7b8681c6b983e26122ee`.
 
-A local clone/test execution was attempted first, but the execution environment could not resolve `github.com`, so no local runtime pass is claimed. The code was pushed once as a coherent implementation commit to allow the repository CI path filter to act as the final confidence gate. At checkpoint time the connector exposed no completed commit status for `c68362f...`; therefore this Phase-1 item is **implemented but not yet marked verified**. No failed job was rerun and no heavyweight media/local-stack workflow was manually triggered.
+`packages/media-catalog/src/index.ts` now provides:
+
+- incremental SHA-256 over `Iterable`/`AsyncIterable<Uint8Array>` without whole-file buffering;
+- idempotent immutable asset registration;
+- mutable location rebinding independent of asset identity;
+- preservation of first-ingest evidence on byte-identical re-ingest;
+- defensive-copy persistence semantics so callers cannot mutate stored identity.
+
+Vitest coverage proves chunk-boundary independence, async streaming equivalence, byte-identical idempotency, rename/re-location behavior, changed-byte location rebinding and persisted-identity immutability.
+
+The first code commit triggered run `32776611559`, which failed specifically at the strict TypeScript gate before Vitest. It was not rerun unchanged. The repair commit added the missing Node type dependency required by the new `node:crypto` import, creating a legitimate code/config reason for a new gate. Exact final evidence for `b820fc8...` is `ai-editor-ci/all = success`, run `32776732634`.
+
+## Validation / free-tier discipline
+
+The execution container still cannot resolve `github.com`, so no local runtime pass is claimed. GitHub Actions was used only as the final confidence gate for code-bearing commits. The failed commit was not rerun; the follow-up run was caused by a concrete dependency repair. No manual PostgreSQL/Qdrant or FFmpeg/media integration workflow was triggered. Documentation/checkpoint closure is path-filtered out of normal CI.
+
+Canonical timeline v1/v2 compatibility, media-time rounding authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence and FFmpeg `-copyts` semantics remain unchanged.
 
 ## Next task
 
-First inspect exact CI/status evidence for `c68362f...`. If the normal validation gate passes, mark the stable-identity contract verified, then implement the smallest dependent slice: streaming SHA-256 ingest/idempotent asset registration with mutable location rebinding and deterministic persistence tests. If that gate fails, repair only the reported code/config cause before proceeding.
+Implement the next smallest Phase-1 dependency: normalized ffprobe stream-metadata ingestion into the media catalog, preserving integer native `startPts`/`durationPts` and rational `timeBase`. Parsing must fail closed for malformed or unsafe timing and must not promote seconds/milliseconds to canonical authority. Prefer deterministic parser fixtures first; real-media FFprobe validation can remain selective/manual until the Phase-1 runtime gate requires it.

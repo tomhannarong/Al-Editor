@@ -22,10 +22,12 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | CI quality gate | single-job named-stage workflow + observable status | verified |
 | Canonical v2 preview | `packages/preview-renderer` + manual real FFmpeg/FFprobe fixture | verified; `-copyts` preserves absolute native PTS |
 | Immutable rerender revision | `packages/timeline-revision` + manual R1/R2 real-media fixture | verified |
-| Stable media asset identity | `packages/contracts/src/media-catalog.contract.ts` | implemented on `c68362f`; verification pending observable exact-commit gate |
-| Mutable media storage location boundary | same media-catalog contract | implemented; location URI is non-identity state |
-| Normalized native stream metadata | same media-catalog contract | implemented contract for stream index/kind/native PTS/rational time base; runtime ffprobe ingestion not yet implemented |
+| Stable media asset identity | `packages/contracts/src/media-catalog.contract.ts` | verified on `c68362f`, CI run `32772298608` |
+| Mutable media storage location boundary | media-catalog contract + `packages/media-catalog/src/index.ts` | verified; rebinding does not change byte-derived identity |
+| Streaming content-addressed ingest | `packages/media-catalog/src/index.ts` | verified on repaired exact head `b820fc8`, CI run `32776732634` |
+| Idempotent asset registration | `InMemoryMediaCatalog.registerAsset` + ingest tests | verified deterministic semantics; first-ingest evidence preserved |
+| Normalized native stream metadata | media-catalog contract | contract verified; ffprobe parser/persistence runtime ingestion is next |
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/FFprobe.
 
-Phase 0 is complete: 22/22 standalone items verified. Phase 1 has begun additively. The first contract slice separates byte-derived stable identity from mutable storage location and reuses the existing canonical rational/time semantics rather than inventing a second timing authority. The next dependent implementation is streaming content hashing + idempotent asset registration/location rebinding, gated first by exact CI/status evidence for `c68362f`.
+Phase 0 is complete: 22/22 standalone items verified. Phase 1 is 2/14 verified. The next implementation must parse/persist ffprobe stream metadata without introducing a second time authority; deterministic parser fixtures should precede any selective real-media gate.
