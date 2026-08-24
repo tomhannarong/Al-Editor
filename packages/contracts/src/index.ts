@@ -7,3 +7,4 @@ export * from './ai-editor-observability.contract.js';
 export * from './delivery-profile.contract.js';
 export * from './ai-model-registry.contract.js';
 export * from './cost-performance-telemetry.contract.js';
+export * from './media-catalog.contract.js';
