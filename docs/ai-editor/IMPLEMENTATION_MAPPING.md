@@ -22,7 +22,10 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | CI quality gate | single-job named-stage workflow + observable status | verified |
 | Canonical v2 preview | `packages/preview-renderer` + manual real FFmpeg/FFprobe fixture | verified; `-copyts` preserves absolute native PTS |
 | Immutable rerender revision | `packages/timeline-revision` + manual R1/R2 real-media fixture | verified |
+| Stable media asset identity | `packages/contracts/src/media-catalog.contract.ts` | implemented on `c68362f`; verification pending observable exact-commit gate |
+| Mutable media storage location boundary | same media-catalog contract | implemented; location URI is non-identity state |
+| Normalized native stream metadata | same media-catalog contract | implemented contract for stream index/kind/native PTS/rational time base; runtime ffprobe ingestion not yet implemented |
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/FFprobe.
 
-Phase 0 is complete: 22/22 standalone items verified. The next mapping pass moves to Phase 1, beginning with stable asset identity, immutable/content-addressed ingest and normalized stream metadata. Existing migrated behavior must be adapted behind standalone contracts rather than duplicated or destructively rewritten.
+Phase 0 is complete: 22/22 standalone items verified. Phase 1 has begun additively. The first contract slice separates byte-derived stable identity from mutable storage location and reuses the existing canonical rational/time semantics rather than inventing a second timing authority. The next dependent implementation is streaming content hashing + idempotent asset registration/location rebinding, gated first by exact CI/status evidence for `c68362f`.
