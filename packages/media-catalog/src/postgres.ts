@@ -226,7 +226,7 @@ function streamFromRow(row: StreamRow): NativeMediaStreamMetadata {
 
 function safeInteger(value: string | number, label: string, minimum?: number): number {
   const parsed = typeof value === 'string' && /^-?[0-9]+$/.test(value) ? Number(value) : value;
-  if (!Number.isSafeInteger(parsed) || (minimum !== undefined && parsed < minimum)) {
+  if (typeof parsed !== 'number' || !Number.isSafeInteger(parsed) || (minimum !== undefined && parsed < minimum)) {
     throw new MediaCatalogInvariantError(`persisted ${label} is outside the safe integer domain`);
   }
   return parsed;
