@@ -1,0 +1,12 @@
+import {describe,expect,it} from 'vitest'; import {transitionDurableJobV1,validateDurableJobV1,type DurableJobV1} from './job-state-machine.contract.js';
+const base=():DurableJobV1=>({stateMachineVersion:'1.0',jobId:'job-1',jobType:'analyze-media',idempotencyKey:'asset-1:analysis-v1',state:'queued',attempt:0,maxAttempts:2,lease:null,nextAttemptAt:null,lastErrorCode:null,createdAt:'2026-08-24T00:00:00Z',updatedAt:'2026-08-24T00:00:00Z'});
+const lease=(job:DurableJobV1)=>transitionDurableJobV1(job,{type:'lease',ownerId:'worker-1',token:'token-1',now:'2026-08-24T00:01:00Z',leaseExpiresAt:'2026-08-24T00:06:00Z'}).job;
+describe('durable job state machine',()=>{
+ it('leases and increments attempt atomically',()=>{const j=lease(base());expect(j.state).toBe('leased');expect(j.attempt).toBe(1)});
+ it('requires matching token',()=>{const j=lease(base());expect(transitionDurableJobV1(j,{type:'start',token:'wrong',now:'2026-08-24T00:02:00Z'}).ok).toBe(false)});
+ it('rejects expired lease',()=>{const j=lease(base());expect(transitionDurableJobV1(j,{type:'start',token:'token-1',now:'2026-08-24T00:06:00Z'}).ok).toBe(false)});
+ it('supports running -> retry-wait -> queued',()=>{let j=lease(base());j=transitionDurableJobV1(j,{type:'start',token:'token-1',now:'2026-08-24T00:02:00Z'}).job;j=transitionDurableJobV1(j,{type:'fail-retryable',token:'token-1',now:'2026-08-24T00:03:00Z',errorCode:'TEMP',nextAttemptAt:'2026-08-24T00:10:00Z'}).job;expect(j.state).toBe('retry-wait');expect(transitionDurableJobV1(j,{type:'requeue',now:'2026-08-24T00:10:00Z'}).job.state).toBe('queued')});
+ it('fails terminally when attempts exhausted',()=>{const q=base();q.attempt=1;let j=lease(q);j=transitionDurableJobV1(j,{type:'start',token:'token-1',now:'2026-08-24T00:02:00Z'}).job;j=transitionDurableJobV1(j,{type:'fail-retryable',token:'token-1',now:'2026-08-24T00:03:00Z',errorCode:'TEMP',nextAttemptAt:'2026-08-24T00:10:00Z'}).job;expect(j.state).toBe('failed')});
+ it('terminal success cannot be cancelled',()=>{let j=lease(base());j=transitionDurableJobV1(j,{type:'start',token:'token-1',now:'2026-08-24T00:02:00Z'}).job;j=transitionDurableJobV1(j,{type:'succeed',token:'token-1',now:'2026-08-24T00:03:00Z'}).job;expect(transitionDurableJobV1(j,{type:'cancel',now:'2026-08-24T00:04:00Z'}).ok).toBe(false)});
+ it('rejects impossible persisted lease state',()=>{const j=base();j.state='running';expect(validateDurableJobV1(j).join('|')).toMatch(/require a lease/)})
+});

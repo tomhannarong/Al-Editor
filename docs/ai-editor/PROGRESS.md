@@ -2,31 +2,29 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 0 — Foundation, Contracts and Reproducibility  
-**Current task:** P0-12 Job state machine
+**Current task:** P0-13 Structured logging convention
 
 ```text
-Standalone: 10 / 162 = 6.17%
-Phase 0:    10 / 22  = 45.45%
+Standalone: 11 / 162 = 6.79%
+Phase 0:    11 / 22  = 50.00%
 ```
 
-Verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-15, P0-18.
+Verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-12, P0-15, P0-18.
 
-## P0-11 Style Profile Schema v1 — VERIFIED
+## P0-12 Job state machine — VERIFIED
 
-Migrated standalone editorial style policy without duplicating Brand DNA. The profile references `brandId`, `brandVersion` and the versioned `VIDEO-STYLE-DNA` authority and stores deterministic planner parameters only: shot-duration preferences/bounds, shot-type variety, optional human-presence interval, near-duplicate penalty, movement preference/repetition penalty, hard-cut/non-cut transition policy and editorial scoring weights.
+Added durable job contract with explicit queued → leased → running → retry-wait/terminal transitions. Lease identity is token-bound and time-bounded, heartbeat extends only an active lease, attempts increment on lease acquisition, retry scheduling cannot run early, and retryable failure becomes terminal once `maxAttempts` is exhausted. Terminal jobs cannot be revived/cancelled through ordinary transitions.
 
-Local evidence:
+Local gates:
 
 ```text
 strict TypeScript compile: PASS
-node scripts/test-style-profile.mjs
-PASS: editorial style profile v1 self-test succeeded (9 behavioral cases)
-node scripts/verify-style-profile-schema.mjs
-PASS: editorial style profile v1 JSON Schema authority markers verified
+node scripts/test-job-state-machine.mjs
+PASS: durable job state machine self-test succeeded (8 transition/lease cases)
 ```
 
-Additional guards reject contradictory duration policies, out-of-range weights, zero-signal scoring, invalid/reversed timestamps and missing VIDEO-STYLE-DNA references. Millisecond style values remain planning preferences only; P0-09/P0-10 stay canonical timing authority.
+Vitest fixtures also cover wrong token, expired lease, retry cycle, exhausted attempts and impossible persisted state.
 
-P0-03/P0-04 remain runtime-pending and P0-05 remains directly blocked. Independent work continues.
+P0-03/P0-04 remain runtime-pending; P0-05 remains directly blocked. Independent work continues.
 
-Next: P0-12 durable leased/idempotent Job state machine.
+Next: P0-13 Structured logging convention.
