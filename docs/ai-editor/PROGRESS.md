@@ -4,64 +4,70 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** wait for observable exact-main GitHub CI evidence for P0-15; do not begin P0-18 before that gate
+**Current task:** validate the local PostgreSQL + Qdrant stack at runtime; do not advance to P0-05 until the services boot and health checks pass
 
-## Overall historical verified baseline
+## Historical migration provenance
 
 ```text
 20 / 162 historically verified before repository split
 [██░░░░░░░░░░░░░░░░░░░] 12.35%
 ```
 
-This number is preserved as migration provenance from the former `creator-intelligence-os` integration. It is **not** a claim that all 20 items have already been revalidated on standalone `Al-Editor/main`.
+This is retained as provenance only; it is not standalone `Al-Editor/main` verification.
 
-## Standalone migration state
-
-The new repository is authoritative. New implementation work is committed directly to `main`; pull requests are not required.
-
-Standalone revalidation remains `0 / 162` because P0-15 has passed local executable validation but exact direct-push GitHub Actions evidence is still not observable through the available GitHub connector.
-
-## Phase progress baseline
+## Standalone revalidation
 
 ```text
-P00 Foundation / Contracts       20/22 historical baseline  90.9%  MIGRATING / REVALIDATING
-P01 Media Catalog                 0/14                       0.0%  audit pending
-P02 Scene Library                 0/11                       0.0%  audit pending
-P03 Voice Alignment               0/09                       0.0%  audit pending
-P04 Baseline Retrieval            0/10                       0.0%  audit pending
-P05 Hybrid Retrieval              0/09                       0.0%  audit pending
-P06 Timeline + Render             0/12                       0.0%  audit pending
-P07 Human Review                  0/10                       0.0%  audit pending
-P08 Editorial Brain               0/09                       0.0%  audit pending
-P09 Evaluation / Learning         0/09                       0.0%  audit pending
-P10 OTIO / DaVinci                0/08                       0.0%  audit pending
-P11 Advanced Video AI             0/08                       0.0%  audit pending
-P12 Content Agent                 0/08                       0.0%  audit pending
-P13 Production Hardening          0/14                       0.0%  audit pending
-P14 Distribution Outcomes         0/09                       0.0%  audit pending
+4 / 162 standalone-revalidated
+[█░░░░░░░░░░░░░░░░░░░░] 2.47%
+
+Phase 0
+4 / 22 standalone-revalidated
+[████░░░░░░░░░░░░░░░░] 18.18%
 ```
 
-## Current gate — P0-15
+Standalone-verified this run:
 
-P0-15 Asset Provenance / Rights Schema v1 is migrated with TypeScript contract, JSON Schema, focused validation tests and package export.
+- **P0-01** — repository structure is committed on `main`.
+- **P0-02** — root `README.md` links directly to `PROJECT_BIBLE.md`.
+- **P0-15** — provenance/rights contract is accepted from direct local contract evidence: strict TypeScript compile passed and focused P0-15 smoke validation passed 5 cases. Repository-wide CI remains a separate P0-20 gate and is not required redundantly for this contract item.
+- **P0-18** — ADR-008 through ADR-011 are now accepted/adapted in `docs/adr/`.
 
-Local validation already passed:
+## P0-15 evidence rule correction
+
+The previous checkpoint accidentally coupled P0-15 contract verification to P0-20 repository CI evidence. That creates an unnecessary deadlock and spends Actions minutes for redundant evidence. The corrected ownership is:
 
 ```text
-strict TypeScript compile: PASS
-P0-15 local smoke: PASS (5 cases)
+P0-15 provenance/rights contract
+  -> strict compile + focused contract tests
+
+P0-20 repository CI gate
+  -> GitHub Actions / migration / repository-wide release evidence
 ```
 
-The exact GitHub code/config state was inspected again this run. The available combined-status API still returns no legacy status contexts, while the available workflow-run connector only exposes pull-request-triggered runs and this project intentionally uses direct `main` pushes. The runtime environment also cannot resolve `github.com` for an independent clone/reinstall, so no new network-backed executable evidence can be manufactured safely.
+No unavailable Actions result has been claimed as a pass.
 
-This is an **evidence observation limitation**, not a test pass and not a code failure.
+## P0-03 / P0-04 current gate
 
-P0-15 remains **not VERIFIED**. P0-18 stays blocked.
+Added `infra/docker-compose.yml` with pinned local services:
+
+- PostgreSQL `17.6-alpine` with `pg_isready` health check;
+- Qdrant `v1.15.4` with HTTP health check;
+- named persistent volumes;
+- configurable local ports and an `infra/.env.example`.
+
+Static YAML parsing passes. Runtime validation does **not** pass yet because the current execution environment has no Docker CLI (`docker: command not found`). This is an environment/tooling limitation, not a service failure.
+
+Therefore:
+
+- P0-03 = `implemented-static-pass-runtime-boot-pending`
+- P0-04 = `implemented-static-pass-runtime-boot-pending`
+- P0-05 remains blocked until the local service gate is executable and green.
 
 ## GitHub Actions free-tier policy
 
-The main CI workflow remains one bounded validation job and does not run for progress/checkpoint/documentation-only commits. No additional Actions run was triggered in this checkpoint solely to obtain redundant evidence.
+Normal CI remains one bounded path-filtered job with concurrency cancellation. Documentation, ADR, progress and `infra/**` changes in this run do not trigger the current Actions workflow. No Actions rerun was spent on unchanged evidence.
 
 ## Next smallest task
 
-On the next run, first inspect whether exact direct-main CI evidence has become observable. If a genuine failure is available, repair P0-15/scaffold only. If a pass is available, promote P0-15 and begin P0-18. Do not rerun unchanged failures, and do not spend Actions minutes on documentation-only evidence.
+At the next run, first inspect whether Docker/runtime service validation is available. If available, run compose config/boot/health checks for PostgreSQL and Qdrant. If unavailable, keep P0-03/P0-04 blocked and do not begin P0-05.
