@@ -1,19 +1,19 @@
 # AI Local Footage Editor — Progress
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
-**Phase:** 0 — Foundation, Contracts and Reproducibility  
-**Current task:** verify P0-05 API health endpoint against the real PostgreSQL + Qdrant local stack
+**Phase:** 1 — Global Media Catalog + Immutable Ingest  
+**Current task:** audit the smallest Phase-1 immutable-ingest/stable-asset-identity item against the standalone repository before adding new implementation
 
 ```text
-Standalone: 21 / 162 = 12.96%
-Phase 0:    21 / 22  = 95.45%
+Standalone: 22 / 162 = 13.58%
+Phase 0:    22 / 22  = 100.00% COMPLETE
 ```
 
-Verified: P0-01, P0-02, P0-03, P0-04, P0-06, P0-07, P0-08, P0-09, P0-10, P0-11, P0-12, P0-13, P0-14, P0-15, P0-16, P0-17, P0-18, P0-19, P0-20, P0-21, P0-22.
+Phase 0 verified: P0-01 through P0-22.
 
 ## P0-03 / P0-04 local dependency runtime — VERIFIED
 
-The exact `main` HEAD `da97e43a5a93672e597d31bca79eff80ca5f8aba` completed GitHub Actions run `32765266590` (`AI Editor Local Stack Gate`) successfully. The job used real Docker Engine/Compose, pulled and started the repository's PostgreSQL and Qdrant services, then produced all required runtime assertions:
+Exact implementation HEAD `da97e43a5a93672e597d31bca79eff80ca5f8aba` passed local-stack run `32765266590`. Real PostgreSQL + Qdrant containers started and produced:
 
 ```text
 PASS: postgres is healthy
@@ -22,25 +22,36 @@ PASS: PostgreSQL readiness command succeeded
 PASS: local PostgreSQL + Qdrant runtime gate succeeded
 ```
 
-The run then removed both containers, volumes and the Compose network. Observable context: `ai-editor-local-stack/all = success`. This is real runtime evidence, not the verifier self-test and not an unavailable-runner substitute.
+## P0-05 API health endpoint — VERIFIED
 
-## P0-05 API health endpoint — IMPLEMENTED, RUNTIME GATE PENDING
+Implementation commit `7785d9262d0e664658bc859f09e845b627b3ce30` adds the standalone dependency-aware health surface without new package dependencies:
 
-The standalone API health surface is intentionally framework-light and adds no package dependency:
+- `GET /health/live` -> process liveness only.
+- `GET /health/ready` -> bounded concurrent PostgreSQL + Qdrant readiness checks.
+- dependency failure -> `503` with explicit dependency state.
+- deterministic local contract/failure tests and a real-stack verifier are included.
 
-- `GET /health/live` is process liveness only and returns `200 {"status":"ok"}`.
-- `GET /health/ready` probes PostgreSQL TCP reachability and Qdrant `/healthz` concurrently with bounded timeouts.
-- readiness returns `503` and names each unavailable dependency rather than claiming a false ready state.
-- non-GET methods fail with `405`; unknown routes return `404`; responses are `no-store` JSON.
-- `scripts/test-api-health.mjs` provides deterministic local contract/failure tests using ephemeral local fake dependencies.
-- `scripts/verify-api-health-runtime.sh` runs the same endpoint against the real Compose services.
+Exact implementation evidence:
 
-Local pre-push checks passed with Node syntax validation, shell syntax validation and `node scripts/test-api-health.mjs`. P0-05 remains unverified until the exact implementation commit passes the real dependency runtime gate.
+```text
+AI Editor Local Stack Gate run: 32766757833 / job 97557852001 / SUCCESS
+PASS: API liveness/readiness contract and fail-closed dependency behavior
+PASS: postgres is healthy
+PASS: qdrant HTTP health endpoint succeeded
+PASS: PostgreSQL readiness command succeeded
+PASS: local PostgreSQL + Qdrant runtime gate succeeded
+PASS: API /health/live returned 200 status=ok
+PASS: API /health/ready confirmed PostgreSQL + Qdrant dependencies
+```
 
-## Existing media/revision evidence preserved
+Normal CI run `32766757854` also passed on the same exact implementation commit: dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status all succeeded.
 
-P0-21/P0-22 remain verified: canonical v2 uses integer project frames + rational FPS and native source PTS/time base; the FFmpeg adapter preserves absolute PTS using `-copyts`; immutable R1 -> R2 rerender evidence and renderer-neutral boundaries are unchanged.
+## Phase-0 closure
 
-## Remaining Phase-0 gate
+Phase 0 now satisfies its Bible gate: canonical v2 timing/timeline compatibility, media-time authority, renderer-neutral boundary, style/delivery/provenance/model/telemetry contracts, migrations, structured logging, immutable revision/rerender evidence, PostgreSQL/Qdrant runtime, API health and repository quality gates are all backed by standalone evidence.
 
-Only P0-05 remains. Phase 1 must not begin until the API readiness endpoint proves `ready` while the real PostgreSQL + Qdrant stack is healthy on the exact implementation HEAD.
+The final closure commit is documentation/checkpoint-only. Workflows intentionally do not run for that commit because path filters exclude documentation, avoiding a redundant Actions run while preserving exact implementation evidence on `7785d926...`.
+
+## Next task
+
+Begin Phase 1 by auditing the first/smallest immutable-ingest requirement: stable asset identity separated from mutable storage location, content-addressed/idempotent ingest behavior, and normalized native stream metadata. Reuse/adapt verified migrated capabilities where they already exist; do not duplicate them and do not weaken canonical media-time rules.

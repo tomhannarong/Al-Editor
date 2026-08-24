@@ -5,7 +5,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Capability | Standalone target | State |
 |---|---|---|
 | PostgreSQL / Qdrant | `infra/docker-compose.yml` | verified real runtime on `da97e43`, run `32765266590` |
-| API health | `apps/api/health-server.mjs` + runtime verifier | implemented; real dependency gate pending |
+| API health | `apps/api/health-server.mjs` + runtime verifier | verified real dependencies on `7785d92`, run `32766757833` |
 | Review UI | `apps/studio` | verified |
 | Renderer boundary | typed renderer contract + ADR-012 | verified |
 | Migration framework | `db/migrations` + scripts | verified |
@@ -25,4 +25,4 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/FFprobe.
 
-Phase-0 remaining chain: P0-03/P0-04 are runtime verified. P0-05 now owns the final Phase-0 gate: `/health/live` must remain independent of dependency state and `/health/ready` must fail closed unless both PostgreSQL and Qdrant are reachable. Phase 1 remains gated until that exact-main runtime proof succeeds.
+Phase 0 is complete: 22/22 standalone items verified. The next mapping pass moves to Phase 1, beginning with stable asset identity, immutable/content-addressed ingest and normalized stream metadata. Existing migrated behavior must be adapted behind standalone contracts rather than duplicated or destructively rewritten.
