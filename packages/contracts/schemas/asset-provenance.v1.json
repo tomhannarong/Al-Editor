@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-editor.local/schemas/asset-provenance.v1.json",
+  "title": "Asset Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "provenanceId", "workspaceId", "subject", "source", "rights", "createdAt", "updatedAt"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "provenanceId": { "type": "string", "minLength": 1 },
+    "workspaceId": { "type": "string", "minLength": 1 },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "assetId", "checksumSha256"],
+      "properties": {
+        "kind": { "enum": ["original-media", "derived-media", "stock-media", "music", "sfx", "font", "template", "voice", "ai-generated-asset"] },
+        "assetId": { "type": "string", "minLength": 1 },
+        "checksumSha256": { "oneOf": [{ "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }, { "type": "null" }] }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin", "provider", "externalId", "sourceUri", "importedAt", "importedBy"],
+      "properties": {
+        "origin": { "type": "string", "minLength": 1 },
+        "provider": { "type": ["string", "null"] },
+        "externalId": { "type": ["string", "null"] },
+        "sourceUri": { "type": ["string", "null"] },
+        "importedAt": { "type": "string", "minLength": 1 },
+        "importedBy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "publicationReadiness", "commercialUseAllowed", "derivativeUseAllowed", "rightsHolder", "licenseEvidence", "consent", "attribution", "restrictions", "reviewedAt", "reviewedBy"],
+      "properties": {
+        "basis": { "enum": ["owned", "licensed", "permission", "public-domain", "generated", "unknown"] },
+        "publicationReadiness": { "enum": ["cleared", "restricted", "blocked", "unreviewed"] },
+        "commercialUseAllowed": { "type": ["boolean", "null"] },
+        "derivativeUseAllowed": { "type": ["boolean", "null"] },
+        "rightsHolder": { "type": ["string", "null"] },
+        "licenseEvidence": { "oneOf": [{ "type": "null" }, { "type": "object", "additionalProperties": false, "required": ["evidenceId", "licenseId", "licenseUri", "validFrom", "validUntil"], "properties": { "evidenceId": { "type": "string", "minLength": 1 }, "licenseId": { "type": ["string", "null"] }, "licenseUri": { "type": ["string", "null"] }, "validFrom": { "type": ["string", "null"] }, "validUntil": { "type": ["string", "null"] } } }] },
+        "consent": { "type": "object", "additionalProperties": false, "required": ["status", "evidenceId"], "properties": { "status": { "enum": ["not-applicable", "not-required", "obtained", "restricted", "unknown"] }, "evidenceId": { "type": ["string", "null"] } } },
+        "attribution": { "type": "object", "additionalProperties": false, "required": ["required", "text"], "properties": { "required": { "type": "boolean" }, "text": { "type": ["string", "null"] } } },
+        "restrictions": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "reviewedAt": { "type": ["string", "null"] },
+        "reviewedBy": { "type": ["string", "null"] }
+      }
+    },
+    "createdAt": { "type": "string", "minLength": 1 },
+    "updatedAt": { "type": "string", "minLength": 1 }
+  }
+}
