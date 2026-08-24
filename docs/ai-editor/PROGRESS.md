@@ -4,7 +4,7 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** obtain one exact-main GitHub CI evidence run for P0-15 after local validation passed; do not begin P0-18 before that gate
+**Current task:** wait for observable exact-main GitHub CI evidence for P0-15; do not begin P0-18 before that gate
 
 ## Overall historical verified baseline
 
@@ -19,7 +19,7 @@ This number is preserved as migration provenance from the former `creator-intell
 
 The new repository is authoritative. New implementation work is committed directly to `main`; pull requests are not required.
 
-Standalone revalidation remains `0 / 162` because P0-15 has passed local executable validation but still lacks observable exact-main GitHub CI evidence.
+Standalone revalidation remains `0 / 162` because P0-15 has passed local executable validation but exact direct-push GitHub Actions evidence is still not observable through the available GitHub connector.
 
 ## Phase progress baseline
 
@@ -45,30 +45,23 @@ P14 Distribution Outcomes         0/09                       0.0%  audit pending
 
 P0-15 Asset Provenance / Rights Schema v1 is migrated with TypeScript contract, JSON Schema, focused validation tests and package export.
 
-Local validation for the exact migrated contract passed on 2026-08-24:
+Local validation already passed:
 
 ```text
 strict TypeScript compile: PASS
 P0-15 local smoke: PASS (5 cases)
 ```
 
-The smoke cases cover a cleared owned asset, fail-closed unknown clearance, licensed-without-evidence rejection, obtained-consent-without-evidence rejection and malformed SHA-256 rejection.
+The exact GitHub code/config state was inspected again this run. The available combined-status API still returns no legacy status contexts, while the available workflow-run connector only exposes pull-request-triggered runs and this project intentionally uses direct `main` pushes. The runtime environment also cannot resolve `github.com` for an independent clone/reinstall, so no new network-backed executable evidence can be manufactured safely.
 
-P0-15 remains **not VERIFIED** until exact-main CI evidence is observable.
+This is an **evidence observation limitation**, not a test pass and not a code failure.
+
+P0-15 remains **not VERIFIED**. P0-18 stays blocked.
 
 ## GitHub Actions free-tier policy
 
-The main CI workflow has been reduced to one bounded validation job. It now:
-
-- runs only for code/config paths relevant to executable validation, plus manual dispatch;
-- does not run for progress/checkpoint/documentation-only commits;
-- uses concurrency cancellation so superseded runs are stopped;
-- uses an 8-minute hard timeout;
-- does not enable npm cache until a lockfile exists;
-- avoids matrices and heavyweight media integration in the ordinary commit loop.
-
-A concrete scaffold issue was found and repaired: the previous workflow enabled `actions/setup-node` npm caching even though the repository has no `package-lock.json`.
+The main CI workflow remains one bounded validation job and does not run for progress/checkpoint/documentation-only commits. No additional Actions run was triggered in this checkpoint solely to obtain redundant evidence.
 
 ## Next smallest task
 
-Inspect the single CI run associated with the optimized workflow/code state. If it fails, repair P0-15/scaffold only. If it passes, promote P0-15 and begin P0-18. Do not rerun unchanged failures and do not spend an Actions run for documentation-only evidence.
+On the next run, first inspect whether exact direct-main CI evidence has become observable. If a genuine failure is available, repair P0-15/scaffold only. If a pass is available, promote P0-15 and begin P0-18. Do not rerun unchanged failures, and do not spend Actions minutes on documentation-only evidence.
