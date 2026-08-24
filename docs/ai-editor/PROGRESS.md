@@ -4,48 +4,41 @@
 **Repository:** `tomhannarong/Al-Editor`  
 **Working branch:** `main`  
 **Current phase:** Phase 0 — Foundation, Contracts and Reproducibility  
-**Current task:** migrate/revalidate P0-09 Canonical timeline v2 while P0-03/P0-04 remain runtime-blocked
+**Current task:** P0-10 centralized media-time conversion/rounding migration; P0-03/P0-04 remain runtime-blocked
 
 ## Standalone revalidation
 
 ```text
-7 / 162 standalone-revalidated = 4.32%
-Phase 0: 7 / 22 = 31.82%
+8 / 162 standalone-revalidated = 4.94%
+Phase 0: 8 / 22 = 36.36%
 ```
 
-Standalone-verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-15 and P0-18.
+Standalone-verified: P0-01, P0-02, P0-06, P0-07, P0-08, P0-09, P0-15 and P0-18.
 
-## P0-08 Migration framework — VERIFIED
+## P0-09 Canonical timeline v2 — VERIFIED
 
-Added an append-only migration ledger and dependency-free deterministic migration tooling:
+Migrated the canonical timing boundary additively into `packages/contracts/src/canonical-timeline.contract.ts` while keeping an explicit compatibility-only v1 representation readable.
 
-- `db/migrations/0001_create_migration_ledger.sql`
-- `scripts/migrations/core.mjs`
-- `scripts/verify-migrations.mjs`
-- `scripts/test-migrations.mjs`
+V2 authority is integer `startFrame`/`endFrame` + rational project `frameRate`; source media selection is integer `sourceStartPts`/`sourceEndPts` + rational `sourceTimeBase`. V2 intentionally contains no authoritative decimal-second source fields. `ReadableCanonicalTimeline` accepts v1 or v2, and `isCanonicalTimelineV2` narrows without rewriting historical v1.
 
-The framework hashes exact SQL bytes with SHA-256, requires contiguous `NNNN_snake_case.sql` versions, rejects malformed/empty/BOM files, validates applied history in strict order, and fails closed on unknown database versions, name drift or checksum drift. Runtime SQL execution is intentionally deferred until P0-03 PostgreSQL readiness exists.
+Runtime validation rejects unsafe/non-integer frame and PTS values, invalid stream indexes/time bases/playback ratios, malformed manifests and invalid revision metadata. Rational values normalize deterministically by GCD.
 
 Local evidence before commit:
 
 ```text
-node scripts/test-migrations.mjs
-PASS: migration framework deterministic self-test succeeded (8 assertions/groups)
+tsc --strict --target ES2022 --module NodeNext --moduleResolution NodeNext --noEmit packages/contracts/src/canonical-timeline.contract.ts
+PASS
 
-node scripts/verify-migrations.mjs
-PASS: 1 migration discovered; checksum 5ac45698db2f4b8489cca6982c725775f8bf15bd32e1c537f6b5db157260a194
+compiled validator runtime assertions
+PASS: canonical timeline v2 runtime validator + v1 readability (4 assertions)
 ```
 
-`npm run validate` now includes migration verification and self-tests, so future repository-wide P0-20 CI verifies migration integrity without a separate job.
+A Vitest contract suite is committed for repository validation and covers valid 30000/1001 + native 1/90000 source timing, rational normalization, non-integer PTS rejection and legacy-v1 readability.
 
 ## Existing blockers
 
-P0-03/P0-04 remain runtime-pending; P0-05 remains their direct dependent. Independent Phase-0 work continues.
-
-## GitHub Actions free-tier policy
-
-This batch is one substantive commit. It may trigger at most one normal validation run and supersede any older in-progress run through concurrency cancellation. No manual rerun/dispatch is requested.
+P0-03/P0-04 remain runtime-pending and P0-05 remains directly blocked. No runtime success is claimed.
 
 ## Next smallest independent task
 
-P0-09 Canonical timeline schema v2 with rational FPS + native source PTS/time base.
+P0-10 centralized media-time conversion and rounding package with golden fixtures.

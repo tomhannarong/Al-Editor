@@ -2,34 +2,35 @@
 
 `tomhannarong/Al-Editor` is the only active implementation repository and `main` is the active implementation branch.
 
-## Migration rule
-
-Historical CIOS evidence remains migration provenance. Standalone verification uses evidence appropriate to each checklist item on `Al-Editor/main`; repository-wide CI is owned by P0-20. A blocked task blocks only direct dependents.
+Historical CIOS evidence remains migration provenance. Standalone verification uses evidence appropriate to each checklist item. A blocked task blocks only direct dependents.
 
 ## Architecture mapping
 
 | Bible concept | Standalone target | Migration state | Action |
 |---|---|---|---|
-| Repository/Bible authority | root + `docs/ai-editor/` | verified | Keep progress synchronized. |
-| PostgreSQL | `infra/docker-compose.yml` | static pass; runtime pending | Boot/health-check before P0-03. |
-| Qdrant | `infra/docker-compose.yml` | static pass; runtime pending | Boot/health-check before P0-04. |
-| HTTP/AI API | `apps/api` | blocked by P0-03/P0-04 | Add after runtime proof. |
+| PostgreSQL | `infra/docker-compose.yml` | static pass / runtime pending | Real boot required for P0-03. |
+| Qdrant | `infra/docker-compose.yml` | static pass / runtime pending | Real boot required for P0-04. |
+| HTTP/AI API | `apps/api` | blocked | Wait for P0-03/P0-04. |
 | Review UI | `apps/studio/index.html` | verified | Projection/human-review boundary only. |
-| Migration framework | `db/migrations/` + `scripts/migrations/` | verified | Append-only SQL, deterministic SHA-256 manifest, drift detection; runtime apply waits on PostgreSQL. |
-| Canonical timeline | timeline v1 compatibility + v2 | next | Migrate additively; preserve v1. |
-| Renderer boundary | `renderer-adapter.contract.ts` + ADR-012 | verified | Timing/path/compliance authority explicit. |
-| Preview renderer | FFmpeg v2 adapter | waiting P0-09/P0-10 | Do not duplicate time semantics. |
-| Provenance/rights | asset provenance v1 | verified | Fail closed on clearance claims. |
+| Database migrations | `db/migrations/` + `scripts/migrations/` | verified | Deterministic hash/drift framework; runtime apply waits on P0-03. |
+| Canonical timeline | `packages/contracts/src/canonical-timeline.contract.ts` | verified | V1 readable; v2 integer frames/rational FPS + native PTS/time base. |
+| Media-time authority | standalone package | next | Explicit conversions/rounding + golden fixtures. |
+| Renderer boundary | `packages/contracts/src/renderer-adapter.contract.ts` + ADR-012 | verified | Renderer never owns canonical timing. |
+| Preview renderer | FFmpeg v2 adapter | waiting P0-10 | Bind only after shared media-time authority. |
+| Provenance/rights | `packages/contracts` | verified | Fail-closed publication semantics. |
+
+## Critical timeline invariant
+
+Canonical project placement uses integer frames plus rational FPS. Native source selection uses integer PTS plus rational stream time base. Decimal seconds are derived presentation-only values.
 
 ## Current migration sequence
 
 ```text
-P0-03/P0-04 Postgres + Qdrant        STATIC PASS / RUNTIME PENDING
-P0-05 API health                     BLOCKED
-P0-06 Review UI                      VERIFIED
-P0-07 Renderer boundary              VERIFIED
-P0-08 Migration framework            VERIFIED
-P0-09 Canonical timeline v2          NEXT
+P0-03/P0-04     STATIC PASS / RUNTIME PENDING
+P0-05           BLOCKED BY P0-03/P0-04
+P0-06           VERIFIED
+P0-07           VERIFIED
+P0-08           VERIFIED
+P0-09           VERIFIED
+P0-10           NEXT INDEPENDENT ITEM
 ```
-
-The build loop commits directly to `main`, blocks only direct dependents and continues independent Phase-0 items.

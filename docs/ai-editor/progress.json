@@ -3,31 +3,12 @@
   "bibleRevision": "1.2-standalone-ai-editor",
   "repository": "tomhannarong/Al-Editor",
   "workingBranch": "main",
-  "migrationSource": {
-    "repository": "tomhannarong/creator-intelligence-os",
-    "branch": "agent/ai-local-footage-editor-bible-phase0",
-    "historicalVerified": 20,
-    "historicalChecklistItems": 162,
-    "historicalVerifiedPercent": 12.35
-  },
+  "migrationSource": {"repository":"tomhannarong/creator-intelligence-os","branch":"agent/ai-local-footage-editor-bible-phase0","historicalVerified":20,"historicalChecklistItems":162,"historicalVerifiedPercent":12.35},
   "status": "in-progress",
   "currentPhase": 0,
-  "currentTask": "p0-09-canonical-timeline-v2-migration",
-  "totals": {
-    "checklistItems": 162,
-    "historicalVerified": 20,
-    "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 7,
-    "standaloneRevalidatedPercent": 4.32
-  },
-  "phase0": {
-    "total": 22,
-    "historicalVerified": 20,
-    "historicalPartial": 2,
-    "standaloneRevalidated": 7,
-    "standaloneRevalidatedPercent": 31.82,
-    "state": "migrating-revalidating"
-  },
+  "currentTask": "p0-10-centralized-media-time-migration",
+  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":8,"standaloneRevalidatedPercent":4.94},
+  "phase0": {"total":22,"historicalVerified":20,"historicalPartial":2,"standaloneRevalidated":8,"standaloneRevalidatedPercent":36.36,"state":"migrating-revalidating"},
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","historicalStatus":"verified","standaloneStatus":"verified"},
     {"id":"P0-02","name":"Root README links PROJECT_BIBLE.md","historicalStatus":"verified","standaloneStatus":"verified"},
@@ -37,7 +18,7 @@
     {"id":"P0-06","name":"Review UI shell","historicalStatus":"verified","standaloneStatus":"verified-local-static-shell-contract"},
     {"id":"P0-07","name":"Renderer-neutral adapter boundary","historicalStatus":"verified","standaloneStatus":"verified-local-typed-boundary-contract"},
     {"id":"P0-08","name":"Migration framework","historicalStatus":"verified","standaloneStatus":"verified-local-deterministic-migration-framework"},
-    {"id":"P0-09","name":"Canonical timeline schema v2 with rational FPS + native source PTS/time base","historicalStatus":"verified","standaloneStatus":"migration-pending"},
+    {"id":"P0-09","name":"Canonical timeline schema v2 with rational FPS + native source PTS/time base","historicalStatus":"verified","standaloneStatus":"verified-local-v1-v2-contract-and-validator"},
     {"id":"P0-10","name":"Centralized media-time conversion and rounding package","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-11","name":"Style profile schema v1","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-12","name":"Job state machine","historicalStatus":"verified","standaloneStatus":"migration-pending"},
@@ -52,19 +33,5 @@
     {"id":"P0-21","name":"3–5 second canonical timeline v2 walking skeleton -> preview render","historicalStatus":"verified","standaloneStatus":"migration-pending"},
     {"id":"P0-22","name":"Edit creates new immutable v2 revision and rerenders","historicalStatus":"verified","standaloneStatus":"migration-pending"}
   ],
-  "rules": {
-    "targetRepositoryOnly": "tomhannarong/Al-Editor",
-    "directMainCommits": true,
-    "pullRequestsRequired": false,
-    "countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem": true,
-    "repositoryCIGateOwnedBy": "P0-20",
-    "doNotAdvanceDependentTaskAfterFailedGate": true,
-    "blockOnlyDirectDependents": true,
-    "continueIndependentPhaseItemsWhenPossible": true,
-    "noDestructiveTimelineV1Rewrite": true,
-    "hourlyContinuationReadsThisFileFirst": true,
-    "minimizeGitHubActions": true,
-    "preferLocalValidationBeforePush": true,
-    "documentationOnlyCommitsMustNotTriggerCI": true
-  }
+  "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }
