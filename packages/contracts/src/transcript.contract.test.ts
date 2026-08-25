@@ -42,7 +42,7 @@ describe('transcript revision contract', () => {
     correction.revisionKind = 'correction';
     correction.revisionId = 'transcript-revision:correction-v2';
     correction.parentRevisionId = 'transcript-revision:asr-v1';
-    correction.words[2] = { ...correction.words[2], text: 'เมืองน่าน' };
+    correction.words[2] = { ...correction.words[2]!, text: 'เมืองน่าน' };
 
     expect(validateTranscriptRevision(correction)).toEqual({ valid: true, errors: [] });
 
@@ -74,7 +74,7 @@ describe('transcript revision contract', () => {
 
   it('validates confidence as untrusted bounded model evidence', () => {
     const transcript = validTranscript();
-    transcript.words[0] = { ...transcript.words[0], confidence: 1.01 };
+    transcript.words[0] = { ...transcript.words[0]!, confidence: 1.01 };
     expect(validateTranscriptRevision(transcript).errors).toContain('words[0].confidence must be between 0 and 1 when present');
   });
 
