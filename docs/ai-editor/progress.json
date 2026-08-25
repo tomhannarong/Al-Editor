@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 2,
-  "currentTask": "phase2-scene-set-immutable-revision-persistence-audit",
+  "currentTask": "phase2-durable-scene-set-revision-persistence-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 37,
-    "standaloneRevalidatedPercent": 22.84
+    "standaloneRevalidated": 38,
+    "standaloneRevalidatedPercent": 23.46
   },
   "phase0": {
     "total": 22,
@@ -57,8 +57,8 @@
   },
   "phase2": {
     "total": 11,
-    "standaloneRevalidated": 1,
-    "standaloneRevalidatedPercent": 9.09,
+    "standaloneRevalidated": 2,
+    "standaloneRevalidatedPercent": 18.18,
     "state": "in-progress",
     "implementedSlices": [
       {
@@ -79,9 +79,31 @@
           "scene IDs are unique and scene intervals are ordered/non-overlapping",
           "proxies and keyframes are deliberately excluded from source-mapping authority"
         ]
+      },
+      {
+        "id": "P2-02-immutable-scene-set-revision-persistence-idempotency",
+        "implementationCommit": "c877b5e91f190ba490a1b6767759b4ff69268e02",
+        "repairCommit": "e221be705e2dbd69e14df5dbbca7b5b949f17c29",
+        "status": "verified",
+        "evidence": [
+          "packages/scene-library/src/index.ts",
+          "packages/scene-library/src/index.test.ts",
+          "AI Editor CI run 32845448729 job 97793963767: strict TypeScript passed; one new Vitest assertion failed and the unchanged run was not rerun",
+          "repair changed only the incorrect assertion from toBeInstanceOf(callback) to toThrow(SceneSetPersistenceInvariantError)",
+          "AI Editor CI run 32845521695 job 97794189378 success",
+          "ai-editor-ci/all success on exact repaired implementation head"
+        ],
+        "invariants": [
+          "revisionId is immutable persistence identity",
+          "semantic re-registration is idempotent with equivalent normalized rational time base",
+          "reuse of revisionId with changed source mapping, detector evidence, scene-set identity, creation evidence or intervals fails closed",
+          "new revisionIds for the same sceneSetId are additive and do not mutate prior evidence",
+          "stored and returned revisions are defensive copies",
+          "validation occurs before persistence side effects and no decimal time becomes authority"
+        ]
       }
     ],
-    "next": "audit the smallest immutable scene-set revision persistence/idempotency slice; preserve exact asset/stream/native-PTS mapping before any proxy or keyframe generation"
+    "next": "audit additive durable PostgreSQL scene-set revision persistence/readback with the same immutable conflict and native source-mapping semantics before proxy/keyframe generation"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
@@ -107,5 +129,19 @@
     {"id":"P0-21","name":"3–5 second canonical timeline v2 with preview render","standaloneStatus":"verified-local-real-ffmpeg-ffprobe-plus-exact-main-ci"},
     {"id":"P0-22","name":"Edit creates new immutable v2 revision and rerenders","standaloneStatus":"verified-local-r1-r2-real-rerender-plus-exact-main-ci"}
   ],
-  "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
+  "rules": {
+    "targetRepositoryOnly": "tomhannarong/Al-Editor",
+    "directMainCommits": true,
+    "pullRequestsRequired": false,
+    "countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem": true,
+    "repositoryCIGateOwnedBy": "P0-20",
+    "doNotAdvanceDependentTaskAfterFailedGate": true,
+    "blockOnlyDirectDependents": true,
+    "continueIndependentPhaseItemsWhenPossible": true,
+    "noDestructiveTimelineV1Rewrite": true,
+    "hourlyContinuationReadsThisFileFirst": true,
+    "minimizeGitHubActions": true,
+    "preferLocalValidationBeforePush": true,
+    "documentationOnlyCommitsMustNotTriggerCI": true
+  }
 }
