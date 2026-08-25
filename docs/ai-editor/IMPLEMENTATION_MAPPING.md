@@ -45,6 +45,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Confined bounded real proxy generation | `packages/proxy-library/src/generator.ts` + `infra/verify-real-proxy-generation-runtime.mts` | verified on `c2ac01b5`; CI `32875753663`; real FFmpeg/local-stack `32875753669` |
 | Versioned rebuildable keyframe derivative | `packages/contracts/src/keyframe-derivative.contract.ts` | verified on `59aa02ed`; CI `32881831056` job `97912919380` |
 | Immutable keyframe derivative revision persistence | `packages/keyframe-library/src/index.ts` | verified on `5ce040ae`; CI `32886479355` job `97928027272` |
+| PostgreSQL keyframe derivative revision persistence | migration 0005 + `packages/keyframe-library/src/postgres.ts` | verified on `bc8431df`; CI `32892664602` job `97947954572`; real PostgreSQL/local-stack `32892664650` job `97947954495` |
 
 ## Phase 1 closure
 
@@ -56,8 +57,8 @@ P2-01 through P2-03 establish versioned scene-set identity, immutable revision s
 
 P2-04 through P2-07 establish rebuildable/versioned proxy evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg generation without introducing proxy-time authority.
 
-P2-08 establishes versioned keyframe derivative evidence for exact scene-set/revision/scene lineage. P2-09 adds immutable in-memory revision persistence: semantic re-registration is idempotent after rational normalization; conflicting reuse of `revisionId` fails closed across source, frame, artifact, profile/toolchain and creation evidence; re-extraction requires a new revision. Exact implementation `5ce040aeb14953f126cfe9dee8b22e086dd06775` passed AI Editor CI `32886479355`, job `97928027272`.
+P2-08 and P2-09 establish versioned keyframe derivative evidence and immutable in-memory revision semantics. P2-10 adds real PostgreSQL durability: the revision references the exact persisted scene-set source tuple plus scene interval, ordered frame rows persist native `sourcePts`, exact semantic re-registration is idempotent, conflicting immutable evidence fails closed, and no seconds/milliseconds timing authority is introduced. Exact implementation `bc8431dffaf8a5c2d682b779557b46f004508e92` passed AI Editor CI `32892664602` and AI Editor Local Stack Gate `32892664650`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 9/11 verified.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 10/11 verified. The final Phase-2 slice is confined bounded real FFmpeg keyframe extraction from managed immutable originals, followed by Phase-2 gate reconciliation.
