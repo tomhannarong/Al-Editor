@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 2,
-  "currentTask": "phase2-durable-scene-set-revision-persistence-audit",
+  "currentTask": "phase2-next-smallest-proxy-derivative-contract-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 38,
-    "standaloneRevalidatedPercent": 23.46
+    "standaloneRevalidated": 39,
+    "standaloneRevalidatedPercent": 24.07
   },
   "phase0": {
     "total": 22,
@@ -34,100 +34,70 @@
     "standaloneRevalidatedPercent": 100,
     "state": "verified-complete",
     "implementedSlices": [
-      {"id":"P1-01-stable-media-identity-contract","implementationCommit":"c68362f7166aba1a33137b89474caa93a8cf163f","status":"verified","evidence":["packages/contracts/src/media-catalog.contract.ts","packages/contracts/src/media-catalog.contract.test.ts","ai-editor-ci/all success run 32772298608"]},
-      {"id":"P1-02-streaming-content-addressed-ingest","implementationCommit":"2cba444a4890b81eb565ca22687fd8e7c2d43a86","repairCommit":"b820fc809f99f438b8ff7b8681c6b983e26122ee","status":"verified","evidence":["packages/media-catalog/src/index.ts","packages/media-catalog/src/index.test.ts","run 32776611559 failed at typecheck and was not rerun unchanged","ai-editor-ci/all success run 32776732634"]},
-      {"id":"P1-03-normalized-ffprobe-native-stream-metadata","implementationCommit":"705e1dc8c1b348b5b2189f23a239969368434412","status":"verified","evidence":["packages/media-catalog/src/index.ts","packages/media-catalog/src/index.test.ts","ai-editor-ci/all success run 32782942297","validate job 97608726144 success"]},
-      {"id":"P1-04-postgresql-media-catalog-persistence","implementationCommit":"d74ae15817958df9279dffa6fcf9313a2f456fee","repairCommit":"7a93cb3fbf75a160d8b6de8456c4576c72bb3fdf","runtimeVerifierCommit":"b31086c30d9c8a6e949e661363236226bfad015e","runtimeRepairCommit":"303f01181aea935d0a87dd6472d48fcacbdce340","status":"verified","evidence":["db/migrations/0002_create_media_catalog.sql","packages/media-catalog/src/postgres.ts","packages/media-catalog/src/postgres.test.ts","ai-editor-ci/all success run 32788230358","AI Editor Local Stack Gate run 32793644151 job 97640306272 success","real PostgreSQL migration 0002 plus PostgresMediaCatalog round trip passed"]},
-      {"id":"P1-05-confined-local-file-ingest","implementationCommit":"f9d704b3ce5474fe035d40f598e35ea9d871fd2b","status":"verified","evidence":["packages/media-catalog/src/local-file-ingest.ts","packages/media-catalog/src/local-file-ingest.test.ts","AI Editor CI run 32799561623 job 97657612381 success"]},
-      {"id":"P1-06-managed-content-addressed-original-materialization","implementationCommit":"ab2ad1346c56012f6c464cbb0cf7f9f813d82f56","repairCommit":"1e7dbc208dc66d6e9080c3c104b00ce2a9104aed","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original.test.ts","AI Editor CI run 32803732504 failed at strict TypeScript because a test fixture used an obsolete schema literal; no unchanged rerun","AI Editor CI run 32803814061 job 97669865113 success"]},
-      {"id":"P1-07-shell-free-bounded-ffprobe-execution","implementationCommit":"e2bd213a3f8754d7345e0fd733c55497735bd1b7","status":"verified","evidence":["packages/media-catalog/src/ffprobe.ts","packages/media-catalog/src/ffprobe.test.ts","AI Editor CI run 32806749817 job 97678251159 success"]},
-      {"id":"P1-08-end-to-end-immutable-local-ingest-orchestration","implementationCommit":"79e4b427d474a9edbe4120d150bea1a61b89d940","repairCommit":"9fc35f46157b845fa6bfdaf18231cca22892dd49","status":"verified","evidence":["packages/media-catalog/src/immutable-ingest.ts","packages/media-catalog/src/immutable-ingest.test.ts","AI Editor CI run 32809256441 failed at strict TypeScript exactOptionalPropertyTypes and was not rerun unchanged","AI Editor CI run 32809327532 job 97685529112 success"]},
-      {"id":"P1-09-validated-ingest-before-durable-commit-boundary","implementationCommit":"71bd875abcd4b8eef6102f75159f71000955c3c5","status":"verified","evidence":["packages/media-catalog/src/durable-ingest.ts","packages/media-catalog/src/durable-ingest.test.ts","AI Editor CI run 32810880801 job 97689838481 success"]},
-      {"id":"P1-10-postgresql-atomic-validated-ingest-commit","implementationCommit":"f7f90f8ef48d6fb551de218e100ad8f1bf0f809e","status":"verified","evidence":["packages/media-catalog/src/postgres.ts","packages/media-catalog/src/postgres.test.ts","infra/verify-postgres-media-catalog-runtime.mts","AI Editor CI run 32815455806 job 97702665656 success","AI Editor Local Stack Gate run 32815455771 job 97702665269 success","real PostgreSQL verifier proved atomic validated-ingest commit and injected late stream-write rollback","exact statuses ai-editor-ci/all and ai-editor-local-stack/all success"]},
-      {"id":"P1-11-durable-filesystem-to-postgresql-ingest-composition","implementationCommit":"fea5a180e8a7b3b98d018d7bbc6f8aafd2845033","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts",".github/workflows/local-stack-gate.yml","AI Editor Local Stack Gate run 32819714185 job 97715097100 success","real runtime exercised ingestImmutableLocalMediaDurably with PostgresMediaCatalog","confined filesystem source, managed content-addressed original, deterministic ffprobe/native timing, atomic PostgreSQL commit and idempotent re-ingest all passed"]},
-      {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original-readonly.test.ts","AI Editor CI run 32824631728 job 97729857134 success","verified existing content changed to mode 0644 is reused at the same content path and restored to mode 0444"]},
-      {"id":"P1-13-real-ffprobe-managed-original-durable-runtime","implementationCommit":"eed8bc827e54bd85d5b4c7d63547a0cce39d9175","runtimeRepairCommit":"f9d843684c30a7e689d59ed4d936545af807225e","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts generates a real FFmpeg video+audio fixture and uses the default real ffprobe executable","AI Editor Local Stack Gate run 32829451776 failed because runner lacked ffmpeg/ffprobe and was not rerun unchanged","AI Editor Local Stack Gate run 32829569480 job 97744989990 success","real ffmpeg 6.1.1 and ffprobe 6.1.1 executed","real ffprobe native video/audio stream metadata persisted atomically to PostgreSQL and matched readback","idempotent re-ingest reused the same SHA-256 managed original and produced identical normalized streams"]},
-      {"id":"P1-14-phase1-gate-reconciliation","status":"verified","verificationCommit":"54223a0ded24d7f33cad9ec947936717f24c4db0","evidence":["PROJECT_BIBLE.md Phase 1 required proof: idempotent content-addressed assets, normalized stream metadata, native timing","P1-01/P1-02 prove SHA-256 identity and idempotent registration independent of mutable locations","P1-05/P1-06/P1-12 prove confined immutable-original ownership and verified read-only managed reuse","P1-03/P1-07/P1-13 prove strict normalized native PTS/rational time-base metadata through a real bounded ffprobe process","P1-04/P1-10/P1-11/P1-13 prove durable and atomic PostgreSQL persistence including real-media idempotent re-ingest","checkpoint 0050 records the phase-gate reconciliation; no redundant Actions run required"]}
-    ],
-    "closure": {
-      "gate": "idempotent content-addressed assets, normalized stream metadata, native timing",
-      "result": "verified",
-      "reason": "all explicit Phase-1 proof requirements map to exact standalone code/test/CI/runtime evidence; no new semantics are required for closure"
-    }
+      {"id":"P1-01-stable-media-identity-contract","implementationCommit":"c68362f7166aba1a33137b89474caa93a8cf163f","status":"verified","evidence":["ai-editor-ci/all success run 32772298608"]},
+      {"id":"P1-02-streaming-content-addressed-ingest","implementationCommit":"2cba444a4890b81eb565ca22687fd8e7c2d43a86","repairCommit":"b820fc809f99f438b8ff7b8681c6b983e26122ee","status":"verified","evidence":["ai-editor-ci/all success run 32776732634"]},
+      {"id":"P1-03-normalized-ffprobe-native-stream-metadata","implementationCommit":"705e1dc8c1b348b5b2189f23a239969368434412","status":"verified","evidence":["ai-editor-ci/all success run 32782942297 job 97608726144"]},
+      {"id":"P1-04-postgresql-media-catalog-persistence","implementationCommit":"d74ae15817958df9279dffa6fcf9313a2f456fee","repairCommit":"7a93cb3fbf75a160d8b6de8456c4576c72bb3fdf","runtimeVerifierCommit":"b31086c30d9c8a6e949e661363236226bfad015e","runtimeRepairCommit":"303f01181aea935d0a87dd6472d48fcacbdce340","status":"verified","evidence":["AI Editor Local Stack Gate run 32793644151 job 97640306272 success"]},
+      {"id":"P1-05-confined-local-file-ingest","implementationCommit":"f9d704b3ce5474fe035d40f598e35ea9d871fd2b","status":"verified","evidence":["AI Editor CI run 32799561623 job 97657612381 success"]},
+      {"id":"P1-06-managed-content-addressed-original-materialization","implementationCommit":"ab2ad1346c56012f6c464cbb0cf7f9f813d82f56","repairCommit":"1e7dbc208dc66d6e9080c3c104b00ce2a9104aed","status":"verified","evidence":["AI Editor CI run 32803814061 job 97669865113 success"]},
+      {"id":"P1-07-shell-free-bounded-ffprobe-execution","implementationCommit":"e2bd213a3f8754d7345e0fd733c55497735bd1b7","status":"verified","evidence":["AI Editor CI run 32806749817 job 97678251159 success"]},
+      {"id":"P1-08-end-to-end-immutable-local-ingest-orchestration","implementationCommit":"79e4b427d474a9edbe4120d150bea1a61b89d940","repairCommit":"9fc35f46157b845fa6bfdaf18231cca22892dd49","status":"verified","evidence":["AI Editor CI run 32809327532 job 97685529112 success"]},
+      {"id":"P1-09-validated-ingest-before-durable-commit-boundary","implementationCommit":"71bd875abcd4b8eef6102f75159f71000955c3c5","status":"verified","evidence":["AI Editor CI run 32810880801 job 97689838481 success"]},
+      {"id":"P1-10-postgresql-atomic-validated-ingest-commit","implementationCommit":"f7f90f8ef48d6fb551de218e100ad8f1bf0f809e","status":"verified","evidence":["AI Editor CI run 32815455806 job 97702665656 success","AI Editor Local Stack Gate run 32815455771 job 97702665269 success"]},
+      {"id":"P1-11-durable-filesystem-to-postgresql-ingest-composition","implementationCommit":"fea5a180e8a7b3b98d018d7bbc6f8aafd2845033","status":"verified","evidence":["AI Editor Local Stack Gate run 32819714185 job 97715097100 success"]},
+      {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["AI Editor CI run 32824631728 job 97729857134 success"]},
+      {"id":"P1-13-real-ffprobe-managed-original-durable-runtime","implementationCommit":"eed8bc827e54bd85d5b4c7d63547a0cce39d9175","runtimeRepairCommit":"f9d843684c30a7e689d59ed4d936545af807225e","status":"verified","evidence":["AI Editor Local Stack Gate run 32829569480 job 97744989990 success"]},
+      {"id":"P1-14-phase1-gate-reconciliation","verificationCommit":"54223a0ded24d7f33cad9ec947936717f24c4db0","status":"verified","evidence":["checkpoint 0050 maps Phase-1 gate to P1-01 through P1-13 exact evidence"]}
+    ]
   },
   "phase2": {
     "total": 11,
-    "standaloneRevalidated": 2,
-    "standaloneRevalidatedPercent": 18.18,
+    "standaloneRevalidated": 3,
+    "standaloneRevalidatedPercent": 27.27,
     "state": "in-progress",
     "implementedSlices": [
       {
         "id": "P2-01-versioned-scene-set-source-mapping-contract",
         "implementationCommit": "8759bc0437d672f4e63329fcc19b84172b9e433d",
         "status": "verified",
-        "evidence": [
-          "packages/contracts/src/scene-set.contract.ts",
-          "packages/contracts/src/scene-set.contract.test.ts",
-          "AI Editor CI run 32840639465 job 97779125483 success",
-          "ai-editor-ci/all success on exact implementation commit"
-        ],
-        "invariants": [
-          "scene-set schema and revision identity are explicit and versioned",
-          "each scene set binds to immutable sha256 asset identity plus stream identity/index",
-          "scene boundaries use safe-integer native sourceStartPts/sourceEndPts only",
-          "source rational time base remains authority; decimal seconds are absent",
-          "scene IDs are unique and scene intervals are ordered/non-overlapping",
-          "proxies and keyframes are deliberately excluded from source-mapping authority"
-        ]
+        "evidence": ["packages/contracts/src/scene-set.contract.ts","AI Editor CI run 32840639465 job 97779125483 success"]
       },
       {
         "id": "P2-02-immutable-scene-set-revision-persistence-idempotency",
         "implementationCommit": "c877b5e91f190ba490a1b6767759b4ff69268e02",
         "repairCommit": "e221be705e2dbd69e14df5dbbca7b5b949f17c29",
         "status": "verified",
+        "evidence": ["packages/scene-library/src/index.ts","AI Editor CI run 32845521695 job 97794189378 success"]
+      },
+      {
+        "id": "P2-03-postgresql-scene-set-revision-persistence",
+        "implementationCommit": "5c91fa9a4acf2ea23b198d3027142109d04cd630",
+        "runtimeRepairCommit": "7cf7b857bfef8585897f208f21cbbe50d723a34c",
+        "status": "verified",
         "evidence": [
-          "packages/scene-library/src/index.ts",
-          "packages/scene-library/src/index.test.ts",
-          "AI Editor CI run 32845448729 job 97793963767: strict TypeScript passed; one new Vitest assertion failed and the unchanged run was not rerun",
-          "repair changed only the incorrect assertion from toBeInstanceOf(callback) to toThrow(SceneSetPersistenceInvariantError)",
-          "AI Editor CI run 32845521695 job 97794189378 success",
-          "ai-editor-ci/all success on exact repaired implementation head"
+          "db/migrations/0003_create_scene_library.sql",
+          "packages/scene-library/src/postgres.ts",
+          "packages/scene-library/src/postgres.test.ts",
+          "AI Editor CI run 32852840324 job 97817616436 success",
+          "AI Editor Local Stack Gate run 32852840321 job 97817616179 failed because the new verifier reapplied already-applied migrations; unchanged run not rerun",
+          "repair 7cf7b857 reuses schema already migrated by the preceding media-catalog verifier",
+          "AI Editor Local Stack Gate run 32853149558 job 97818643421 success",
+          "ai-editor-local-stack/all success on exact repaired runtime head"
         ],
         "invariants": [
-          "revisionId is immutable persistence identity",
-          "semantic re-registration is idempotent with equivalent normalized rational time base",
-          "reuse of revisionId with changed source mapping, detector evidence, scene-set identity, creation evidence or intervals fails closed",
-          "new revisionIds for the same sceneSetId are additive and do not mutate prior evidence",
-          "stored and returned revisions are defensive copies",
-          "validation occurs before persistence side effects and no decimal time becomes authority"
+          "revisionId remains immutable durable identity",
+          "scene-set rows and ordered intervals are transactionally persisted",
+          "exact semantic re-registration is idempotent and conflicting revisionId reuse fails closed",
+          "durable source mapping references the existing immutable media asset/stream/index",
+          "source boundaries remain native safe-integer PTS plus normalized rational time base",
+          "no seconds or milliseconds columns become source authority"
         ]
       }
     ],
-    "next": "audit additive durable PostgreSQL scene-set revision persistence/readback with the same immutable conflict and native source-mapping semantics before proxy/keyframe generation"
+    "next": "audit the smallest rebuildable/versioned proxy derivative contract now that durable scene-set source mapping is verified; derivatives must reference scene-set revision/source authority rather than replace it"
   },
   "phase0Items": [
-    {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
-    {"id":"P0-02","name":"Root README links PROJECT_BIBLE.md","standaloneStatus":"verified"},
-    {"id":"P0-03","name":"PostgreSQL local stack","standaloneStatus":"verified-exact-main-run-32765266590-sha-da97e43"},
-    {"id":"P0-04","name":"Qdrant local stack","standaloneStatus":"verified-exact-main-run-32765266590-sha-da97e43"},
-    {"id":"P0-05","name":"API health endpoint","standaloneStatus":"verified-exact-main-runtime-run-32766757833-sha-7785d92"},
-    {"id":"P0-06","name":"Review UI shell","standaloneStatus":"verified-local-static-shell-contract"},
-    {"id":"P0-07","name":"Renderer-neutral adapter boundary","standaloneStatus":"verified-local-typed-boundary-contract"},
-    {"id":"P0-08","name":"Migration framework","standaloneStatus":"verified-local-deterministic-migration-framework"},
-    {"id":"P0-09","name":"Canonical timeline schema v2 with rational FPS + native source PTS/time base","standaloneStatus":"verified-local-v1-v2-contract-and-validator"},
-    {"id":"P0-10","name":"Centralized media-time conversion and rounding package","standaloneStatus":"verified-local-golden-media-time-authority"},
-    {"id":"P0-11","name":"Style profile schema v1","standaloneStatus":"verified-local-contract-schema-behavior"},
-    {"id":"P0-12","name":"Job state machine","standaloneStatus":"verified-local-leased-idempotent-state-machine"},
-    {"id":"P0-13","name":"Structured logging convention","standaloneStatus":"verified-local-privacy-minimized-log-contract"},
-    {"id":"P0-14","name":"Delivery profile schema v1","standaloneStatus":"verified-local-contract-schema-behavior"},
-    {"id":"P0-15","name":"Provenance/rights schema skeleton","standaloneStatus":"verified-local-contract-evidence"},
-    {"id":"P0-16","name":"Model/prompt/model-artifact registry convention","standaloneStatus":"verified-local-versioned-registry-contract-schema-behavior"},
-    {"id":"P0-17","name":"Cost/performance telemetry contract","standaloneStatus":"verified-local-stage-cost-performance-contract"},
-    {"id":"P0-18","name":"Bible ADR-008 through ADR-011 decisions accepted/adapted","standaloneStatus":"verified"},
-    {"id":"P0-19","name":"ADR template","standaloneStatus":"verified-local-adr-template-contract"},
-    {"id":"P0-20","name":"CI lint/type/test/migration gates","standaloneStatus":"verified-exact-main-run-32763513474-sha-dcfd194"},
-    {"id":"P0-21","name":"3–5 second canonical timeline v2 with preview render","standaloneStatus":"verified-local-real-ffmpeg-ffprobe-plus-exact-main-ci"},
-    {"id":"P0-22","name":"Edit creates new immutable v2 revision and rerenders","standaloneStatus":"verified-local-r1-r2-real-rerender-plus-exact-main-ci"}
+    {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},{"id":"P0-02","name":"Root README links PROJECT_BIBLE.md","standaloneStatus":"verified"},{"id":"P0-03","name":"PostgreSQL local stack","standaloneStatus":"verified-exact-main-run-32765266590-sha-da97e43"},{"id":"P0-04","name":"Qdrant local stack","standaloneStatus":"verified-exact-main-run-32765266590-sha-da97e43"},{"id":"P0-05","name":"API health endpoint","standaloneStatus":"verified-exact-main-runtime-run-32766757833-sha-7785d92"},{"id":"P0-06","name":"Review UI shell","standaloneStatus":"verified-local-static-shell-contract"},{"id":"P0-07","name":"Renderer-neutral adapter boundary","standaloneStatus":"verified-local-typed-boundary-contract"},{"id":"P0-08","name":"Migration framework","standaloneStatus":"verified-local-deterministic-migration-framework"},{"id":"P0-09","name":"Canonical timeline schema v2 with rational FPS + native source PTS/time base","standaloneStatus":"verified-local-v1-v2-contract-and-validator"},{"id":"P0-10","name":"Centralized media-time conversion and rounding package","standaloneStatus":"verified-local-golden-media-time-authority"},{"id":"P0-11","name":"Style profile schema v1","standaloneStatus":"verified-local-contract-schema-behavior"},{"id":"P0-12","name":"Job state machine","standaloneStatus":"verified-local-leased-idempotent-state-machine"},{"id":"P0-13","name":"Structured logging convention","standaloneStatus":"verified-local-privacy-minimized-log-contract"},{"id":"P0-14","name":"Delivery profile schema v1","standaloneStatus":"verified-local-contract-schema-behavior"},{"id":"P0-15","name":"Provenance/rights schema skeleton","standaloneStatus":"verified-local-contract-evidence"},{"id":"P0-16","name":"Model/prompt/model-artifact registry convention","standaloneStatus":"verified-local-versioned-registry-contract-schema-behavior"},{"id":"P0-17","name":"Cost/performance telemetry contract","standaloneStatus":"verified-local-stage-cost-performance-contract"},{"id":"P0-18","name":"Bible ADR-008 through ADR-011 decisions accepted/adapted","standaloneStatus":"verified"},{"id":"P0-19","name":"ADR template","standaloneStatus":"verified-local-adr-template-contract"},{"id":"P0-20","name":"CI lint/type/test/migration gates","standaloneStatus":"verified-exact-main-run-32763513474-sha-dcfd194"},{"id":"P0-21","name":"3–5 second canonical timeline v2 with preview render","standaloneStatus":"verified-local-real-ffmpeg-ffprobe-plus-exact-main-ci"},{"id":"P0-22","name":"Edit creates new immutable v2 revision and rerenders","standaloneStatus":"verified-local-r1-r2-real-rerender-plus-exact-main-ci"}
   ],
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",

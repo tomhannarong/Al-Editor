@@ -36,29 +36,26 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Managed-original read-only reuse guard | `managed-original.ts` + deterministic test | verified CI `32824631728`, job `97729857134` |
 | Real ffprobe durable ingest | real FFmpeg fixture + default ffprobe + PostgreSQL verifier | verified repaired runtime `32829569480`, job `97744989990` |
 | Phase-1 gate reconciliation | Bible Phase-1 proof mapped to P1-01..P1-13 evidence | verified on docs closure `54223a0d`; no redundant Actions run required |
-| Versioned scene-set source mapping | `packages/contracts/src/scene-set.contract.ts` | verified on `8759bc04`, CI run `32840639465`, job `97779125483`; immutable asset/stream identity + native integer PTS/rational time base, ordered non-overlapping scenes, no derivative authority |
-| Immutable scene-set revision persistence | `packages/scene-library/src/index.ts` | verified on repaired head `e221be70`; CI run `32845521695`, job `97794189378`; exact semantic re-registration idempotent, conflicting `revisionId` reuse fails closed, additive revisions preserve prior evidence, defensive copies |
+| Versioned scene-set source mapping | `packages/contracts/src/scene-set.contract.ts` | verified on `8759bc04`, CI `32840639465`, job `97779125483` |
+| Immutable scene-set revision persistence | `packages/scene-library/src/index.ts` | verified on repaired `e221be70`, CI `32845521695`, job `97794189378` |
+| PostgreSQL scene-set revision persistence | migration 0003 + `packages/scene-library/src/postgres.ts` | verified static CI `32852840324`, job `97817616436`; real PostgreSQL repaired runtime `32853149558`, job `97818643421`, exact `ai-editor-local-stack/all = success` |
 
 ## Phase 1 closure
 
-The explicit Phase-1 proof is complete:
-
-1. **Idempotent content-addressed assets** — SHA-256 byte identity is stable across moves/re-ingest and independent of mutable locations.
-2. **Immutable originals** — local paths are confined, managed copies are content-addressed and byte-verified, and every successful reuse restores the read-only guard.
-3. **Normalized stream metadata** — strict ffprobe normalization keeps native integer PTS plus rational stream time base as authority; decimal seconds are derived/non-authoritative.
-4. **Durability** — PostgreSQL commits validated asset/location/stream state atomically and rolls back injected late failures.
-5. **Real-media composition** — a real FFmpeg fixture flows through managed-original storage, the real bounded ffprobe executable and atomic PostgreSQL persistence, with idempotent re-ingest verified.
+The explicit Phase-1 proof remains complete: content-addressed identities are idempotent, originals are immutable/confined, ffprobe normalization preserves native PTS/rational time base, PostgreSQL durability is atomic, and real-media composition is verified.
 
 ## Phase 2 progress
 
-P2-01 establishes the dependency boundary for the scene library before any proxy or keyframe generation. A scene-set revision has explicit schema/revision/detector versioning and maps every scene interval to one immutable SHA-256 asset + stream identity/index using native integer PTS and a rational source time base. Decimal seconds/milliseconds, proxy paths and keyframe paths are deliberately absent from source-mapping authority.
+P2-01 establishes versioned scene-set identity and exact source mapping to one immutable asset/stream using native PTS + rational time base.
 
-P2-02 makes scene-set revisions immutable persistence evidence. `revisionId` reuse is accepted only when the complete immutable revision is semantically equal, including normalized rational source time base. Changed source mapping, detector evidence, creation evidence or scene intervals fail closed. New revisions for the same `sceneSetId` are additive, and callers receive defensive copies so stored evidence cannot be mutated indirectly.
+P2-02 establishes immutable scene-set revision semantics: exact semantic re-registration is idempotent, conflicting `revisionId` reuse fails closed, and new revisions are additive.
 
-The first P2-02 CI run `32845448729` failed one new test assertion after strict TypeScript passed; migration/contract gates were skipped. The assertion itself was repaired in `e221be705e2dbd69e14df5dbbca7b5b949f17c29` rather than rerunning unchanged code. Repaired CI run `32845521695`, job `97794189378`, passed all gates and published `ai-editor-ci/all = success`.
+P2-03 makes that evidence durable. Migration `0003_create_scene_library.sql` adds immutable scene-set revision rows plus ordered interval rows and references the existing media stream `(asset_id, stream_id, stream_index)` tuple. `PostgresSceneSetRevisionStore` validates before transaction side effects, normalizes rational time bases exactly, commits new revisions and intervals transactionally, and reads native PTS/rational mapping back without decimal-time authority.
 
-The next Phase-2 slice should audit durable PostgreSQL scene-set revision persistence/readback using the same immutable conflict semantics before proxy/keyframe generation.
+Implementation `5c91fa9a4acf2ea23b198d3027142109d04cd630` passed normal CI run `32852840324`, job `97817616436`. The first selective runtime `32852840321` failed because the new verifier reapplied migrations that the preceding verifier had already applied. No unchanged rerun was used. Repair `7cf7b857bfef8585897f208f21cbbe50d723a34c` reuses/asserts the migrated schema; local-stack run `32853149558`, job `97818643421`, then passed all real PostgreSQL/Qdrant/media/scene/API checks and published `ai-editor-local-stack/all = success`.
+
+The next Phase-2 slice should define the smallest rebuildable/versioned proxy derivative contract. Proxy/keyframe derivatives must reference immutable scene-set/source evidence and never become canonical timing authority.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 2/11 verified from the migrated checklist count.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 3/11 verified.
