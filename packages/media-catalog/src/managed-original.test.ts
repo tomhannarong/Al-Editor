@@ -138,7 +138,7 @@ describe('managed content-addressed original materialization', () => {
       allowedSourceRoot: sourceRoot,
       managedRoot,
       asset: {
-        schemaVersion: 'media-asset-identity/v1',
+        schemaVersion: '1.0',
         assetId: `sha256:${digest}`,
         contentDigest: { algorithm: 'sha256', hex: digest },
         byteSize: bytes.byteLength,
