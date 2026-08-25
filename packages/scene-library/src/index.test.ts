@@ -106,7 +106,7 @@ describe('immutable scene-set revision persistence', () => {
     const store = new InMemorySceneSetRevisionStore();
     expect(() => store.registerRevision(revision({
       scenes: [{ sceneId: 'bad', sourceStartPts: 100, sourceEndPts: 100 }],
-    }))).toBeInstanceOf(SceneSetPersistenceInvariantError);
+    }))).toThrow(SceneSetPersistenceInvariantError);
     expect(store.getRevision('scene-set-revision:001')).toBeUndefined();
   });
 });
