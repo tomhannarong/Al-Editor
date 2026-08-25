@@ -1,55 +1,48 @@
 # AI Local Footage Editor — Progress
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
-**Phase:** 2 — Scene Library, Proxies, Keyframes  
-**Current task:** Phase-2 gate reconciliation; do not advance until the Bible quality baseline has exact evidence
+**Phase:** 3 — Voice / Transcript Alignment  
+**Current task:** audit Phase 3 and select the smallest independent immutable voice/transcript alignment slice
 
 ```text
 Standalone verified: 47 / 162 = 29.01%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
-Phase 2:             11 / 11  = 100.00% implementation slices verified; gate reconciliation pending
+Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14.
 
-## Phase 2 verified slices
+## Phase 2 closure
 
-P2-01 through P2-10 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, confined bounded real FFmpeg proxy generation, versioned keyframe derivative evidence, immutable keyframe revision semantics, and real PostgreSQL keyframe durability.
+P2-01 through P2-11 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, confined bounded real FFmpeg proxy generation, versioned keyframe derivative evidence, immutable keyframe revision semantics, PostgreSQL keyframe durability and confined bounded real FFmpeg keyframe extraction.
 
-### P2-11 — confined shell-free bounded real FFmpeg keyframe extraction
+The Bible's remaining Phase-2 `quality baseline` requirement had no standalone evidence at the start of this run, so it was not inferred from historical documentation. Implementation `4fca4d89dae48d57e381420bea91b6d321efba41` adds a deterministic versioned scene-boundary benchmark using native integer PTS + rational stream time base only.
 
-Implementation `57f68a113d15f914d193cb53c9d4df70595eec4c`.
+The baseline fixture is intentionally narrow and auditable: labeled boundaries `90000, 180000, 270000, 360000`, detector boundaries `90000, 181000, 270000, 450000`, tolerance `1500` PTS at `1/90000`, producing precision `0.75`, recall `0.75`, F1 `0.75`. This is a baseline measurement, not an acceptance threshold. Source mapping mismatch and invalid/ambiguous benchmark boundaries fail closed.
 
-`packages/keyframe-library/src/generator.ts` now extracts keyframe image derivatives from a source that is realpath-confined under the supplied managed-original root. Direct symlink inputs fail closed. The generator reuses the existing shell-free `runBoundedProcess` boundary, validates a bounded frame fan-out before invoking FFmpeg, maps the exact source stream, and drives selection with integer native `sourcePts` values via `select=eq(pts\,...)` while retaining the revision's rational source time base as the interpretation authority.
+Exact evidence on implementation `4fca4d89dae48d57e381420bea91b6d321efba41`:
 
-Caller-controlled `revisionId`/`frameId` values never become filesystem path segments: the revision directory is a SHA-256 digest of the immutable revision ID and frame outputs are ordinal PNG paths. Every declared `artifactUri` must exactly match its confined deterministic output. FFmpeg writes to a unique temporary image and the final path is published without overwriting an existing revision artifact. Image bytes and URIs remain rebuildable derivative state only.
-
-`infra/verify-real-keyframe-extraction-runtime.mts` creates a real 30 fps H.264 MP4 with explicit `1/90000` track time base, verifies that native PTS `0` and `45000` exist, marks the managed input read-only, extracts those exact frames with real FFmpeg, and ffprobes both generated PNGs.
-
-Exact evidence on `57f68a113d15f914d193cb53c9d4df70595eec4c`:
-
-- AI Editor CI run `32899647168`, job `97970214362`: success
+- `packages/scene-library/src/quality-baseline.ts`
+- `packages/scene-library/src/quality-baseline.test.ts`
+- `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`
+- AI Editor CI run `32903495078`, job `97982328934`: success
 - TypeScript strict gate: success
 - Vitest behavioral gate: success
 - migration deterministic gate: success
 - contract/policy gates: success
 - `ai-editor-ci/all = success`
-- AI Editor Local Stack Gate run `32899647404`, job `97970215910`: success
-- PostgreSQL + Qdrant runtime: success
-- media catalog / durable ingest / scene / proxy / keyframe PostgreSQL verifier chain: success
-- real FFmpeg proxy + keyframe derivative generation: success
-- API health against real dependencies: success
-- `ai-editor-local-stack/all = success`
+
+The Phase-2 advancement proof is therefore complete: versioned scene sets, exact source mapping and a versioned deterministic quality baseline all have exact standalone evidence.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and Phase-2 exact scene/proxy/keyframe source lineage remain unchanged. Native PTS + rational stream time base remain source-time authority.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and Phase-2 scene/proxy/keyframe lineage remain unchanged. Native PTS + rational stream time base remain source-time authority.
 
 ## Validation / free-tier discipline
 
-The execution environment could not resolve `github.com`, so a local clone/test run was unavailable and was not claimed as a pass. The implementation was batched into one commit. That exact commit used one normal single-job CI run plus the already-selective single-job local-stack runtime gate; no matrix and no unchanged rerun were used. Proxy and keyframe real-media checks are consolidated into one derivative-generation step. The docs/checkpoint closure is path-filtered and must not trigger Actions.
+A local clone/test attempt was made before pushing, but the execution environment could not resolve `github.com`; that was not counted as a test pass or code failure. The quality baseline was batched into one substantive implementation commit and used one normal single-job CI run only. No PostgreSQL/Qdrant local-stack, FFmpeg runtime workflow, matrix or unchanged rerun was used because this deterministic evaluation slice did not require them.
 
 ## Next task
 
-Reconcile the Phase-2 Bible gate directly against `PROJECT_BIBLE.md`: versioned scene sets and exact source mapping already have exact evidence, but Phase 2 must not advance until the required **quality baseline** is mapped to exact standalone evidence. If that evidence is absent, implement the smallest deterministic quality-baseline contract/fixture needed before entering Phase 3.
+Audit Phase 3 directly against the Bible and historical mapping, then implement the smallest independent missing contract in phase order. The first candidate is a versioned immutable transcript/ASR revision contract with stable word timing and explicit correction lineage; do not introduce decimal-time authority or a hidden parallel workflow.

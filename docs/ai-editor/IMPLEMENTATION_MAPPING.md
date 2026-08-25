@@ -47,23 +47,22 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Immutable keyframe derivative revision persistence | `packages/keyframe-library/src/index.ts` | verified on `5ce040ae`; CI `32886479355` job `97928027272` |
 | PostgreSQL keyframe derivative revision persistence | migration 0005 + `packages/keyframe-library/src/postgres.ts` | verified on `bc8431df`; CI `32892664602` job `97947954572`; real PostgreSQL/local-stack `32892664650` job `97947954495` |
 | Confined bounded real keyframe extraction | `packages/keyframe-library/src/generator.ts` + `infra/verify-real-keyframe-extraction-runtime.mts` | verified on `57f68a11`; CI `32899647168` job `97970214362`; real FFmpeg/local-stack `32899647404` job `97970215910` |
+| Scene-boundary quality baseline | `packages/scene-library/src/quality-baseline.ts` + versioned fixture | verified on `4fca4d89`; CI `32903495078` job `97982328934`; baseline P/R/F1 = 0.75/0.75/0.75 |
 
 ## Phase 1 closure
 
 Phase 1 remains complete: content-addressed identities are idempotent, originals immutable/confined, ffprobe normalization preserves native PTS/rational time base, PostgreSQL durability is atomic and real-media composition is verified.
 
-## Phase 2 progress
+## Phase 2 closure
 
 P2-01 through P2-03 establish versioned scene-set identity, immutable revision semantics and real PostgreSQL durability with exact native source mapping.
 
 P2-04 through P2-07 establish rebuildable/versioned proxy evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg generation without introducing proxy-time authority.
 
-P2-08 through P2-10 establish versioned keyframe derivative evidence, immutable revision semantics and real PostgreSQL durability with exact scene/source native-PTS lineage.
+P2-08 through P2-11 establish versioned keyframe evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg extraction with exact scene/source native-PTS lineage.
 
-P2-11 adds confined, shell-free, bounded real FFmpeg keyframe extraction. Managed-original inputs are realpath-confined, symlink inputs fail closed, frame fan-out is bounded, exact native integer `sourcePts` drive selection, caller IDs do not become filesystem path segments, and image artifacts publish only at deterministic confined URIs without overwriting existing immutable revision artifacts. Exact implementation `57f68a113d15f914d193cb53c9d4df70595eec4c` passed AI Editor CI `32899647168` and AI Editor Local Stack Gate `32899647404`.
-
-All 11 planned Phase-2 implementation slices now have standalone verification. Phase 2 is **not yet advanced**: the Bible's required proof also names a `quality baseline`, and gate reconciliation must map that requirement to exact evidence or implement the smallest missing deterministic baseline before Phase 3 begins.
+The remaining Bible gate requirement, `quality baseline`, is now backed by `packages/scene-library/src/quality-baseline.ts`, its deterministic tests and `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`. Exact implementation `4fca4d89dae48d57e381420bea91b6d321efba41` passed AI Editor CI `32903495078` / job `97982328934`. The baseline is versioned, source-bound and uses native integer PTS plus rational stream time base only. Phase 2 is therefore verified complete.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 implementation slices are 11/11 verified; Phase-2 gate reconciliation remains pending.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Current phase is Phase 3 — Voice / Transcript Alignment.
