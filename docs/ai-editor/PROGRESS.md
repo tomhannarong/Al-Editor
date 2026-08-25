@@ -1,50 +1,49 @@
 # AI Local Footage Editor — Progress
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
-**Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** final Phase-1 gate reconciliation and last-item audit
+**Phase:** 2 — Scene Library, Proxies, Keyframes  
+**Current task:** audit the smallest versioned scene-set contract with exact source mapping before derivative generation
 
 ```text
-Standalone verified: 35 / 162 = 21.60%
+Standalone verified: 36 / 162 = 22.22%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1:             13 / 14  = 92.86% verified
+Phase 1:             14 / 14  = 100.00% COMPLETE
 ```
 
-Phase 0 verified: P0-01 through P0-22.
+Phase 0 remains verified: P0-01 through P0-22.
 
-## Phase 1 verified slices
+## Phase 1 closure
 
-P1-01 through P1-12 retain their previously recorded exact implementation/runtime evidence and contracts. The newly verified slice is below.
+The Bible's Phase-1 gate requires **idempotent content-addressed assets, normalized stream metadata, and native timing**. The accumulated standalone evidence now covers the gate without adding a synthetic capability solely to fill the final checklist slot.
 
-### P1-13 — real ffprobe managed-original durable runtime proof
+- Stable asset identity is SHA-256 byte-derived and separate from mutable storage location (P1-01/P1-02).
+- Confined local ingest plus content-addressed managed originals prove immutable-original ownership; verified reuse restores the read-only guard before location publication (P1-05/P1-06/P1-12).
+- Native stream normalization accepts integer PTS plus rational stream time base only; decimal seconds remain non-authoritative (P1-03).
+- Media process execution is shell-free, bounded and fail-closed (P1-07).
+- Filesystem ingest, managed-original publication and native metadata validation compose without a second identity/timing implementation (P1-08/P1-09).
+- PostgreSQL persistence is durable and atomic, including injected late-failure rollback (P1-04/P1-10).
+- Real runtime composition proves filesystem -> managed SHA-256 original -> PostgreSQL, including idempotent re-ingest (P1-11).
+- A real generated FFmpeg fixture is inspected by the default real `ffprobe` executable and its normalized native video/audio metadata is committed atomically to PostgreSQL; re-ingest reuses the same managed original and reproduces identical normalized streams (P1-13).
 
-Implementation/runtime verifier commit `eed8bc827e54bd85d5b4c7d63547a0cce39d9175` upgrades the existing durable-ingest runtime verifier from a deterministic ffprobe executor to a real-media path. The verifier generates a small video+audio MP4 with FFmpeg, runs the normal durable ingest pipeline with the default real `ffprobe` executable, verifies the byte-identical managed SHA-256 original, native video/audio metadata, PostgreSQL readback, and idempotent re-ingest.
+### P1-14 — Phase-1 gate reconciliation
 
-The first selective runtime run `32829451776`, job `97744632786`, failed after PostgreSQL/Qdrant and the lower-level PostgreSQL verifier had passed because the hosted runner did not contain FFmpeg tooling: `spawn ffmpeg ENOENT`. This was treated as a runtime-tooling/config failure, not an ingest code pass/failure, and the unchanged run was not rerun.
+Verified by reconciliation of the exact evidence above against `PROJECT_BIBLE.md` section 5. No new code or redundant GitHub Actions run is required: the closure item is evidence bookkeeping, not a new product capability.
 
-Repair commit `f9d843684c30a7e689d59ed4d936545af807225e` adds FFmpeg installation only to the selective local-stack gate. The repaired run installed `ffmpeg 6.1.1-3ubuntu5` and `ffprobe 6.1.1-3ubuntu5`, then passed the complete real-media proof.
+Key runtime evidence retained:
 
-Exact repaired evidence:
+- AI Editor Local Stack Gate `32829569480`, job `97744989990`: real FFmpeg/ffprobe + PostgreSQL/Qdrant + durable real-media ingest success.
+- AI Editor Local Stack Gate `32815455771`, job `97702665269`: atomic PostgreSQL validated-ingest commit and rollback success.
+- AI Editor CI `32824631728`, job `97729857134`: managed-original read-only reuse guard success.
+- Earlier exact CI/runtime evidence for P1-01 through P1-11 remains recorded in `progress.json`, implementation mapping and immutable checkpoints.
 
-- AI Editor Local Stack Gate run `32829569480`
-- job `97744989990`
-- Docker runtime: success
-- PostgreSQL + Qdrant real health: success
-- FFmpeg/ffprobe runtime tools: success
-- PostgreSQL migration/catalog atomic commit+rollback verifier: success
-- real-media durable ingest verifier: success
-- API health against real PostgreSQL/Qdrant: success
-- cleanup/status publication: success
-- exact status: **`ai-editor-local-stack/all = success`** on `f9d84368...`
+## Preserved contracts
 
-The real-media verifier proves generated FFmpeg bytes flow through confined source hashing → verified content-addressed managed original → real bounded `ffprobe` → normalized native integer PTS/rational time-base metadata → atomic PostgreSQL persistence. Re-ingesting unchanged bytes reuses the same SHA-256 managed path and produces identical normalized stream metadata.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style profile, delivery profile, structured logging, provenance/rights, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Stable media identity remains content-derived; native integer PTS plus rational stream time base remain the source timing authority.
 
 ## Validation / free-tier discipline
 
-This run intentionally modified only the selective runtime verifier, followed by one workflow/tooling repair after a concrete missing-executable failure. No normal CI, matrix, broad FFmpeg suite or unchanged rerun was used. The second selective run is the only passing runtime confidence gate for P1-13.
-
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style profile, delivery profile, structured logging, provenance/rights, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Stable asset identity remains SHA-256 byte-derived; storage URI remains mutable state; native integer PTS plus rational stream time base remain source timing authority.
+This closure is documentation/evidence reconciliation only. The container still cannot resolve `github.com`, so no local clone pass is claimed. No Actions run is needed because every Phase-1 proof requirement already has exact static/CI/runtime evidence and the repository workflow path filters exclude checkpoint-only closure changes.
 
 ## Next task
 
-Perform the final Phase-1 gate reconciliation against the Bible's explicit proof requirements: idempotent content-addressed assets, normalized stream metadata, native timing and immutable-original ownership. Audit the remaining checklist item without inventing new semantics. If all required evidence maps cleanly, close Phase 1 explicitly before starting the smallest Phase-2 scene-library capability.
+Start Phase 2 with the smallest dependency-correct slice: audit and define a **versioned scene-set identity/source-mapping contract**. Each scene must reference the immutable asset + stream and exact native PTS/rational time base; scene-set revisions must be immutable/versioned. Do not generate proxies or keyframes until that mapping contract is explicit.

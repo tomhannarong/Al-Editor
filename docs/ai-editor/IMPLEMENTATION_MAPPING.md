@@ -22,30 +22,31 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | CI quality gate | single-job named-stage workflow + observable status | verified |
 | Canonical v2 preview | `packages/preview-renderer` + manual real FFmpeg/FFprobe fixture | verified; `-copyts` preserves absolute native PTS |
 | Immutable rerender revision | `packages/timeline-revision` + manual R1/R2 real-media fixture | verified |
-| Stable media asset identity | `packages/contracts/src/media-catalog.contract.ts` | verified on `c68362f`, CI run `32772298608` |
-| Mutable media storage location boundary | media-catalog contract + `packages/media-catalog/src/index.ts` | verified; rebinding does not change byte-derived identity |
-| Streaming content-addressed ingest | `packages/media-catalog/src/index.ts` | verified on repaired exact head `b820fc8`, CI run `32776732634` |
-| Idempotent asset registration | `InMemoryMediaCatalog.registerAsset` + ingest tests | verified deterministic semantics; first-ingest evidence preserved |
-| Normalized native stream metadata contract | `packages/contracts/src/media-catalog.contract.ts` | verified contract |
-| ffprobe native stream normalization/persistence | `packages/media-catalog/src/index.ts` | verified on `705e1dc8`, CI run `32782942297` |
-| Durable PostgreSQL media-catalog schema | `db/migrations/0002_create_media_catalog.sql` | verified against real PostgreSQL on run `32793644151` |
-| PostgreSQL media-catalog adapter | `packages/media-catalog/src/postgres.ts` + runtime verifier | verified real round-trip on `303f0118`, run `32793644151`, job `97640306272` |
-| Confined local-file ingest boundary | `packages/media-catalog/src/local-file-ingest.ts` | verified on `f9d704b3`, CI run `32799561623`, job `97657612381` |
-| Managed content-addressed original storage | `packages/media-catalog/src/managed-original.ts` | verified on repaired head `1e7dbc2`, CI run `32803814061`, job `97669865113` |
-| Shell-free bounded ffprobe execution | `packages/media-catalog/src/ffprobe.ts` | verified on `e2bd213a`, CI run `32806749817`, job `97678251159` |
-| End-to-end immutable local ingest coordinator | `packages/media-catalog/src/immutable-ingest.ts` | verified on repaired head `9fc35f46`, CI run `32809327532`, job `97685529112` |
-| Validated ingest before durable commit boundary | `packages/media-catalog/src/durable-ingest.ts` | verified on `71bd875a`, CI run `32810880801`, job `97689838481` |
-| PostgreSQL atomic validated-ingest commit | `packages/media-catalog/src/postgres.ts` + `infra/verify-postgres-media-catalog-runtime.mts` | verified on `f7f90f8e`; CI run `32815455806`, job `97702665656`; real local-stack run `32815455771`, job `97702665269` |
-| Durable filesystem-to-PostgreSQL ingest composition | `infra/verify-postgres-durable-ingest-runtime.mts` + selective local-stack workflow | verified on `fea5a180`; real local-stack run `32819714185`, job `97715097100` |
-| Managed-original read-only invariant on reuse | `packages/media-catalog/src/managed-original.ts` + `managed-original-readonly.test.ts` | verified on `58432e1f`; CI run `32824631728`, job `97729857134`; every successful verified reuse restores mode `0444` before location publication/return |
-| Real ffprobe managed-original durable runtime | `infra/verify-postgres-durable-ingest-runtime.mts` + selective local-stack workflow | verified on implementation `eed8bc82`, workflow repair `f9d84368`; run `32829569480`, job `97744989990`; generated FFmpeg fixture -> verified SHA-256 managed original -> real ffprobe native video/audio metadata -> atomic PostgreSQL persistence -> idempotent re-ingest |
+| Stable media asset identity | `packages/contracts/src/media-catalog.contract.ts` | verified on `c68362f`, CI `32772298608` |
+| Streaming content-addressed ingest | `packages/media-catalog/src/index.ts` | verified on repaired `b820fc8`, CI `32776732634` |
+| Native ffprobe normalization | `packages/media-catalog/src/index.ts` | verified on `705e1dc8`, CI `32782942297` |
+| PostgreSQL media catalog | migration 0002 + `packages/media-catalog/src/postgres.ts` | verified real round-trip run `32793644151`, job `97640306272` |
+| Confined local-file ingest | `packages/media-catalog/src/local-file-ingest.ts` | verified CI `32799561623`, job `97657612381` |
+| Managed immutable original | `packages/media-catalog/src/managed-original.ts` | verified repaired CI `32803814061`, job `97669865113` |
+| Shell-free bounded ffprobe | `packages/media-catalog/src/ffprobe.ts` | verified CI `32806749817`, job `97678251159` |
+| Immutable local ingest coordinator | `packages/media-catalog/src/immutable-ingest.ts` | verified repaired CI `32809327532`, job `97685529112` |
+| Validated-before-durable boundary | `packages/media-catalog/src/durable-ingest.ts` | verified CI `32810880801`, job `97689838481` |
+| PostgreSQL atomic validated ingest | `packages/media-catalog/src/postgres.ts` + runtime verifier | verified CI `32815455806`; real runtime `32815455771`, job `97702665269` |
+| Durable filesystem -> PostgreSQL composition | `infra/verify-postgres-durable-ingest-runtime.mts` | verified real runtime `32819714185`, job `97715097100` |
+| Managed-original read-only reuse guard | `managed-original.ts` + deterministic test | verified CI `32824631728`, job `97729857134` |
+| Real ffprobe durable ingest | real FFmpeg fixture + default ffprobe + PostgreSQL verifier | verified repaired runtime `32829569480`, job `97744989990` |
+| Phase-1 gate reconciliation | Bible Phase-1 proof mapped to P1-01..P1-13 evidence | verified; no redundant Actions run required |
 
-PostgreSQL persistence preserves the authority boundary: `asset_id` is SHA-256 byte identity, storage URI is mutable location state, stream replacement/validated ingest are transactional, and only native integer PTS plus rational time-base columns represent source timing. Decimal seconds/milliseconds are absent from the durable schema.
+## Phase 1 closure
 
-Local-file ingest and managed-original materialization enforce path confinement, stable source snapshots, content-addressed managed paths, byte verification and read-only managed originals before metadata processing. The ffprobe process boundary remains shell-free and bounded.
+The explicit Phase-1 proof is complete:
 
-P1-08 composes the filesystem/media primitives without creating a second identity or timing implementation. P1-09 ensures no durable callback is possible until deterministic media validation succeeds. P1-10 provides atomic PostgreSQL commit/rollback. P1-11 proves those layers against a real filesystem and PostgreSQL. P1-12 restores the managed-original read-only guard on every verified reuse. P1-13 removes the final mocked-media-process gap from that runtime composition by proving the managed original is inspected by a real ffprobe executable before normalized native metadata is committed.
+1. **Idempotent content-addressed assets** — SHA-256 byte identity is stable across moves/re-ingest and independent of mutable locations.
+2. **Immutable originals** — local paths are confined, managed copies are content-addressed and byte-verified, and every successful reuse restores the read-only guard.
+3. **Normalized stream metadata** — strict ffprobe normalization keeps native integer PTS plus rational stream time base as authority; decimal seconds are derived/non-authoritative.
+4. **Durability** — PostgreSQL commits validated asset/location/stream state atomically and rolls back injected late failures.
+5. **Real-media composition** — a real FFmpeg fixture flows through managed-original storage, the real bounded ffprobe executable and atomic PostgreSQL persistence, with idempotent re-ingest verified.
 
-Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/ffprobe.
+Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior are unchanged.
 
-Phase 0 is complete: 22/22 standalone items verified. Phase 1 is now 13/14 verified. The next run should reconcile the final Phase-1 checklist item directly against the Bible's explicit phase gate before any Phase-2 derivative capability is started.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. The next implementation target is the smallest Phase-2 **versioned scene-set identity/source-mapping contract**; proxies/keyframes remain downstream derivatives and must not precede exact immutable asset/stream/native-PTS mapping.

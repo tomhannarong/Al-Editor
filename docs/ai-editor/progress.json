@@ -11,14 +11,14 @@
     "historicalVerifiedPercent": 12.35
   },
   "status": "in-progress",
-  "currentPhase": 1,
-  "currentTask": "phase1-final-gate-reconciliation-and-last-item-audit",
+  "currentPhase": 2,
+  "currentTask": "phase2-smallest-versioned-scene-set-contract-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 35,
-    "standaloneRevalidatedPercent": 21.6
+    "standaloneRevalidated": 36,
+    "standaloneRevalidatedPercent": 22.22
   },
   "phase0": {
     "total": 22,
@@ -30,13 +30,13 @@
   },
   "phase1": {
     "total": 14,
-    "standaloneRevalidated": 13,
-    "standaloneRevalidatedPercent": 92.86,
-    "state": "in-progress",
+    "standaloneRevalidated": 14,
+    "standaloneRevalidatedPercent": 100,
+    "state": "verified-complete",
     "implementedSlices": [
       {"id":"P1-01-stable-media-identity-contract","implementationCommit":"c68362f7166aba1a33137b89474caa93a8cf163f","status":"verified","evidence":["packages/contracts/src/media-catalog.contract.ts","packages/contracts/src/media-catalog.contract.test.ts","ai-editor-ci/all success run 32772298608"]},
       {"id":"P1-02-streaming-content-addressed-ingest","implementationCommit":"2cba444a4890b81eb565ca22687fd8e7c2d43a86","repairCommit":"b820fc809f99f438b8ff7b8681c6b983e26122ee","status":"verified","evidence":["packages/media-catalog/src/index.ts","packages/media-catalog/src/index.test.ts","run 32776611559 failed at typecheck and was not rerun unchanged","ai-editor-ci/all success run 32776732634"]},
-      {"id":"P1-03-normalized-ffprobe-native-stream-metadata","implementationCommit":"705e1dc8c1b348b5b2189f23a239969368434412","status":"verified","evidence":["packages/media-catalog/src/index.ts","packages/media-catalog/src/index.test.ts","ai-editor-ci/all success run 32782942297","validate job 97608726144 success"],"invariants":["native startPts/durationPts plus rational timeBase remain timing authority","ffprobe decimal seconds are ignored","malformed or unsafe timing fails closed"]},
+      {"id":"P1-03-normalized-ffprobe-native-stream-metadata","implementationCommit":"705e1dc8c1b348b5b2189f23a239969368434412","status":"verified","evidence":["packages/media-catalog/src/index.ts","packages/media-catalog/src/index.test.ts","ai-editor-ci/all success run 32782942297","validate job 97608726144 success"]},
       {"id":"P1-04-postgresql-media-catalog-persistence","implementationCommit":"d74ae15817958df9279dffa6fcf9313a2f456fee","repairCommit":"7a93cb3fbf75a160d8b6de8456c4576c72bb3fdf","runtimeVerifierCommit":"b31086c30d9c8a6e949e661363236226bfad015e","runtimeRepairCommit":"303f01181aea935d0a87dd6472d48fcacbdce340","status":"verified","evidence":["db/migrations/0002_create_media_catalog.sql","packages/media-catalog/src/postgres.ts","packages/media-catalog/src/postgres.test.ts","ai-editor-ci/all success run 32788230358","AI Editor Local Stack Gate run 32793644151 job 97640306272 success","real PostgreSQL migration 0002 plus PostgresMediaCatalog round trip passed"]},
       {"id":"P1-05-confined-local-file-ingest","implementationCommit":"f9d704b3ce5474fe035d40f598e35ea9d871fd2b","status":"verified","evidence":["packages/media-catalog/src/local-file-ingest.ts","packages/media-catalog/src/local-file-ingest.test.ts","AI Editor CI run 32799561623 job 97657612381 success"]},
       {"id":"P1-06-managed-content-addressed-original-materialization","implementationCommit":"ab2ad1346c56012f6c464cbb0cf7f9f813d82f56","repairCommit":"1e7dbc208dc66d6e9080c3c104b00ce2a9104aed","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original.test.ts","AI Editor CI run 32803732504 failed at strict TypeScript because a test fixture used an obsolete schema literal; no unchanged rerun","AI Editor CI run 32803814061 job 97669865113 success"]},
@@ -45,10 +45,16 @@
       {"id":"P1-09-validated-ingest-before-durable-commit-boundary","implementationCommit":"71bd875abcd4b8eef6102f75159f71000955c3c5","status":"verified","evidence":["packages/media-catalog/src/durable-ingest.ts","packages/media-catalog/src/durable-ingest.test.ts","AI Editor CI run 32810880801 job 97689838481 success"]},
       {"id":"P1-10-postgresql-atomic-validated-ingest-commit","implementationCommit":"f7f90f8ef48d6fb551de218e100ad8f1bf0f809e","status":"verified","evidence":["packages/media-catalog/src/postgres.ts","packages/media-catalog/src/postgres.test.ts","infra/verify-postgres-media-catalog-runtime.mts","AI Editor CI run 32815455806 job 97702665656 success","AI Editor Local Stack Gate run 32815455771 job 97702665269 success","real PostgreSQL verifier proved atomic validated-ingest commit and injected late stream-write rollback","exact statuses ai-editor-ci/all and ai-editor-local-stack/all success"]},
       {"id":"P1-11-durable-filesystem-to-postgresql-ingest-composition","implementationCommit":"fea5a180e8a7b3b98d018d7bbc6f8aafd2845033","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts",".github/workflows/local-stack-gate.yml","AI Editor Local Stack Gate run 32819714185 job 97715097100 success","real runtime exercised ingestImmutableLocalMediaDurably with PostgresMediaCatalog","confined filesystem source, managed content-addressed original, deterministic ffprobe/native timing, atomic PostgreSQL commit and idempotent re-ingest all passed"]},
-      {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original-readonly.test.ts","AI Editor CI run 32824631728 job 97729857134 success","ai-editor-ci/all success on exact implementation commit","verified existing content changed to mode 0644 is reused at the same content path and restored to mode 0444"],"invariants":["managed original bytes are verified before the read-only guard is enforced","every successful managed-original materialization/reuse enforces mode 0444 before location publication/return","idempotent reuse preserves the same SHA-256-derived destination path","corrupted content still fails closed before state publication","stable asset identity and native timing authority are unchanged"]},
-      {"id":"P1-13-real-ffprobe-managed-original-durable-runtime","implementationCommit":"eed8bc827e54bd85d5b4c7d63547a0cce39d9175","runtimeRepairCommit":"f9d843684c30a7e689d59ed4d936545af807225e","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts generates a real FFmpeg video+audio fixture and uses the default real ffprobe executable","AI Editor Local Stack Gate run 32829451776 failed because runner lacked ffmpeg/ffprobe (spawn ffmpeg ENOENT) and was not rerun unchanged","workflow repair installs FFmpeg runtime tools only in the selective local-stack gate","AI Editor Local Stack Gate run 32829569480 job 97744989990 success","real ffmpeg 6.1.1 and ffprobe 6.1.1 executed","real ffprobe native video/audio stream metadata persisted atomically to PostgreSQL and matched readback","idempotent re-ingest reused the same SHA-256 managed original and produced identical normalized streams","exact status ai-editor-local-stack/all success on f9d84368"]}
+      {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original-readonly.test.ts","AI Editor CI run 32824631728 job 97729857134 success","verified existing content changed to mode 0644 is reused at the same content path and restored to mode 0444"]},
+      {"id":"P1-13-real-ffprobe-managed-original-durable-runtime","implementationCommit":"eed8bc827e54bd85d5b4c7d63547a0cce39d9175","runtimeRepairCommit":"f9d843684c30a7e689d59ed4d936545af807225e","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts generates a real FFmpeg video+audio fixture and uses the default real ffprobe executable","AI Editor Local Stack Gate run 32829451776 failed because runner lacked ffmpeg/ffprobe and was not rerun unchanged","AI Editor Local Stack Gate run 32829569480 job 97744989990 success","real ffmpeg 6.1.1 and ffprobe 6.1.1 executed","real ffprobe native video/audio stream metadata persisted atomically to PostgreSQL and matched readback","idempotent re-ingest reused the same SHA-256 managed original and produced identical normalized streams"]},
+      {"id":"P1-14-phase1-gate-reconciliation","status":"verified","verificationCommit":"pending-docs-closure","evidence":["PROJECT_BIBLE.md Phase 1 required proof: idempotent content-addressed assets, normalized stream metadata, native timing","P1-01/P1-02 prove SHA-256 identity and idempotent registration independent of mutable locations","P1-05/P1-06/P1-12 prove confined immutable-original ownership and verified read-only managed reuse","P1-03/P1-07/P1-13 prove strict normalized native PTS/rational time-base metadata through a real bounded ffprobe process","P1-04/P1-10/P1-11/P1-13 prove durable and atomic PostgreSQL persistence including real-media idempotent re-ingest","checkpoint 0050 records the phase-gate reconciliation; no redundant Actions run required"]}
     ],
-    "next": "perform the final Phase-1 gate reconciliation against the Bible's explicit idempotent content-addressed asset, normalized stream metadata, native timing and immutable-original requirements; audit the last checklist item without inventing new semantics, and only close Phase 1 when all evidence maps cleanly"
+    "closure": {
+      "gate": "idempotent content-addressed assets, normalized stream metadata, native timing",
+      "result": "verified",
+      "reason": "all explicit Phase-1 proof requirements map to exact standalone code/test/CI/runtime evidence; no new semantics are required for closure"
+    },
+    "next": "start Phase 2 by auditing the smallest versioned scene-set contract that preserves exact asset/stream native-PTS source mapping; do not build proxies/keyframes before the scene-set identity and source-mapping contract is explicit"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
