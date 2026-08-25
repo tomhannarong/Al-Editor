@@ -35,7 +35,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Durable filesystem -> PostgreSQL composition | `infra/verify-postgres-durable-ingest-runtime.mts` | verified real runtime `32819714185`, job `97715097100` |
 | Managed-original read-only reuse guard | `managed-original.ts` + deterministic test | verified CI `32824631728`, job `97729857134` |
 | Real ffprobe durable ingest | real FFmpeg fixture + default ffprobe + PostgreSQL verifier | verified repaired runtime `32829569480`, job `97744989990` |
-| Phase-1 gate reconciliation | Bible Phase-1 proof mapped to P1-01..P1-13 evidence | verified; no redundant Actions run required |
+| Phase-1 gate reconciliation | Bible Phase-1 proof mapped to P1-01..P1-13 evidence | verified on docs closure `54223a0d`; no redundant Actions run required |
+| Versioned scene-set source mapping | `packages/contracts/src/scene-set.contract.ts` | verified on `8759bc04`, CI run `32840639465`, job `97779125483`; immutable asset/stream identity + native integer PTS/rational time base, ordered non-overlapping scenes, no derivative authority |
 
 ## Phase 1 closure
 
@@ -47,6 +48,12 @@ The explicit Phase-1 proof is complete:
 4. **Durability** — PostgreSQL commits validated asset/location/stream state atomically and rolls back injected late failures.
 5. **Real-media composition** — a real FFmpeg fixture flows through managed-original storage, the real bounded ffprobe executable and atomic PostgreSQL persistence, with idempotent re-ingest verified.
 
+## Phase 2 start
+
+P2-01 establishes the dependency boundary for the scene library before any proxy or keyframe generation. A scene-set revision has explicit schema/revision/detector versioning and maps every scene interval to one immutable SHA-256 asset + stream identity/index using native integer PTS and a rational source time base. Decimal seconds/milliseconds, proxy paths and keyframe paths are deliberately absent from source-mapping authority.
+
+The next Phase-2 slice should add immutable revision persistence/idempotency semantics rather than derivative generation. Reusing a `revisionId` with different source mapping or scene intervals must fail closed; exact equivalent re-registration may be idempotent.
+
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. The next implementation target is the smallest Phase-2 **versioned scene-set identity/source-mapping contract**; proxies/keyframes remain downstream derivatives and must not precede exact immutable asset/stream/native-PTS mapping.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 1/11 verified from the migrated checklist count.

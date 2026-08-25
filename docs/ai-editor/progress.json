@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 2,
-  "currentTask": "phase2-smallest-versioned-scene-set-contract-audit",
+  "currentTask": "phase2-scene-set-immutable-revision-persistence-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 36,
-    "standaloneRevalidatedPercent": 22.22
+    "standaloneRevalidated": 37,
+    "standaloneRevalidatedPercent": 22.84
   },
   "phase0": {
     "total": 22,
@@ -47,14 +47,41 @@
       {"id":"P1-11-durable-filesystem-to-postgresql-ingest-composition","implementationCommit":"fea5a180e8a7b3b98d018d7bbc6f8aafd2845033","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts",".github/workflows/local-stack-gate.yml","AI Editor Local Stack Gate run 32819714185 job 97715097100 success","real runtime exercised ingestImmutableLocalMediaDurably with PostgresMediaCatalog","confined filesystem source, managed content-addressed original, deterministic ffprobe/native timing, atomic PostgreSQL commit and idempotent re-ingest all passed"]},
       {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original-readonly.test.ts","AI Editor CI run 32824631728 job 97729857134 success","verified existing content changed to mode 0644 is reused at the same content path and restored to mode 0444"]},
       {"id":"P1-13-real-ffprobe-managed-original-durable-runtime","implementationCommit":"eed8bc827e54bd85d5b4c7d63547a0cce39d9175","runtimeRepairCommit":"f9d843684c30a7e689d59ed4d936545af807225e","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts generates a real FFmpeg video+audio fixture and uses the default real ffprobe executable","AI Editor Local Stack Gate run 32829451776 failed because runner lacked ffmpeg/ffprobe and was not rerun unchanged","AI Editor Local Stack Gate run 32829569480 job 97744989990 success","real ffmpeg 6.1.1 and ffprobe 6.1.1 executed","real ffprobe native video/audio stream metadata persisted atomically to PostgreSQL and matched readback","idempotent re-ingest reused the same SHA-256 managed original and produced identical normalized streams"]},
-      {"id":"P1-14-phase1-gate-reconciliation","status":"verified","verificationCommit":"pending-docs-closure","evidence":["PROJECT_BIBLE.md Phase 1 required proof: idempotent content-addressed assets, normalized stream metadata, native timing","P1-01/P1-02 prove SHA-256 identity and idempotent registration independent of mutable locations","P1-05/P1-06/P1-12 prove confined immutable-original ownership and verified read-only managed reuse","P1-03/P1-07/P1-13 prove strict normalized native PTS/rational time-base metadata through a real bounded ffprobe process","P1-04/P1-10/P1-11/P1-13 prove durable and atomic PostgreSQL persistence including real-media idempotent re-ingest","checkpoint 0050 records the phase-gate reconciliation; no redundant Actions run required"]}
+      {"id":"P1-14-phase1-gate-reconciliation","status":"verified","verificationCommit":"54223a0ded24d7f33cad9ec947936717f24c4db0","evidence":["PROJECT_BIBLE.md Phase 1 required proof: idempotent content-addressed assets, normalized stream metadata, native timing","P1-01/P1-02 prove SHA-256 identity and idempotent registration independent of mutable locations","P1-05/P1-06/P1-12 prove confined immutable-original ownership and verified read-only managed reuse","P1-03/P1-07/P1-13 prove strict normalized native PTS/rational time-base metadata through a real bounded ffprobe process","P1-04/P1-10/P1-11/P1-13 prove durable and atomic PostgreSQL persistence including real-media idempotent re-ingest","checkpoint 0050 records the phase-gate reconciliation; no redundant Actions run required"]}
     ],
     "closure": {
       "gate": "idempotent content-addressed assets, normalized stream metadata, native timing",
       "result": "verified",
       "reason": "all explicit Phase-1 proof requirements map to exact standalone code/test/CI/runtime evidence; no new semantics are required for closure"
-    },
-    "next": "start Phase 2 by auditing the smallest versioned scene-set contract that preserves exact asset/stream native-PTS source mapping; do not build proxies/keyframes before the scene-set identity and source-mapping contract is explicit"
+    }
+  },
+  "phase2": {
+    "total": 11,
+    "standaloneRevalidated": 1,
+    "standaloneRevalidatedPercent": 9.09,
+    "state": "in-progress",
+    "implementedSlices": [
+      {
+        "id": "P2-01-versioned-scene-set-source-mapping-contract",
+        "implementationCommit": "8759bc0437d672f4e63329fcc19b84172b9e433d",
+        "status": "verified",
+        "evidence": [
+          "packages/contracts/src/scene-set.contract.ts",
+          "packages/contracts/src/scene-set.contract.test.ts",
+          "AI Editor CI run 32840639465 job 97779125483 success",
+          "ai-editor-ci/all success on exact implementation commit"
+        ],
+        "invariants": [
+          "scene-set schema and revision identity are explicit and versioned",
+          "each scene set binds to immutable sha256 asset identity plus stream identity/index",
+          "scene boundaries use safe-integer native sourceStartPts/sourceEndPts only",
+          "source rational time base remains authority; decimal seconds are absent",
+          "scene IDs are unique and scene intervals are ordered/non-overlapping",
+          "proxies and keyframes are deliberately excluded from source-mapping authority"
+        ]
+      }
+    ],
+    "next": "audit the smallest immutable scene-set revision persistence/idempotency slice; preserve exact asset/stream/native-PTS mapping before any proxy or keyframe generation"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
