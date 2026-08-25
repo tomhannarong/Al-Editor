@@ -14,6 +14,7 @@ on:
       - 'infra/verify-postgres-proxy-library-runtime.mts'
       - 'infra/verify-postgres-keyframe-library-runtime.mts'
       - 'infra/verify-real-proxy-generation-runtime.mts'
+      - 'infra/verify-real-keyframe-extraction-runtime.mts'
       - 'apps/api/health-server.mjs'
       - 'scripts/test-api-health.mjs'
       - 'scripts/verify-api-health-runtime.sh'
@@ -64,9 +65,11 @@ jobs:
           npx --no-install tsx infra/verify-postgres-scene-library-runtime.mts
           npx --no-install tsx infra/verify-postgres-proxy-library-runtime.mts
           npx --no-install tsx infra/verify-postgres-keyframe-library-runtime.mts
-      - name: Verify real FFmpeg proxy generation
-        id: proxy_generation
-        run: npx --no-install tsx infra/verify-real-proxy-generation-runtime.mts
+      - name: Verify real FFmpeg media derivative generation
+        id: derivative_generation
+        run: |
+          npx --no-install tsx infra/verify-real-proxy-generation-runtime.mts
+          npx --no-install tsx infra/verify-real-keyframe-extraction-runtime.mts
       - name: Verify API health against real local dependencies
         id: api_health
         run: bash scripts/verify-api-health-runtime.sh
@@ -80,7 +83,7 @@ jobs:
           STACK_OUTCOME: ${{ steps.stack.outcome }}
           RUNTIME_DEPS_OUTCOME: ${{ steps.runtime_deps.outcome }}
           MEDIA_CATALOG_OUTCOME: ${{ steps.media_catalog.outcome }}
-          PROXY_GENERATION_OUTCOME: ${{ steps.proxy_generation.outcome }}
+          DERIVATIVE_GENERATION_OUTCOME: ${{ steps.derivative_generation.outcome }}
           API_HEALTH_OUTCOME: ${{ steps.api_health.outcome }}
         run: |
           state=success
@@ -92,8 +95,8 @@ jobs:
             state=failure; context='ai-editor-local-stack/media-catalog-deps'; description='media runtime verifier dependency install failed'
           elif [ "$MEDIA_CATALOG_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/media-catalog'; description='PostgreSQL media, scene, proxy or keyframe persistence gate failed'
-          elif [ "$PROXY_GENERATION_OUTCOME" != 'success' ]; then
-            state=failure; context='ai-editor-local-stack/proxy-generation'; description='real FFmpeg proxy generation gate failed'
+          elif [ "$DERIVATIVE_GENERATION_OUTCOME" != 'success' ]; then
+            state=failure; context='ai-editor-local-stack/derivative-generation'; description='real FFmpeg proxy or keyframe generation gate failed'
           elif [ "$API_HEALTH_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/api-health'; description='API dependency health runtime gate failed'
           fi
