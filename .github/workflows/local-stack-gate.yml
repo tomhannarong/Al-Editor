@@ -49,6 +49,13 @@ jobs:
         id: stack
         run: bash infra/verify-local-stack.sh
 
+      - name: Install FFmpeg runtime verifier tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+
       - name: Install PostgreSQL runtime verifier dependencies
         id: runtime_deps
         run: npm install --ignore-scripts --no-audit --no-fund --no-save pg tsx
