@@ -1,5 +1,5 @@
 import { mkdir, realpath } from 'node:fs/promises';
-import { dirname, relative, resolve, sep, isAbsolute } from 'node:path';
+import { isAbsolute, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { validateProxyDerivativeRevision, type ProxyDerivativeRevision } from '../../contracts/src/proxy-derivative.contract.js';
@@ -50,7 +50,7 @@ export async function generateProxyDerivative(
     '-nostdin', '-hide_banner', '-loglevel', 'error', '-y',
     '-i', sourcePath,
     '-map', `0:${revision.source.streamIndex}`,
-    '-vf', 'scale=w=min(1280\,iw):h=-2',
+    '-vf', 'scale=1280:720:force_original_aspect_ratio=decrease:force_divisible_by=2',
     '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '28',
     '-an',
     outputPath,

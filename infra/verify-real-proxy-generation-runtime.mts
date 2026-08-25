@@ -15,8 +15,8 @@ const outputPath = join(derivativeRoot, `${revisionId}.mp4`);
 
 await runBoundedProcess('ffmpeg', [
   '-nostdin', '-hide_banner', '-loglevel', 'error', '-y',
-  '-f', 'lavfi', '-i', 'testsrc=size=1920x1080:rate=30',
-  '-t', '1', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', managedOriginal,
+  '-f', 'lavfi', '-i', 'color=c=black:s=640x360:r=30',
+  '-t', '1', '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', managedOriginal,
 ], { timeoutMs: 60000, maxStdoutBytes: 65536, maxStderrBytes: 1048576 });
 
 const output = await generateProxyDerivative({
@@ -35,7 +35,9 @@ const output = await generateProxyDerivative({
 
 const info = await stat(output);
 if (!info.isFile() || info.size <= 0) throw new Error('proxy artifact was not materialized');
-const probe = await probeMediaWithFfprobe(output) as { streams?: Array<{ codec_type?: string; width?: number; height?: number }> };
+const probe = await probeMediaWithFfprobe(output) as { streams?: Array<{ codec_type?: string; codec_name?: string; width?: number; height?: number }> };
 const video = probe.streams?.find((stream) => stream.codec_type === 'video');
-if (!video || !video.width || !video.height || video.width > 1280) throw new Error('proxy video dimensions are invalid');
-console.log(JSON.stringify({ realFfmpegProxyGeneration: 'passed', width: video.width, height: video.height, byteSize: info.size }));
+if (!video || video.codec_name !== 'h264' || !video.width || !video.height || video.width > 1280 || video.height > 720) {
+  throw new Error(`proxy video output is invalid: ${JSON.stringify(video)}`);
+}
+console.log(JSON.stringify({ realFfmpegProxyGeneration: 'passed', codec: video.codec_name, width: video.width, height: video.height, byteSize: info.size }));

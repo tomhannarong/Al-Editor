@@ -62,7 +62,9 @@ jobs:
           npx --no-install tsx infra/verify-postgres-durable-ingest-runtime.mts
           npx --no-install tsx infra/verify-postgres-scene-library-runtime.mts
           npx --no-install tsx infra/verify-postgres-proxy-library-runtime.mts
-          npx --no-install tsx infra/verify-real-proxy-generation-runtime.mts
+      - name: Verify real FFmpeg proxy generation
+        id: proxy_generation
+        run: npx --no-install tsx infra/verify-real-proxy-generation-runtime.mts
       - name: Verify API health against real local dependencies
         id: api_health
         run: bash scripts/verify-api-health-runtime.sh
@@ -76,17 +78,20 @@ jobs:
           STACK_OUTCOME: ${{ steps.stack.outcome }}
           RUNTIME_DEPS_OUTCOME: ${{ steps.runtime_deps.outcome }}
           MEDIA_CATALOG_OUTCOME: ${{ steps.media_catalog.outcome }}
+          PROXY_GENERATION_OUTCOME: ${{ steps.proxy_generation.outcome }}
           API_HEALTH_OUTCOME: ${{ steps.api_health.outcome }}
         run: |
           state=success
           context='ai-editor-local-stack/all'
-          description='PostgreSQL, Qdrant, media, scene, proxy and API runtime gates passed'
+          description='PostgreSQL, Qdrant, media, proxy generation and API runtime gates passed'
           if [ "$STACK_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/runtime'; description='PostgreSQL or Qdrant runtime gate failed'
           elif [ "$RUNTIME_DEPS_OUTCOME" != 'success' ]; then
-            state=failure; context='ai-editor-local-stack/media-catalog-deps'; description='media catalog runtime verifier dependency install failed'
+            state=failure; context='ai-editor-local-stack/media-catalog-deps'; description='media runtime verifier dependency install failed'
           elif [ "$MEDIA_CATALOG_OUTCOME" != 'success' ]; then
-            state=failure; context='ai-editor-local-stack/media-catalog'; description='PostgreSQL media, scene or proxy runtime gate failed'
+            state=failure; context='ai-editor-local-stack/media-catalog'; description='PostgreSQL media, scene or proxy persistence gate failed'
+          elif [ "$PROXY_GENERATION_OUTCOME" != 'success' ]; then
+            state=failure; context='ai-editor-local-stack/proxy-generation'; description='real FFmpeg proxy generation gate failed'
           elif [ "$API_HEALTH_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/api-health'; description='API dependency health runtime gate failed'
           fi
