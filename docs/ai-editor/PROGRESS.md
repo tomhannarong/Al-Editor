@@ -2,12 +2,12 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** audit the four remaining Phase-1 checklist items and select the smallest independent ingest/catalog gap
+**Current task:** audit the three remaining Phase-1 checklist items and select the smallest independent ingest/catalog gap
 
 ```text
-Standalone verified: 32 / 162 = 19.75%
+Standalone verified: 33 / 162 = 20.37%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1:             10 / 14  = 71.43% verified
+Phase 1:             11 / 14  = 78.57% verified
 ```
 
 Phase 0 verified: P0-01 through P0-22.
@@ -42,20 +42,21 @@ Implementation `79e4b427d474a9edbe4120d150bea1a61b89d940`, repaired by `9fc35f46
 Implementation `71bd875abcd4b8eef6102f75159f71000955c3c5`; AI Editor CI run `32810880801`, job `97689838481`, success. Full source hashing, managed-original verification and ffprobe/native-timing validation finish before one durable callback receives the defensive aggregate.
 
 ### P1-10 — PostgreSQL atomic validated-ingest commit
-Implementation `f7f90f8ef48d6fb551de218e100ad8f1bf0f809e` extends `PostgresMediaCatalog` with `commitValidatedImmutableIngest(...)` and adds deterministic transaction tests plus real PostgreSQL rollback proof.
+Implementation `f7f90f8ef48d6fb551de218e100ad8f1bf0f809e`; AI Editor CI run `32815455806`, job `97702665656`, success; AI Editor Local Stack Gate run `32815455771`, job `97702665269`, success. Asset + source location + managed location + native stream projection commit in one transaction and injected late stream failure rolls all writes back.
 
-The complete bundle is validated before `BEGIN`. The transaction idempotently inserts/reuses the immutable asset, verifies an existing immutable identity inside the transaction, upserts distinct source and managed locations, replaces the native stream projection and then commits. Any failure rolls the entire aggregate back.
+### P1-11 — durable filesystem-to-PostgreSQL ingest composition
+Implementation/runtime-proof commit `fea5a180e8a7b3b98d018d7bbc6f8aafd2845033` adds `infra/verify-postgres-durable-ingest-runtime.mts` and extends the existing selective local-stack workflow to execute it after the lower-level PostgreSQL catalog verifier.
 
-Exact normal evidence: **AI Editor CI run `32815455806`, job `97702665656`, `ai-editor-ci/all = success`**. Install, strict TypeScript, Vitest, deterministic migration, contract/policy and observable-status gates all passed.
+The runtime proof creates a real confined local source file, materializes and byte-verifies the SHA-256-addressed managed original, injects deterministic ffprobe JSON, preserves native integer PTS + rational stream time base, calls `ingestImmutableLocalMediaDurably(...)` with a real `PostgresMediaCatalog`, verifies PostgreSQL readback, then re-ingests the same bytes and proves the managed content path and durable asset identity are reused.
 
-Exact runtime evidence: **AI Editor Local Stack Gate run `32815455771`, job `97702665269`, `ai-editor-local-stack/all = success`**. PostgreSQL and Qdrant booted healthy; the verifier applied migration 0002, committed a complete validated ingest bundle, then injected a late stream-insert failure for a second bundle and confirmed the new asset, both locations and streams were absent after rollback. The verifier printed: `PostgreSQL media catalog runtime proof passed: migration 0002, idempotent identity, mutable rebinding, native PTS/time-base readback, and atomic validated-ingest commit/rollback.`
+Exact evidence: **AI Editor Local Stack Gate run `32819714185`, job `97715097100`, `ai-editor-local-stack/all = success` on `fea5a180...`**. Docker, PostgreSQL/Qdrant health, both PostgreSQL media-catalog runtime verifiers, API dependency health, cleanup and observable status publication all passed. The durable-ingest verifier itself completed successfully before the API health step. No normal CI run was triggered because the change was confined to the selective runtime verifier/workflow; the code paths it composes already have exact normal CI evidence.
 
 ## Validation / free-tier discipline
 
-The execution container still could not resolve `github.com`, so no local clone/test pass is claimed. The transaction implementation, deterministic tests and real-PostgreSQL verifier were assembled into one code tree and pushed once. That single substantive commit triggered exactly the normal CI gate and the already-selective local-stack gate because the runtime verifier changed. No unchanged failed run was rerun, no matrix was used and no FFmpeg/media integration workflow was triggered.
+This run intentionally changed only the selective PostgreSQL runtime verifier and its workflow path/command. It triggered one local-stack workflow and no normal CI workflow. No matrix, FFmpeg real-media integration or unchanged rerun was used.
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Native integer PTS + rational stream time base remain source-timing authority; no seconds/milliseconds columns or semantics were introduced.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Decimal `start_time`/`duration` emitted by the deterministic ffprobe fixture remain non-authoritative and are not persisted as source timing.
 
 ## Next task
 
-Audit the four remaining Phase-1 checklist items against the now-verified stable identity, staging and atomic PostgreSQL durability boundaries. Choose the smallest independent unfinished ingest/catalog gap. The leading candidate is a thin durable filesystem-to-PostgreSQL composition proof using `ingestImmutableLocalMediaDurably(...)` with `PostgresMediaCatalog`, deterministic ffprobe injection and real PostgreSQL, without adding new metadata semantics or starting Phase 2 early.
+Audit the three remaining Phase-1 checklist items against the now-verified end-to-end durable ingest path. Select the smallest dependency-correct catalog/ingest gap and keep Phase-2 derivative work blocked until Phase 1 is explicitly resolved.
