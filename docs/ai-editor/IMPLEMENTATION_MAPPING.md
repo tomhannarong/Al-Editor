@@ -44,6 +44,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | PostgreSQL proxy derivative revision persistence | migration 0004 + `packages/proxy-library/src/postgres.ts` | verified CI `32869312338`; real PostgreSQL `32869312804` |
 | Confined bounded real proxy generation | `packages/proxy-library/src/generator.ts` + `infra/verify-real-proxy-generation-runtime.mts` | verified on `c2ac01b5`; CI `32875753663`; real FFmpeg/local-stack `32875753669` |
 | Versioned rebuildable keyframe derivative | `packages/contracts/src/keyframe-derivative.contract.ts` | verified on `59aa02ed`; CI `32881831056` job `97912919380` |
+| Immutable keyframe derivative revision persistence | `packages/keyframe-library/src/index.ts` | verified on `5ce040ae`; CI `32886479355` job `97928027272` |
 
 ## Phase 1 closure
 
@@ -55,8 +56,8 @@ P2-01 through P2-03 establish versioned scene-set identity, immutable revision s
 
 P2-04 through P2-07 establish rebuildable/versioned proxy evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg generation without introducing proxy-time authority.
 
-P2-08 adds versioned keyframe derivative evidence for exact scene-set/revision/scene lineage. Native safe-integer source PTS plus rational stream time base remain the only source-time authority; image filenames, artifact locations and display timestamps remain rebuildable derivative state. Exact implementation `59aa02eddf4357eb289ef244a820c99cd5de95ad` passed AI Editor CI `32881831056`, job `97912919380`.
+P2-08 establishes versioned keyframe derivative evidence for exact scene-set/revision/scene lineage. P2-09 adds immutable in-memory revision persistence: semantic re-registration is idempotent after rational normalization; conflicting reuse of `revisionId` fails closed across source, frame, artifact, profile/toolchain and creation evidence; re-extraction requires a new revision. Exact implementation `5ce040aeb14953f126cfe9dee8b22e086dd06775` passed AI Editor CI `32886479355`, job `97928027272`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 8/11 verified.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 9/11 verified.

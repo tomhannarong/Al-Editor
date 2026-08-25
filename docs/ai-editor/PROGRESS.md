@@ -2,31 +2,31 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 2 — Scene Library, Proxies, Keyframes  
-**Current task:** immutable keyframe derivative revision persistence/idempotency after verified keyframe contract
+**Current task:** PostgreSQL durable keyframe derivative revision persistence/readback
 
 ```text
-Standalone verified: 44 / 162 = 27.16%
+Standalone verified: 45 / 162 = 27.78%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
-Phase 2:              8 / 11  =  72.73% verified
+Phase 2:              9 / 11  =  81.82% verified
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14.
 
 ## Phase 2 verified slices
 
-P2-01 through P2-07 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, and confined bounded real FFmpeg proxy generation.
+P2-01 through P2-08 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, confined bounded real FFmpeg proxy generation, and the versioned rebuildable keyframe derivative contract.
 
-### P2-08 — versioned rebuildable keyframe derivative contract
-Implementation `59aa02eddf4357eb289ef244a820c99cd5de95ad`.
+### P2-09 — immutable keyframe derivative revision persistence/idempotency
+Implementation `5ce040aeb14953f126cfe9dee8b22e086dd06775`.
 
-`packages/contracts/src/keyframe-derivative.contract.ts` defines rebuildable keyframe-image evidence for one immutable scene. Every revision binds to exact scene-set/revision/scene lineage plus immutable SHA-256 asset identity, stream identity/index and rational native time base. Each frame carries a safe-integer native `sourcePts`; frame IDs and source PTS values are unique, PTS values are strictly increasing, and artifact URIs are required only as derivative locations.
+`packages/keyframe-library/src/index.ts` adds the in-memory immutable metadata boundary for rebuildable keyframe revisions. `revisionId` is immutable evidence identity. Exact semantic re-registration is idempotent, including equivalent rational time bases after normalization. Reusing the same `revisionId` with changed source lineage, frame selection, frame artifact URI, profile/toolchain version or creation evidence fails closed before mutation.
 
-The contract explicitly keeps filename-encoded times, image paths and decoded/display timestamps out of canonical timing authority. Profile and toolchain versions are explicit so extraction can be rebuilt under a new immutable revision rather than mutating historical evidence.
+Read and registration results deep-copy source, toolchain and every frame, so callers cannot mutate stored historical evidence. Re-extraction or a rebuilt artifact set must create a new immutable revision rather than replacing a prior revision.
 
-Exact evidence on `59aa02eddf4357eb289ef244a820c99cd5de95ad`:
+Exact evidence on `5ce040aeb14953f126cfe9dee8b22e086dd06775`:
 
-- AI Editor CI run `32881831056`, job `97912919380`: success
+- AI Editor CI run `32886479355`, job `97928027272`: success
 - TypeScript strict gate: success
 - Vitest behavioral gate: success
 - migration deterministic gate: success
@@ -35,12 +35,12 @@ Exact evidence on `59aa02eddf4357eb289ef244a820c99cd5de95ad`:
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and Phase-2 scene/proxy durable lineage remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, Phase-2 scene/proxy durable lineage and native PTS+rational source-time authority remain unchanged.
 
 ## Validation / free-tier discipline
 
-A local clone was attempted before implementation but DNS resolution for `github.com` was unavailable, so no local pass is claimed. The contract slice used one normal single-job CI confidence gate and no local-stack/FFmpeg runtime workflow, matrix or rerun.
+This slice used one normal single-job CI confidence gate. No PostgreSQL/Qdrant local-stack, FFmpeg keyframe extraction, matrix or rerun was used because P2-09 is an in-memory persistence/idempotency boundary and the normal repository gate was sufficient.
 
 ## Next task
 
-Implement the smallest immutable keyframe derivative revision persistence/idempotency boundary. Exact semantic re-registration should be idempotent; conflicting `revisionId` reuse must fail closed. Keep PostgreSQL durability and real FFmpeg extraction as later selective slices.
+Implement PostgreSQL durable keyframe derivative revision persistence/readback, reusing the P2-09 immutable conflict/idempotency semantics. Real FFmpeg keyframe extraction remains a later selective slice after durable evidence is proven.

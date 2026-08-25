@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 2,
-  "currentTask": "phase2-immutable-keyframe-derivative-revision-persistence-idempotency",
+  "currentTask": "phase2-postgresql-keyframe-derivative-revision-persistence",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 44,
-    "standaloneRevalidatedPercent": 27.16
+    "standaloneRevalidated": 45,
+    "standaloneRevalidatedPercent": 27.78
   },
   "phase0": {
     "total": 22,
@@ -52,8 +52,8 @@
   },
   "phase2": {
     "total": 11,
-    "standaloneRevalidated": 8,
-    "standaloneRevalidatedPercent": 72.73,
+    "standaloneRevalidated": 9,
+    "standaloneRevalidatedPercent": 81.82,
     "state": "in-progress",
     "implementedSlices": [
       {"id":"P2-01-versioned-scene-set-source-mapping-contract","implementationCommit":"8759bc0437d672f4e63329fcc19b84172b9e433d","status":"verified","evidence":["packages/contracts/src/scene-set.contract.ts","AI Editor CI run 32840639465 job 97779125483 success"]},
@@ -63,9 +63,10 @@
       {"id":"P2-05-immutable-proxy-derivative-revision-persistence-idempotency","implementationCommit":"f950775fadea9b3681c4c7fdec93cb27b59f29f8","status":"verified","evidence":["packages/proxy-library/src/index.ts","packages/proxy-library/src/index.test.ts","AI Editor CI run 32863422284 job 97852730546 success","ai-editor-ci/all success on exact implementation commit"]},
       {"id":"P2-06-postgresql-proxy-derivative-revision-persistence","implementationCommit":"577a14456b5b7c48860f52f88dd0ac6a11d2f380","status":"verified","evidence":["db/migrations/0004_create_proxy_library.sql","packages/proxy-library/src/postgres.ts","packages/proxy-library/src/postgres.test.ts","infra/verify-postgres-proxy-library-runtime.mts","AI Editor CI run 32869312338 job 97872229894 success","AI Editor Local Stack Gate run 32869312804 job 97872230411 success"]},
       {"id":"P2-07-confined-shell-free-bounded-real-ffmpeg-proxy-generation","implementationCommit":"92c0136a0a820caaa77431f76a0da09433be8547","testRepairCommit":"417d3e73abf8516a7da75083eb5246754e691ceb","runtimeRepairCommit":"c2ac01b5676c9bd64a070819d5dc29e7c406fc2c","status":"verified","evidence":["packages/proxy-library/src/generator.ts","packages/proxy-library/src/generator.test.ts","infra/verify-real-proxy-generation-runtime.mts","AI Editor CI run 32875753663 job 97893121765 success","AI Editor Local Stack Gate run 32875753669 job 97893122814 success"]},
-      {"id":"P2-08-versioned-rebuildable-keyframe-derivative-contract","implementationCommit":"59aa02eddf4357eb289ef244a820c99cd5de95ad","status":"verified","evidence":["packages/contracts/src/keyframe-derivative.contract.ts","packages/contracts/src/keyframe-derivative.contract.test.ts","AI Editor CI run 32881831056 job 97912919380 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["keyframes bind to exact scene-set revision, scene, immutable asset and stream identity","native safe-integer sourcePts plus rational source time base remain timing authority","frame IDs/sourcePts must be unique and sourcePts strictly increasing","artifact URIs and filename-encoded/display timestamps remain rebuildable derivative state","derivative profile and toolchain versions are explicit"]}
+      {"id":"P2-08-versioned-rebuildable-keyframe-derivative-contract","implementationCommit":"59aa02eddf4357eb289ef244a820c99cd5de95ad","status":"verified","evidence":["packages/contracts/src/keyframe-derivative.contract.ts","packages/contracts/src/keyframe-derivative.contract.test.ts","AI Editor CI run 32881831056 job 97912919380 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["keyframes bind to exact scene-set revision, scene, immutable asset and stream identity","native safe-integer sourcePts plus rational source time base remain timing authority","frame IDs/sourcePts must be unique and sourcePts strictly increasing","artifact URIs and filename-encoded/display timestamps remain rebuildable derivative state","derivative profile and toolchain versions are explicit"]},
+      {"id":"P2-09-immutable-keyframe-derivative-revision-persistence-idempotency","implementationCommit":"5ce040aeb14953f126cfe9dee8b22e086dd06775","status":"verified","evidence":["packages/keyframe-library/src/index.ts","packages/keyframe-library/src/index.test.ts","AI Editor CI run 32886479355 job 97928027272 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable evidence identity","semantic re-registration including equivalent rational time bases is idempotent","changed source lineage, frames, artifact URIs, profile/toolchain or creation evidence under the same revisionId fails closed","re-extraction/rebuild requires a new immutable revision","stored source/toolchain/frame evidence is defensively copied"]}
     ],
-    "next": "implement immutable keyframe derivative revision persistence/idempotency before PostgreSQL durability or real extraction"
+    "next": "implement PostgreSQL durable keyframe derivative revision persistence/readback before real FFmpeg keyframe extraction"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
