@@ -2,35 +2,36 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 2 — Scene Library, Proxies, Keyframes  
-**Current task:** audit the smallest keyframe derivative contract/generation slice after verified proxy generation
+**Current task:** immutable keyframe derivative revision persistence/idempotency after verified keyframe contract
 
 ```text
-Standalone verified: 43 / 162 = 26.54%
+Standalone verified: 44 / 162 = 27.16%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
-Phase 2:              7 / 11  =  63.64% verified
+Phase 2:              8 / 11  =  72.73% verified
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14.
 
 ## Phase 2 verified slices
 
-P2-01 through P2-06 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set revision semantics, PostgreSQL scene-set durability, rebuildable proxy contract, immutable proxy revision semantics and PostgreSQL proxy durability.
+P2-01 through P2-07 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, and confined bounded real FFmpeg proxy generation.
 
-### P2-07 — confined shell-free bounded real FFmpeg proxy generation
-Implementation `92c0136a0a820caaa77431f76a0da09433be8547`, test repair `417d3e73abf8516a7da75083eb5246754e691ceb`, runtime hardening `c2ac01b5676c9bd64a070819d5dc29e7c406fc2c`.
+### P2-08 — versioned rebuildable keyframe derivative contract
+Implementation `59aa02eddf4357eb289ef244a820c99cd5de95ad`.
 
-`packages/proxy-library/src/generator.ts` executes FFmpeg through the existing bounded `runBoundedProcess` boundary (`shell:false`), reads the managed-original path, confines output beneath a derivative root, requires exact `artifactUri` agreement, maps only the declared source stream and emits the pinned `proxy-h264-720p-v1` derivative. Proxy codec/presentation timestamps remain rebuildable derivative state and never replace native PTS + rational time-base authority.
+`packages/contracts/src/keyframe-derivative.contract.ts` defines rebuildable keyframe-image evidence for one immutable scene. Every revision binds to exact scene-set/revision/scene lineage plus immutable SHA-256 asset identity, stream identity/index and rational native time base. Each frame carries a safe-integer native `sourcePts`; frame IDs and source PTS values are unique, PTS values are strictly increasing, and artifact URIs are required only as derivative locations.
 
-Exact final evidence on `c2ac01b5676c9bd64a070819d5dc29e7c406fc2c`:
+The contract explicitly keeps filename-encoded times, image paths and decoded/display timestamps out of canonical timing authority. Profile and toolchain versions are explicit so extraction can be rebuilt under a new immutable revision rather than mutating historical evidence.
 
-- AI Editor CI run `32875753663`, job `97893121765`: success
-- AI Editor Local Stack Gate run `32875753669`, job `97893122814`: success
-- real FFmpeg proxy generation step: success
-- PostgreSQL media/scene/proxy persistence runtime step: success
-- commit statuses: `ai-editor-ci/all = success`, `ai-editor-local-stack/all = success`
+Exact evidence on `59aa02eddf4357eb289ef244a820c99cd5de95ad`:
 
-Two earlier failures were not counted as passes and were not rerun unchanged. `92c0136...` failed TypeScript because of the new mock test harness typing and its local-stack run failed in the combined media/proxy verifier step. `417d3e7...` repaired the test harness and passed CI. `c2ac01b...` then simplified the bounded 720p filter/runtime fixture and isolated real proxy verification as its own observable step; both required gates passed on that exact SHA.
+- AI Editor CI run `32881831056`, job `97912919380`: success
+- TypeScript strict gate: success
+- Vitest behavioral gate: success
+- migration deterministic gate: success
+- contract/policy gates: success
+- `ai-editor-ci/all = success`
 
 ## Preserved contracts
 
@@ -38,8 +39,8 @@ Canonical timeline v1/v2 compatibility, centralized media-time authority, render
 
 ## Validation / free-tier discipline
 
-No matrix or separate heavyweight workflow was added. Real FFmpeg proof was folded into the existing selective local-stack job. Failed commits were repaired by code/config changes rather than unchanged reruns.
+A local clone was attempted before implementation but DNS resolution for `github.com` was unavailable, so no local pass is claimed. The contract slice used one normal single-job CI confidence gate and no local-stack/FFmpeg runtime workflow, matrix or rerun.
 
 ## Next task
 
-Audit the smallest additive Phase-2 keyframe derivative slice tied to immutable scene-set/source authority before durable or real extraction work. Keep any real FFmpeg extraction selective and do not let image filenames or derived timestamps become canonical timing authority.
+Implement the smallest immutable keyframe derivative revision persistence/idempotency boundary. Exact semantic re-registration should be idempotent; conflicting `revisionId` reuse must fail closed. Keep PostgreSQL durability and real FFmpeg extraction as later selective slices.

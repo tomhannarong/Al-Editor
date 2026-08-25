@@ -42,7 +42,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned rebuildable proxy derivative | `packages/contracts/src/proxy-derivative.contract.ts` | verified CI `32857635477` |
 | Immutable proxy derivative revision persistence | `packages/proxy-library/src/index.ts` | verified CI `32863422284` |
 | PostgreSQL proxy derivative revision persistence | migration 0004 + `packages/proxy-library/src/postgres.ts` | verified CI `32869312338`; real PostgreSQL `32869312804` |
-| Confined bounded real proxy generation | `packages/proxy-library/src/generator.ts` + `infra/verify-real-proxy-generation-runtime.mts` | verified on `c2ac01b5`; CI `32875753663` job `97893121765`; real FFmpeg/local-stack `32875753669` job `97893122814` |
+| Confined bounded real proxy generation | `packages/proxy-library/src/generator.ts` + `infra/verify-real-proxy-generation-runtime.mts` | verified on `c2ac01b5`; CI `32875753663`; real FFmpeg/local-stack `32875753669` |
+| Versioned rebuildable keyframe derivative | `packages/contracts/src/keyframe-derivative.contract.ts` | verified on `59aa02ed`; CI `32881831056` job `97912919380` |
 
 ## Phase 1 closure
 
@@ -52,10 +53,10 @@ Phase 1 remains complete: content-addressed identities are idempotent, originals
 
 P2-01 through P2-03 establish versioned scene-set identity, immutable revision semantics and real PostgreSQL durability with exact native source mapping.
 
-P2-04 through P2-06 establish rebuildable/versioned proxy derivative evidence, immutable revision semantics and PostgreSQL durability without introducing proxy-time authority.
+P2-04 through P2-07 establish rebuildable/versioned proxy evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg generation without introducing proxy-time authority.
 
-P2-07 adds the executable proxy-generation boundary: FFmpeg is invoked shell-free through the bounded process executor, output is confined under a derivative root, `artifactUri` must match the generated path, source stream selection is explicit and the `proxy-h264-720p-v1` output is proven with real FFmpeg + ffprobe. Final implementation `c2ac01b5676c9bd64a070819d5dc29e7c406fc2c` passed CI `32875753663` and selective local-stack `32875753669` on the exact SHA.
+P2-08 adds versioned keyframe derivative evidence for exact scene-set/revision/scene lineage. Native safe-integer source PTS plus rational stream time base remain the only source-time authority; image filenames, artifact locations and display timestamps remain rebuildable derivative state. Exact implementation `59aa02eddf4357eb289ef244a820c99cd5de95ad` passed AI Editor CI `32881831056`, job `97912919380`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 7/11 verified.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 8/11 verified.
