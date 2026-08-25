@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 1,
-  "currentTask": "phase1-audit-two-remaining-items-real-ffprobe-phase-gate-need",
+  "currentTask": "phase1-final-gate-reconciliation-and-last-item-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 34,
-    "standaloneRevalidatedPercent": 20.99
+    "standaloneRevalidated": 35,
+    "standaloneRevalidatedPercent": 21.6
   },
   "phase0": {
     "total": 22,
@@ -30,8 +30,8 @@
   },
   "phase1": {
     "total": 14,
-    "standaloneRevalidated": 12,
-    "standaloneRevalidatedPercent": 85.71,
+    "standaloneRevalidated": 13,
+    "standaloneRevalidatedPercent": 92.86,
     "state": "in-progress",
     "implementedSlices": [
       {"id":"P1-01-stable-media-identity-contract","implementationCommit":"c68362f7166aba1a33137b89474caa93a8cf163f","status":"verified","evidence":["packages/contracts/src/media-catalog.contract.ts","packages/contracts/src/media-catalog.contract.test.ts","ai-editor-ci/all success run 32772298608"]},
@@ -45,9 +45,10 @@
       {"id":"P1-09-validated-ingest-before-durable-commit-boundary","implementationCommit":"71bd875abcd4b8eef6102f75159f71000955c3c5","status":"verified","evidence":["packages/media-catalog/src/durable-ingest.ts","packages/media-catalog/src/durable-ingest.test.ts","AI Editor CI run 32810880801 job 97689838481 success"]},
       {"id":"P1-10-postgresql-atomic-validated-ingest-commit","implementationCommit":"f7f90f8ef48d6fb551de218e100ad8f1bf0f809e","status":"verified","evidence":["packages/media-catalog/src/postgres.ts","packages/media-catalog/src/postgres.test.ts","infra/verify-postgres-media-catalog-runtime.mts","AI Editor CI run 32815455806 job 97702665656 success","AI Editor Local Stack Gate run 32815455771 job 97702665269 success","real PostgreSQL verifier proved atomic validated-ingest commit and injected late stream-write rollback","exact statuses ai-editor-ci/all and ai-editor-local-stack/all success"]},
       {"id":"P1-11-durable-filesystem-to-postgresql-ingest-composition","implementationCommit":"fea5a180e8a7b3b98d018d7bbc6f8aafd2845033","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts",".github/workflows/local-stack-gate.yml","AI Editor Local Stack Gate run 32819714185 job 97715097100 success","real runtime exercised ingestImmutableLocalMediaDurably with PostgresMediaCatalog","confined filesystem source, managed content-addressed original, deterministic ffprobe/native timing, atomic PostgreSQL commit and idempotent re-ingest all passed"]},
-      {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original-readonly.test.ts","AI Editor CI run 32824631728 job 97729857134 success","ai-editor-ci/all success on exact implementation commit","verified existing content changed to mode 0644 is reused at the same content path and restored to mode 0444"],"invariants":["managed original bytes are verified before the read-only guard is enforced","every successful managed-original materialization/reuse enforces mode 0444 before location publication/return","idempotent reuse preserves the same SHA-256-derived destination path","corrupted content still fails closed before state publication","stable asset identity and native timing authority are unchanged"]}
+      {"id":"P1-12-managed-original-readonly-invariant-on-reuse","implementationCommit":"58432e1fd35569d230ea060f6b3b82ea08d96946","status":"verified","evidence":["packages/media-catalog/src/managed-original.ts","packages/media-catalog/src/managed-original-readonly.test.ts","AI Editor CI run 32824631728 job 97729857134 success","ai-editor-ci/all success on exact implementation commit","verified existing content changed to mode 0644 is reused at the same content path and restored to mode 0444"],"invariants":["managed original bytes are verified before the read-only guard is enforced","every successful managed-original materialization/reuse enforces mode 0444 before location publication/return","idempotent reuse preserves the same SHA-256-derived destination path","corrupted content still fails closed before state publication","stable asset identity and native timing authority are unchanged"]},
+      {"id":"P1-13-real-ffprobe-managed-original-durable-runtime","implementationCommit":"eed8bc827e54bd85d5b4c7d63547a0cce39d9175","runtimeRepairCommit":"f9d843684c30a7e689d59ed4d936545af807225e","status":"verified","evidence":["infra/verify-postgres-durable-ingest-runtime.mts generates a real FFmpeg video+audio fixture and uses the default real ffprobe executable","AI Editor Local Stack Gate run 32829451776 failed because runner lacked ffmpeg/ffprobe (spawn ffmpeg ENOENT) and was not rerun unchanged","workflow repair installs FFmpeg runtime tools only in the selective local-stack gate","AI Editor Local Stack Gate run 32829569480 job 97744989990 success","real ffmpeg 6.1.1 and ffprobe 6.1.1 executed","real ffprobe native video/audio stream metadata persisted atomically to PostgreSQL and matched readback","idempotent re-ingest reused the same SHA-256 managed original and produced identical normalized streams","exact status ai-editor-local-stack/all success on f9d84368"]}
     ],
-    "next": "audit the two remaining Phase-1 items and decide whether selective real-ffprobe-on-managed-original runtime evidence is required for the Phase-1 gate before closure; do not start Phase 2 early"
+    "next": "perform the final Phase-1 gate reconciliation against the Bible's explicit idempotent content-addressed asset, normalized stream metadata, native timing and immutable-original requirements; audit the last checklist item without inventing new semantics, and only close Phase 1 when all evidence maps cleanly"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
