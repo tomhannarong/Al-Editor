@@ -1,16 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
 import type { StableMediaAssetIdentity } from '../../contracts/src/media-catalog.contract.js';
+import type { ValidatedImmutableIngestBundle } from './durable-ingest.js';
 import { MediaCatalogInvariantError } from './index.js';
 import { PostgresMediaCatalog, type PostgresQueryClient, type PostgresQueryResult } from './postgres.js';
 
 class ScriptedClient implements PostgresQueryClient {
   readonly calls: Array<{ text: string; values: readonly unknown[] }> = [];
-  constructor(private readonly responses: PostgresQueryResult[]) {}
+  constructor(private readonly responses: Array<PostgresQueryResult | Error>) {}
   async query<Row = Record<string, unknown>>(text: string, values: readonly unknown[] = []): Promise<PostgresQueryResult<Row>> {
     this.calls.push({ text, values });
     const response = this.responses.shift();
     if (!response) throw new Error(`unexpected query: ${text}`);
+    if (response instanceof Error) throw response;
     return response as PostgresQueryResult<Row>;
   }
 }
@@ -32,6 +34,44 @@ const assetRow = {
   byte_size: '1234',
   first_ingested_at: asset.firstIngestedAt,
 };
+
+const sourceLocation = {
+  locationId: 'source-slot',
+  assetId: asset.assetId,
+  uri: 'file:///footage/camera.mov',
+  state: 'available' as const,
+  observedAt: '2026-08-25T00:10:00.000Z',
+};
+
+const managedLocation = {
+  locationId: 'managed-slot',
+  assetId: asset.assetId,
+  uri: `file:///managed/sha256/aa/${digest}`,
+  state: 'available' as const,
+  observedAt: '2026-08-25T00:11:00.000Z',
+};
+
+const streams = [{
+  streamId: `${asset.assetId}:stream:0`, assetId: asset.assetId, streamIndex: 0, kind: 'video' as const,
+  timeBase: { numerator: 1, denominator: 90000 }, startPts: 180000, durationPts: 450000, width: 1920, height: 1080,
+}];
+
+const bundle: ValidatedImmutableIngestBundle = {
+  asset,
+  sourceLocation,
+  managedLocation,
+  streams,
+};
+
+function locationRow(location: typeof sourceLocation | typeof managedLocation) {
+  return {
+    location_id: location.locationId,
+    asset_id: location.assetId,
+    uri: location.uri,
+    state: location.state,
+    observed_at: location.observedAt,
+  };
+}
 
 describe('PostgresMediaCatalog', () => {
   it('idempotently registers immutable bytes and preserves first-ingest evidence', async () => {
@@ -68,10 +108,6 @@ describe('PostgresMediaCatalog', () => {
       { rows: [], rowCount: 1 },
       { rows: [], rowCount: null },
     ]);
-    const streams = [{
-      streamId: `${asset.assetId}:stream:0`, assetId: asset.assetId, streamIndex: 0, kind: 'video' as const,
-      timeBase: { numerator: 1, denominator: 90000 }, startPts: 180000, durationPts: 450000, width: 1920, height: 1080,
-    }];
     await expect(new PostgresMediaCatalog(client).replaceStreamMetadata(asset.assetId, streams)).resolves.toEqual(streams);
     expect(client.calls.map((call) => call.text.trim().split(/\s+/)[0])).toEqual(['BEGIN', 'SELECT', 'DELETE', 'INSERT', 'COMMIT']);
     const insertValues = client.calls[3]?.values ?? [];
@@ -101,6 +137,55 @@ describe('PostgresMediaCatalog', () => {
       timeBase: { numerator: 1, denominator: 48000 }, startPts: 0, durationPts: 48000,
     }));
     await expect(new PostgresMediaCatalog(client).replaceStreamMetadata(asset.assetId, duplicate)).rejects.toThrow('duplicate streamIndex 0');
+    expect(client.calls).toHaveLength(0);
+  });
+
+  it('atomically commits a validated immutable-ingest aggregate in one transaction', async () => {
+    const client = new ScriptedClient([
+      { rows: [], rowCount: null },
+      { rows: [assetRow], rowCount: 1 },
+      { rows: [locationRow(sourceLocation)], rowCount: 1 },
+      { rows: [locationRow(managedLocation)], rowCount: 1 },
+      { rows: [], rowCount: 0 },
+      { rows: [], rowCount: 1 },
+      { rows: [], rowCount: null },
+    ]);
+
+    await expect(new PostgresMediaCatalog(client).commitValidatedImmutableIngest(bundle)).resolves.toBeUndefined();
+    expect(client.calls.map((call) => call.text.trim().split(/\s+/)[0]))
+      .toEqual(['BEGIN', 'INSERT', 'INSERT', 'INSERT', 'DELETE', 'INSERT', 'COMMIT']);
+    expect(client.calls[1]?.text).toContain('ON CONFLICT (asset_id) DO NOTHING');
+    expect(client.calls[2]?.values).toContain(sourceLocation.uri);
+    expect(client.calls[3]?.values).toContain(managedLocation.uri);
+    expect(client.calls[5]?.values).toContain(180000);
+    expect(client.calls[5]?.values).toContain(90000);
+  });
+
+  it('rolls back the entire validated aggregate when a later durable write fails', async () => {
+    const client = new ScriptedClient([
+      { rows: [], rowCount: null },
+      { rows: [assetRow], rowCount: 1 },
+      { rows: [locationRow(sourceLocation)], rowCount: 1 },
+      { rows: [locationRow(managedLocation)], rowCount: 1 },
+      { rows: [], rowCount: 0 },
+      new Error('injected stream insert failure'),
+      { rows: [], rowCount: null },
+    ]);
+
+    await expect(new PostgresMediaCatalog(client).commitValidatedImmutableIngest(bundle))
+      .rejects.toThrow('injected stream insert failure');
+    expect(client.calls.at(-1)?.text).toBe('ROLLBACK');
+    expect(client.calls.some((call) => call.text === 'COMMIT')).toBe(false);
+  });
+
+  it('validates the complete ingest bundle before opening a transaction', async () => {
+    const client = new ScriptedClient([]);
+    const invalid = {
+      ...bundle,
+      managedLocation: { ...bundle.managedLocation, assetId: `sha256:${'b'.repeat(64)}` },
+    };
+    await expect(new PostgresMediaCatalog(client).commitValidatedImmutableIngest(invalid))
+      .rejects.toThrow('locations must reference the immutable asset');
     expect(client.calls).toHaveLength(0);
   });
 

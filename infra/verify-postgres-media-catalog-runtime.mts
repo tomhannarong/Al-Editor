@@ -4,7 +4,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 
-import { PostgresMediaCatalog } from '../packages/media-catalog/src/postgres.ts';
+import { PostgresMediaCatalog, type PostgresQueryClient, type PostgresQueryResult } from '../packages/media-catalog/src/postgres.ts';
+import type { ValidatedImmutableIngestBundle } from '../packages/media-catalog/src/durable-ingest.ts';
 
 const { Client } = pg;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -111,6 +112,109 @@ try {
   await catalog.replaceStreamMetadata(asset.assetId, replacement);
   assert.deepEqual(await catalog.getStreamMetadata(asset.assetId), replacement);
 
+  const atomicDigest = 'c'.repeat(64);
+  const atomicAsset = {
+    schemaVersion: '1.0' as const,
+    assetId: `sha256:${atomicDigest}`,
+    contentDigest: { algorithm: 'sha256' as const, hex: atomicDigest },
+    byteSize: 8192,
+    firstIngestedAt: '2026-08-25T06:00:00.000Z',
+  };
+  const atomicBundle: ValidatedImmutableIngestBundle = {
+    asset: atomicAsset,
+    sourceLocation: {
+      locationId: 'runtime-atomic-source',
+      assetId: atomicAsset.assetId,
+      uri: 'file:///footage/atomic.mov',
+      state: 'available',
+      observedAt: '2026-08-25T06:01:00.000Z',
+    },
+    managedLocation: {
+      locationId: 'runtime-atomic-managed',
+      assetId: atomicAsset.assetId,
+      uri: `file:///managed/sha256/cc/${atomicDigest}`,
+      state: 'available',
+      observedAt: '2026-08-25T06:02:00.000Z',
+    },
+    streams: [{
+      streamId: `${atomicAsset.assetId}:stream:0`,
+      assetId: atomicAsset.assetId,
+      streamIndex: 0,
+      kind: 'video',
+      codecName: 'h264',
+      timeBase: { numerator: 1, denominator: 90000 },
+      startPts: 270000,
+      durationPts: 630000,
+      width: 3840,
+      height: 2160,
+    }],
+  };
+
+  await catalog.commitValidatedImmutableIngest(atomicBundle);
+  assert.deepEqual(await catalog.getAsset(atomicAsset.assetId), atomicAsset);
+  assert.deepEqual(await catalog.getLocation(atomicBundle.sourceLocation.locationId), atomicBundle.sourceLocation);
+  assert.deepEqual(await catalog.getLocation(atomicBundle.managedLocation.locationId), atomicBundle.managedLocation);
+  assert.deepEqual(await catalog.getStreamMetadata(atomicAsset.assetId), atomicBundle.streams);
+
+  const rollbackDigest = 'd'.repeat(64);
+  const rollbackAsset = {
+    schemaVersion: '1.0' as const,
+    assetId: `sha256:${rollbackDigest}`,
+    contentDigest: { algorithm: 'sha256' as const, hex: rollbackDigest },
+    byteSize: 16384,
+    firstIngestedAt: '2026-08-25T07:00:00.000Z',
+  };
+  const rollbackBundle: ValidatedImmutableIngestBundle = {
+    asset: rollbackAsset,
+    sourceLocation: {
+      locationId: 'runtime-rollback-source',
+      assetId: rollbackAsset.assetId,
+      uri: 'file:///footage/rollback.mov',
+      state: 'available',
+      observedAt: '2026-08-25T07:01:00.000Z',
+    },
+    managedLocation: {
+      locationId: 'runtime-rollback-managed',
+      assetId: rollbackAsset.assetId,
+      uri: `file:///managed/sha256/dd/${rollbackDigest}`,
+      state: 'available',
+      observedAt: '2026-08-25T07:02:00.000Z',
+    },
+    streams: [{
+      streamId: `${rollbackAsset.assetId}:stream:0`,
+      assetId: rollbackAsset.assetId,
+      streamIndex: 0,
+      kind: 'audio',
+      codecName: 'aac',
+      timeBase: { numerator: 1, denominator: 48000 },
+      startPts: 48000,
+      durationPts: 96000,
+      sampleRate: 48000,
+      channels: 2,
+    }],
+  };
+
+  let injected = false;
+  const faultingClient: PostgresQueryClient = {
+    async query<Row = Record<string, unknown>>(text: string, values?: readonly unknown[]): Promise<PostgresQueryResult<Row>> {
+      if (!injected && text.includes('INSERT INTO media_streams')) {
+        injected = true;
+        throw new Error('injected atomic ingest stream failure');
+      }
+      const result = values === undefined ? await client.query(text) : await client.query(text, [...values]);
+      return { rows: result.rows as Row[], rowCount: result.rowCount };
+    },
+  };
+
+  await assert.rejects(
+    new PostgresMediaCatalog(faultingClient).commitValidatedImmutableIngest(rollbackBundle),
+    /injected atomic ingest stream failure/,
+  );
+  assert.equal(injected, true);
+  assert.equal((await client.query('SELECT 1 FROM media_assets WHERE asset_id = $1', [rollbackAsset.assetId])).rowCount, 0);
+  assert.equal((await client.query('SELECT 1 FROM media_storage_locations WHERE location_id = ANY($1::text[])', [[rollbackBundle.sourceLocation.locationId, rollbackBundle.managedLocation.locationId]])).rowCount, 0);
+  assert.equal((await client.query('SELECT 1 FROM media_streams WHERE asset_id = $1', [rollbackAsset.assetId])).rowCount, 0);
+
   const schemaColumns = await client.query<{ column_name: string }>(
     `SELECT column_name
        FROM information_schema.columns
@@ -125,7 +229,7 @@ try {
   assert(columnNames.includes('time_base_denominator'));
   assert(!columnNames.some((name) => /second|millisecond/i.test(name)));
 
-  process.stdout.write('PostgreSQL media catalog runtime proof passed: migration 0002, idempotent asset identity, mutable location rebinding, transactional stream replacement, and native PTS/time-base readback.\n');
+  process.stdout.write('PostgreSQL media catalog runtime proof passed: migration 0002, idempotent identity, mutable rebinding, native PTS/time-base readback, and atomic validated-ingest commit/rollback.\n');
 } finally {
   await client.end().catch(() => undefined);
 }

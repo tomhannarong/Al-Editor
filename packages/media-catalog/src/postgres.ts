@@ -7,6 +7,7 @@ import {
   type NativeMediaStreamMetadata,
   type StableMediaAssetIdentity,
 } from '../../contracts/src/media-catalog.contract.js';
+import type { ValidatedImmutableIngestBundle } from './durable-ingest.js';
 import { MediaCatalogInvariantError } from './index.js';
 
 export interface PostgresQueryResult<Row = Record<string, unknown>> {
@@ -76,20 +77,7 @@ export class PostgresMediaCatalog {
 
   async rebindLocation(location: MediaStorageLocation): Promise<MediaStorageLocation> {
     assertLocation(location);
-    const result = await this.client.query<LocationRow>(
-      `INSERT INTO media_storage_locations (location_id, asset_id, uri, state, observed_at)
-       VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (location_id) DO UPDATE SET
-         asset_id = EXCLUDED.asset_id,
-         uri = EXCLUDED.uri,
-         state = EXCLUDED.state,
-         observed_at = EXCLUDED.observed_at
-       RETURNING location_id, asset_id, uri, state, observed_at`,
-      [location.locationId, location.assetId, location.uri, location.state, location.observedAt],
-    );
-    const row = result.rows[0];
-    if (!row) throw new MediaCatalogInvariantError('location upsert returned no row');
-    return locationFromRow(row);
+    return upsertLocation(this.client, location);
   }
 
   async replaceStreamMetadata(assetId: string, streams: NativeMediaStreamMetadata[]): Promise<NativeMediaStreamMetadata[]> {
@@ -98,23 +86,38 @@ export class PostgresMediaCatalog {
     try {
       const owner = await this.client.query<{ asset_id: string }>('SELECT asset_id FROM media_assets WHERE asset_id = $1 FOR SHARE', [assetId]);
       if (!owner.rows[0]) throw new MediaCatalogInvariantError(`cannot persist streams for unknown asset ${assetId}`);
-      await this.client.query('DELETE FROM media_streams WHERE asset_id = $1', [assetId]);
-      for (const stream of normalized) {
-        await this.client.query(
-          `INSERT INTO media_streams (
-             stream_id, asset_id, stream_index, kind, codec_name,
-             time_base_numerator, time_base_denominator, start_pts, duration_pts,
-             width, height, sample_rate, channels
-           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
-          [
-            stream.streamId, stream.assetId, stream.streamIndex, stream.kind, stream.codecName ?? null,
-            stream.timeBase.numerator, stream.timeBase.denominator, stream.startPts, stream.durationPts,
-            stream.width ?? null, stream.height ?? null, stream.sampleRate ?? null, stream.channels ?? null,
-          ],
-        );
-      }
+      await replaceStreams(this.client, assetId, normalized);
       await this.client.query('COMMIT');
       return normalized.map(cloneStream);
+    } catch (error) {
+      await this.client.query('ROLLBACK');
+      throw error;
+    }
+  }
+
+  /**
+   * Atomically commits a fully validated ingest aggregate. This is the durable
+   * counterpart to the pre-durable staging boundary: either immutable asset,
+   * both mutable locations and the native stream projection commit together,
+   * or PostgreSQL rolls the whole aggregate back.
+   */
+  async commitValidatedImmutableIngest(bundle: ValidatedImmutableIngestBundle): Promise<void> {
+    const normalizedStreams = validateIngestBundle(bundle);
+    await this.client.query('BEGIN');
+    try {
+      const inserted = await insertAssetIfAbsent(this.client, bundle.asset);
+      if (!inserted) {
+        const existing = await selectAssetForUpdate(this.client, bundle.asset.assetId);
+        if (!existing) throw new MediaCatalogInvariantError('asset conflict disappeared before transactional readback');
+        if (!sameImmutableAsset(existing, bundle.asset)) {
+          throw new MediaCatalogInvariantError('content-addressed asset identity conflicts with existing immutable bytes');
+        }
+      }
+
+      await upsertLocation(this.client, bundle.sourceLocation);
+      await upsertLocation(this.client, bundle.managedLocation);
+      await replaceStreams(this.client, bundle.asset.assetId, normalizedStreams);
+      await this.client.query('COMMIT');
     } catch (error) {
       await this.client.query('ROLLBACK');
       throw error;
@@ -147,6 +150,87 @@ export class PostgresMediaCatalog {
     );
     return result.rows.map(streamFromRow);
   }
+}
+
+async function insertAssetIfAbsent(
+  client: PostgresQueryClient,
+  candidate: StableMediaAssetIdentity,
+): Promise<StableMediaAssetIdentity | undefined> {
+  const result = await client.query<AssetRow>(
+    `INSERT INTO media_assets (asset_id, schema_version, digest_algorithm, digest_hex, byte_size, first_ingested_at)
+     VALUES ($1, $2, $3, $4, $5, $6)
+     ON CONFLICT (asset_id) DO NOTHING
+     RETURNING asset_id, schema_version, digest_algorithm, digest_hex, byte_size, first_ingested_at`,
+    [candidate.assetId, candidate.schemaVersion, candidate.contentDigest.algorithm, candidate.contentDigest.hex, candidate.byteSize, candidate.firstIngestedAt],
+  );
+  return result.rows[0] ? assetFromRow(result.rows[0]) : undefined;
+}
+
+async function selectAssetForUpdate(
+  client: PostgresQueryClient,
+  assetId: string,
+): Promise<StableMediaAssetIdentity | undefined> {
+  const result = await client.query<AssetRow>(
+    `SELECT asset_id, schema_version, digest_algorithm, digest_hex, byte_size, first_ingested_at
+       FROM media_assets WHERE asset_id = $1 FOR UPDATE`,
+    [assetId],
+  );
+  return result.rows[0] ? assetFromRow(result.rows[0]) : undefined;
+}
+
+async function upsertLocation(
+  client: PostgresQueryClient,
+  location: MediaStorageLocation,
+): Promise<MediaStorageLocation> {
+  const result = await client.query<LocationRow>(
+    `INSERT INTO media_storage_locations (location_id, asset_id, uri, state, observed_at)
+     VALUES ($1, $2, $3, $4, $5)
+     ON CONFLICT (location_id) DO UPDATE SET
+       asset_id = EXCLUDED.asset_id,
+       uri = EXCLUDED.uri,
+       state = EXCLUDED.state,
+       observed_at = EXCLUDED.observed_at
+     RETURNING location_id, asset_id, uri, state, observed_at`,
+    [location.locationId, location.assetId, location.uri, location.state, location.observedAt],
+  );
+  const row = result.rows[0];
+  if (!row) throw new MediaCatalogInvariantError('location upsert returned no row');
+  return locationFromRow(row);
+}
+
+async function replaceStreams(
+  client: PostgresQueryClient,
+  assetId: string,
+  streams: NativeMediaStreamMetadata[],
+): Promise<void> {
+  await client.query('DELETE FROM media_streams WHERE asset_id = $1', [assetId]);
+  for (const stream of streams) {
+    await client.query(
+      `INSERT INTO media_streams (
+         stream_id, asset_id, stream_index, kind, codec_name,
+         time_base_numerator, time_base_denominator, start_pts, duration_pts,
+         width, height, sample_rate, channels
+       ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+      [
+        stream.streamId, stream.assetId, stream.streamIndex, stream.kind, stream.codecName ?? null,
+        stream.timeBase.numerator, stream.timeBase.denominator, stream.startPts, stream.durationPts,
+        stream.width ?? null, stream.height ?? null, stream.sampleRate ?? null, stream.channels ?? null,
+      ],
+    );
+  }
+}
+
+function validateIngestBundle(bundle: ValidatedImmutableIngestBundle): NativeMediaStreamMetadata[] {
+  assertAsset(bundle.asset);
+  assertLocation(bundle.sourceLocation);
+  assertLocation(bundle.managedLocation);
+  if (bundle.sourceLocation.assetId !== bundle.asset.assetId || bundle.managedLocation.assetId !== bundle.asset.assetId) {
+    throw new MediaCatalogInvariantError('validated ingest locations must reference the immutable asset');
+  }
+  if (bundle.sourceLocation.locationId === bundle.managedLocation.locationId) {
+    throw new MediaCatalogInvariantError('source and managed ingest locations must have distinct locationId values');
+  }
+  return validateStreamSet(bundle.asset.assetId, bundle.streams);
 }
 
 function assertAsset(asset: StableMediaAssetIdentity): void {
