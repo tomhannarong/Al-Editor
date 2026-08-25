@@ -48,6 +48,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | PostgreSQL keyframe derivative revision persistence | migration 0005 + `packages/keyframe-library/src/postgres.ts` | verified on `bc8431df`; CI `32892664602` job `97947954572`; real PostgreSQL/local-stack `32892664650` job `97947954495` |
 | Confined bounded real keyframe extraction | `packages/keyframe-library/src/generator.ts` + `infra/verify-real-keyframe-extraction-runtime.mts` | verified on `57f68a11`; CI `32899647168` job `97970214362`; real FFmpeg/local-stack `32899647404` job `97970215910` |
 | Scene-boundary quality baseline | `packages/scene-library/src/quality-baseline.ts` + versioned fixture | verified on `4fca4d89`; CI `32903495078` job `97982328934`; baseline P/R/F1 = 0.75/0.75/0.75 |
+| Versioned immutable transcript / ASR-correction lineage | `packages/contracts/src/transcript.contract.ts` | verified on repaired `0921bcd2`; CI `32909410505` job `98000354561` |
 
 ## Phase 1 closure
 
@@ -61,8 +62,12 @@ P2-04 through P2-07 establish rebuildable/versioned proxy evidence, immutable re
 
 P2-08 through P2-11 establish versioned keyframe evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg extraction with exact scene/source native-PTS lineage.
 
-The remaining Bible gate requirement, `quality baseline`, is now backed by `packages/scene-library/src/quality-baseline.ts`, its deterministic tests and `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`. Exact implementation `4fca4d89dae48d57e381420bea91b6d321efba41` passed AI Editor CI `32903495078` / job `97982328934`. The baseline is versioned, source-bound and uses native integer PTS plus rational stream time base only. Phase 2 is therefore verified complete.
+The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/src/quality-baseline.ts`, deterministic tests and `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`. Exact implementation `4fca4d89dae48d57e381420bea91b6d321efba41` passed AI Editor CI `32903495078` / job `97982328934`.
+
+## Phase 3 status
+
+The historical checklist authority defines Phase 3 as 9 items. P3-01 is now verified: `packages/contracts/src/transcript.contract.ts` defines immutable transcript revisions bound to stable SHA-256 media/audio-stream identity, native safe-integer word PTS with rational time base, explicit ASR-vs-correction revision lineage, stable word IDs/ordinals and bounded confidence evidence. Initial implementation `af1b62e8cd1aa154cadfad0d1afcbf20106a3049` correctly failed the TypeScript strict gate due to two strict test-harness spreads; repair `0921bcd24909620f989b61a7764f78358c0ea466` passed AI Editor CI `32909410505`, job `98000354561`, with `ai-editor-ci/all = success`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Current phase is Phase 3 — Voice / Transcript Alignment.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 1/9.

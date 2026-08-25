@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 3,
-  "currentTask": "phase3-audit-first-independent-slice",
+  "currentTask": "P3-02-immutable-transcript-revision-persistence-idempotency",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 47,
-    "standaloneRevalidatedPercent": 29.01
+    "standaloneRevalidated": 48,
+    "standaloneRevalidatedPercent": 29.63
   },
   "phase0": {
     "total": 22,
@@ -73,7 +73,17 @@
       "exactSourceMapping": ["P2-01, P2-03 and derivative lineage evidence preserve immutable asset/stream/native-PTS mapping"],
       "qualityBaseline": ["implementation commit 4fca4d89dae48d57e381420bea91b6d321efba41", "packages/scene-library/src/quality-baseline.ts", "packages/scene-library/src/quality-baseline.test.ts", "docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md", "AI Editor CI run 32903495078 job 97982328934 success", "ai-editor-ci/all success on exact implementation commit"]
     },
-    "next": "Phase 2 gate is verified complete; audit Phase 3 and select the smallest independent immutable voice/transcript alignment slice"
+    "next": "Phase 2 gate is verified complete; Phase 3 P3-01 is now verified"
+  },
+  "phase3": {
+    "total": 9,
+    "standaloneRevalidated": 1,
+    "standaloneRevalidatedPercent": 11.11,
+    "state": "in-progress",
+    "implementedSlices": [
+      {"id":"P3-01-versioned-immutable-transcript-revision-contract","implementationCommit":"af1b62e8cd1aa154cadfad0d1afcbf20106a3049","repairCommit":"0921bcd24909620f989b61a7764f78358c0ea466","status":"verified","evidence":["packages/contracts/src/transcript.contract.ts","packages/contracts/src/transcript.contract.test.ts","AI Editor CI run 32909410505 job 98000354561 success","ai-editor-ci/all success on exact repair commit"],"invariants":["transcript revisions bind to immutable sha256 asset and exact audio stream identity","word authority is safe-integer native sourceStartPts/sourceEndPts plus rational source time base","word IDs are unique and ordinals are stable zero-based positions","ASR root revisions cannot claim a parent; correction revisions require explicit immutable parent lineage","confidence remains bounded untrusted model evidence rather than executable or timing authority","milliseconds and decimal seconds are deliberately absent from the canonical transcript contract"]}
+    ],
+    "next": "P3-02 immutable transcript revision persistence/idempotency"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
