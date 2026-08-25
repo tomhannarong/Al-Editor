@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 2,
-  "currentTask": "phase2-next-smallest-real-ffmpeg-proxy-generation-audit",
+  "currentTask": "phase2-next-smallest-keyframe-derivative-contract-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 42,
-    "standaloneRevalidatedPercent": 25.93
+    "standaloneRevalidated": 43,
+    "standaloneRevalidatedPercent": 26.54
   },
   "phase0": {
     "total": 22,
@@ -52,8 +52,8 @@
   },
   "phase2": {
     "total": 11,
-    "standaloneRevalidated": 6,
-    "standaloneRevalidatedPercent": 54.55,
+    "standaloneRevalidated": 7,
+    "standaloneRevalidatedPercent": 63.64,
     "state": "in-progress",
     "implementedSlices": [
       {"id":"P2-01-versioned-scene-set-source-mapping-contract","implementationCommit":"8759bc0437d672f4e63329fcc19b84172b9e433d","status":"verified","evidence":["packages/contracts/src/scene-set.contract.ts","AI Editor CI run 32840639465 job 97779125483 success"]},
@@ -61,9 +61,10 @@
       {"id":"P2-03-postgresql-scene-set-revision-persistence","implementationCommit":"5c91fa9a4acf2ea23b198d3027142109d04cd630","runtimeRepairCommit":"7cf7b857bfef8585897f208f21cbbe50d723a34c","status":"verified","evidence":["db/migrations/0003_create_scene_library.sql","packages/scene-library/src/postgres.ts","AI Editor CI run 32852840324 job 97817616436 success","AI Editor Local Stack Gate run 32853149558 job 97818643421 success"]},
       {"id":"P2-04-versioned-rebuildable-proxy-derivative-contract","implementationCommit":"236dba5785f33eb861094f08459840cbec223a93","status":"verified","evidence":["packages/contracts/src/proxy-derivative.contract.ts","packages/contracts/src/proxy-derivative.contract.test.ts","AI Editor CI run 32857635477 job 97833415918 success","ai-editor-ci/all success on exact implementation commit"]},
       {"id":"P2-05-immutable-proxy-derivative-revision-persistence-idempotency","implementationCommit":"f950775fadea9b3681c4c7fdec93cb27b59f29f8","status":"verified","evidence":["packages/proxy-library/src/index.ts","packages/proxy-library/src/index.test.ts","AI Editor CI run 32863422284 job 97852730546 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["semantic re-registration including equivalent rational source time base is idempotent","conflicting revisionId reuse fails closed before mutation","stored revision evidence is defensively copied","artifact rebuild to changed derivative state requires a new immutable revisionId","artifact URI remains downstream rebuildable state and does not redefine canonical source mapping"]},
-      {"id":"P2-06-postgresql-proxy-derivative-revision-persistence","implementationCommit":"577a14456b5b7c48860f52f88dd0ac6a11d2f380","status":"verified","evidence":["db/migrations/0004_create_proxy_library.sql","packages/proxy-library/src/postgres.ts","packages/proxy-library/src/postgres.test.ts","infra/verify-postgres-proxy-library-runtime.mts","AI Editor CI run 32869312338 job 97872229894 success","AI Editor Local Stack Gate run 32869312804 job 97872230411 success","ai-editor-ci/all and ai-editor-local-stack/all success on exact implementation commit"],"invariants":["durable row references exact immutable scene-set revision and source tuple","normalized rational time base remains native timing authority","same immutable revision registration is idempotent","conflicting revisionId reuse fails closed and rolls back","artifact URI remains rebuildable derivative evidence rather than canonical source authority"]}
+      {"id":"P2-06-postgresql-proxy-derivative-revision-persistence","implementationCommit":"577a14456b5b7c48860f52f88dd0ac6a11d2f380","status":"verified","evidence":["db/migrations/0004_create_proxy_library.sql","packages/proxy-library/src/postgres.ts","packages/proxy-library/src/postgres.test.ts","infra/verify-postgres-proxy-library-runtime.mts","AI Editor CI run 32869312338 job 97872229894 success","AI Editor Local Stack Gate run 32869312804 job 97872230411 success","ai-editor-ci/all and ai-editor-local-stack/all success on exact implementation commit"],"invariants":["durable row references exact immutable scene-set revision and source tuple","normalized rational time base remains native timing authority","same immutable revision registration is idempotent","conflicting revisionId reuse fails closed and rolls back","artifact URI remains rebuildable derivative evidence rather than canonical source authority"]},
+      {"id":"P2-07-confined-shell-free-bounded-real-ffmpeg-proxy-generation","implementationCommit":"92c0136a0a820caaa77431f76a0da09433be8547","testRepairCommit":"417d3e73abf8516a7da75083eb5246754e691ceb","runtimeRepairCommit":"c2ac01b5676c9bd64a070819d5dc29e7c406fc2c","status":"verified","evidence":["packages/proxy-library/src/generator.ts","packages/proxy-library/src/generator.test.ts","infra/verify-real-proxy-generation-runtime.mts","AI Editor CI run 32875753663 job 97893121765 success","AI Editor Local Stack Gate run 32875753669 job 97893122814 success","ai-editor-ci/all and ai-editor-local-stack/all success on exact runtime repair commit"],"invariants":["FFmpeg executes through shell-free bounded process boundary","managed original is input-only and proxy output is confined beneath derivativeRoot","artifactUri must match the confined rebuildable output path","declared source stream mapping is explicit","proxy codec and presentation timestamps never replace native PTS plus rational time-base authority"]}
     ],
-    "next": "audit the smallest real FFmpeg proxy-generation slice using the verified immutable/durable proxy revision boundary; keep generation selective/manual until its Phase-2 gate requires runtime proof"
+    "next": "audit the smallest additive keyframe derivative contract/generation slice tied to immutable scene-set/source authority"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
