@@ -46,6 +46,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned rebuildable keyframe derivative | `packages/contracts/src/keyframe-derivative.contract.ts` | verified on `59aa02ed`; CI `32881831056` job `97912919380` |
 | Immutable keyframe derivative revision persistence | `packages/keyframe-library/src/index.ts` | verified on `5ce040ae`; CI `32886479355` job `97928027272` |
 | PostgreSQL keyframe derivative revision persistence | migration 0005 + `packages/keyframe-library/src/postgres.ts` | verified on `bc8431df`; CI `32892664602` job `97947954572`; real PostgreSQL/local-stack `32892664650` job `97947954495` |
+| Confined bounded real keyframe extraction | `packages/keyframe-library/src/generator.ts` + `infra/verify-real-keyframe-extraction-runtime.mts` | verified on `57f68a11`; CI `32899647168` job `97970214362`; real FFmpeg/local-stack `32899647404` job `97970215910` |
 
 ## Phase 1 closure
 
@@ -57,8 +58,12 @@ P2-01 through P2-03 establish versioned scene-set identity, immutable revision s
 
 P2-04 through P2-07 establish rebuildable/versioned proxy evidence, immutable revision semantics, PostgreSQL durability and confined bounded real FFmpeg generation without introducing proxy-time authority.
 
-P2-08 and P2-09 establish versioned keyframe derivative evidence and immutable in-memory revision semantics. P2-10 adds real PostgreSQL durability: the revision references the exact persisted scene-set source tuple plus scene interval, ordered frame rows persist native `sourcePts`, exact semantic re-registration is idempotent, conflicting immutable evidence fails closed, and no seconds/milliseconds timing authority is introduced. Exact implementation `bc8431dffaf8a5c2d682b779557b46f004508e92` passed AI Editor CI `32892664602` and AI Editor Local Stack Gate `32892664650`.
+P2-08 through P2-10 establish versioned keyframe derivative evidence, immutable revision semantics and real PostgreSQL durability with exact scene/source native-PTS lineage.
+
+P2-11 adds confined, shell-free, bounded real FFmpeg keyframe extraction. Managed-original inputs are realpath-confined, symlink inputs fail closed, frame fan-out is bounded, exact native integer `sourcePts` drive selection, caller IDs do not become filesystem path segments, and image artifacts publish only at deterministic confined URIs without overwriting existing immutable revision artifacts. Exact implementation `57f68a113d15f914d193cb53c9d4df70595eec4c` passed AI Editor CI `32899647168` and AI Editor Local Stack Gate `32899647404`.
+
+All 11 planned Phase-2 implementation slices now have standalone verification. Phase 2 is **not yet advanced**: the Bible's required proof also names a `quality baseline`, and gate reconciliation must map that requirement to exact evidence or implement the smallest missing deterministic baseline before Phase 3 begins.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 10/11 verified. The final Phase-2 slice is confined bounded real FFmpeg keyframe extraction from managed immutable originals, followed by Phase-2 gate reconciliation.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 implementation slices are 11/11 verified; Phase-2 gate reconciliation remains pending.

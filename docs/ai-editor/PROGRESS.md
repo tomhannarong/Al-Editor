@@ -2,41 +2,43 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 2 — Scene Library, Proxies, Keyframes  
-**Current task:** confined shell-free bounded real FFmpeg keyframe extraction
+**Current task:** Phase-2 gate reconciliation; do not advance until the Bible quality baseline has exact evidence
 
 ```text
-Standalone verified: 46 / 162 = 28.40%
+Standalone verified: 47 / 162 = 29.01%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
-Phase 2:             10 / 11  =  90.91% verified
+Phase 2:             11 / 11  = 100.00% implementation slices verified; gate reconciliation pending
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14.
 
 ## Phase 2 verified slices
 
-P2-01 through P2-09 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, confined bounded real FFmpeg proxy generation, versioned keyframe derivative evidence and immutable in-memory keyframe revision semantics.
+P2-01 through P2-10 remain verified with their existing exact evidence: versioned scene-set source mapping, immutable scene-set persistence/durability, rebuildable proxy contract/persistence/durability, confined bounded real FFmpeg proxy generation, versioned keyframe derivative evidence, immutable keyframe revision semantics, and real PostgreSQL keyframe durability.
 
-### P2-10 — PostgreSQL durable keyframe derivative revision persistence/readback
+### P2-11 — confined shell-free bounded real FFmpeg keyframe extraction
 
-Implementation `bc8431dffaf8a5c2d682b779557b46f004508e92`.
+Implementation `57f68a113d15f914d193cb53c9d4df70595eec4c`.
 
-Migration `0005_create_keyframe_library.sql` adds durable immutable keyframe revision evidence plus ordered frame rows. The revision row references the exact persisted scene-set source tuple and the exact `(scene_set_revision_id, scene_id)` interval. Frame rows persist only `frameId`, native safe-integer `sourcePts`, ordered ordinal and rebuildable `artifactUri`; no seconds/milliseconds timing authority was introduced.
+`packages/keyframe-library/src/generator.ts` now extracts keyframe image derivatives from a source that is realpath-confined under the supplied managed-original root. Direct symlink inputs fail closed. The generator reuses the existing shell-free `runBoundedProcess` boundary, validates a bounded frame fan-out before invoking FFmpeg, maps the exact source stream, and drives selection with integer native `sourcePts` values via `select=eq(pts\,...)` while retaining the revision's rational source time base as the interpretation authority.
 
-`PostgresKeyframeDerivativeRevisionStore` normalizes rational source time bases before insert, inserts revision + frames in one transaction, treats exact semantic re-registration as idempotent, and rejects conflicting `revisionId` reuse without replacing historical evidence. Readback validates and defensively copies the reconstructed revision.
+Caller-controlled `revisionId`/`frameId` values never become filesystem path segments: the revision directory is a SHA-256 digest of the immutable revision ID and frame outputs are ordinal PNG paths. Every declared `artifactUri` must exactly match its confined deterministic output. FFmpeg writes to a unique temporary image and the final path is published without overwriting an existing revision artifact. Image bytes and URIs remain rebuildable derivative state only.
 
-Exact evidence on `bc8431dffaf8a5c2d682b779557b46f004508e92`:
+`infra/verify-real-keyframe-extraction-runtime.mts` creates a real 30 fps H.264 MP4 with explicit `1/90000` track time base, verifies that native PTS `0` and `45000` exist, marks the managed input read-only, extracts those exact frames with real FFmpeg, and ffprobes both generated PNGs.
 
-- AI Editor CI run `32892664602`, job `97947954572`: success
+Exact evidence on `57f68a113d15f914d193cb53c9d4df70595eec4c`:
+
+- AI Editor CI run `32899647168`, job `97970214362`: success
 - TypeScript strict gate: success
 - Vitest behavioral gate: success
 - migration deterministic gate: success
 - contract/policy gates: success
 - `ai-editor-ci/all = success`
-- AI Editor Local Stack Gate run `32892664650`, job `97947954495`: success
+- AI Editor Local Stack Gate run `32899647404`, job `97970215910`: success
 - PostgreSQL + Qdrant runtime: success
 - media catalog / durable ingest / scene / proxy / keyframe PostgreSQL verifier chain: success
-- real FFmpeg proxy generation regression gate: success
+- real FFmpeg proxy + keyframe derivative generation: success
 - API health against real dependencies: success
 - `ai-editor-local-stack/all = success`
 
@@ -46,8 +48,8 @@ Canonical timeline v1/v2 compatibility, centralized media-time authority, render
 
 ## Validation / free-tier discipline
 
-This database slice used one normal single-job CI gate and one selective local-stack runtime gate because real PostgreSQL foreign-key/transaction/readback proof was required. No matrix or unchanged rerun was used. The next docs-only closure is path-filtered and must not trigger Actions.
+The execution environment could not resolve `github.com`, so a local clone/test run was unavailable and was not claimed as a pass. The implementation was batched into one commit. That exact commit used one normal single-job CI run plus the already-selective single-job local-stack runtime gate; no matrix and no unchanged rerun were used. Proxy and keyframe real-media checks are consolidated into one derivative-generation step. The docs/checkpoint closure is path-filtered and must not trigger Actions.
 
 ## Next task
 
-Implement the final Phase-2 slice: confined, shell-free, bounded real FFmpeg keyframe extraction from managed immutable originals, preserving exact scene/source native-PTS lineage and treating extracted image bytes/URIs as rebuildable derivative state only. After that, reconcile the Phase-2 gate before advancing to Phase 3.
+Reconcile the Phase-2 Bible gate directly against `PROJECT_BIBLE.md`: versioned scene sets and exact source mapping already have exact evidence, but Phase 2 must not advance until the required **quality baseline** is mapped to exact standalone evidence. If that evidence is absent, implement the smallest deterministic quality-baseline contract/fixture needed before entering Phase 3.

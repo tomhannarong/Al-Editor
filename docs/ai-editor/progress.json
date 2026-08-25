@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 2,
-  "currentTask": "phase2-real-ffmpeg-keyframe-extraction",
+  "currentTask": "phase2-gate-reconciliation",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 46,
-    "standaloneRevalidatedPercent": 28.4
+    "standaloneRevalidated": 47,
+    "standaloneRevalidatedPercent": 29.01
   },
   "phase0": {
     "total": 22,
@@ -52,9 +52,9 @@
   },
   "phase2": {
     "total": 11,
-    "standaloneRevalidated": 10,
-    "standaloneRevalidatedPercent": 90.91,
-    "state": "in-progress",
+    "standaloneRevalidated": 11,
+    "standaloneRevalidatedPercent": 100,
+    "state": "implementation-complete-gate-reconciliation-pending",
     "implementedSlices": [
       {"id":"P2-01-versioned-scene-set-source-mapping-contract","implementationCommit":"8759bc0437d672f4e63329fcc19b84172b9e433d","status":"verified","evidence":["packages/contracts/src/scene-set.contract.ts","AI Editor CI run 32840639465 job 97779125483 success"]},
       {"id":"P2-02-immutable-scene-set-revision-persistence-idempotency","implementationCommit":"c877b5e91f190ba490a1b6767759b4ff69268e02","repairCommit":"e221be705e2dbd69e14df5dbbca7b5b949f17c29","status":"verified","evidence":["packages/scene-library/src/index.ts","AI Editor CI run 32845521695 job 97794189378 success"]},
@@ -65,9 +65,10 @@
       {"id":"P2-07-confined-shell-free-bounded-real-ffmpeg-proxy-generation","implementationCommit":"92c0136a0a820caaa77431f76a0da09433be8547","testRepairCommit":"417d3e73abf8516a7da75083eb5246754e691ceb","runtimeRepairCommit":"c2ac01b5676c9bd64a070819d5dc29e7c406fc2c","status":"verified","evidence":["packages/proxy-library/src/generator.ts","packages/proxy-library/src/generator.test.ts","infra/verify-real-proxy-generation-runtime.mts","AI Editor CI run 32875753663 job 97893121765 success","AI Editor Local Stack Gate run 32875753669 job 97893122814 success"]},
       {"id":"P2-08-versioned-rebuildable-keyframe-derivative-contract","implementationCommit":"59aa02eddf4357eb289ef244a820c99cd5de95ad","status":"verified","evidence":["packages/contracts/src/keyframe-derivative.contract.ts","packages/contracts/src/keyframe-derivative.contract.test.ts","AI Editor CI run 32881831056 job 97912919380 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["keyframes bind to exact scene-set revision, scene, immutable asset and stream identity","native safe-integer sourcePts plus rational source time base remain timing authority","frame IDs/sourcePts must be unique and sourcePts strictly increasing","artifact URIs and filename-encoded/display timestamps remain rebuildable derivative state","derivative profile and toolchain versions are explicit"]},
       {"id":"P2-09-immutable-keyframe-derivative-revision-persistence-idempotency","implementationCommit":"5ce040aeb14953f126cfe9dee8b22e086dd06775","status":"verified","evidence":["packages/keyframe-library/src/index.ts","packages/keyframe-library/src/index.test.ts","AI Editor CI run 32886479355 job 97928027272 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable evidence identity","semantic re-registration including equivalent rational time bases is idempotent","changed source lineage, frames, artifact URIs, profile/toolchain or creation evidence under the same revisionId fails closed","re-extraction/rebuild requires a new immutable revision","stored source/toolchain/frame evidence is defensively copied"]},
-      {"id":"P2-10-postgresql-keyframe-derivative-revision-persistence","implementationCommit":"bc8431dffaf8a5c2d682b779557b46f004508e92","status":"verified","evidence":["db/migrations/0005_create_keyframe_library.sql","packages/keyframe-library/src/postgres.ts","packages/keyframe-library/src/postgres.test.ts","infra/verify-postgres-keyframe-library-runtime.mts","AI Editor CI run 32892664602 job 97947954572 success","AI Editor Local Stack Gate run 32892664650 job 97947954495 success","ai-editor-ci/all success on exact implementation commit","ai-editor-local-stack/all success on exact implementation commit"],"invariants":["durable revision references exact persisted scene-set source tuple and scene interval","ordered frame evidence persists native sourcePts and artifact URI only","equivalent rational source time bases normalize before durable insert","semantic re-registration is idempotent and conflicting immutable evidence rolls back","schema introduces no seconds or milliseconds timing authority"]}
+      {"id":"P2-10-postgresql-keyframe-derivative-revision-persistence","implementationCommit":"bc8431dffaf8a5c2d682b779557b46f004508e92","status":"verified","evidence":["db/migrations/0005_create_keyframe_library.sql","packages/keyframe-library/src/postgres.ts","packages/keyframe-library/src/postgres.test.ts","infra/verify-postgres-keyframe-library-runtime.mts","AI Editor CI run 32892664602 job 97947954572 success","AI Editor Local Stack Gate run 32892664650 job 97947954495 success","ai-editor-ci/all success on exact implementation commit","ai-editor-local-stack/all success on exact implementation commit"],"invariants":["durable revision references exact persisted scene-set source tuple and scene interval","ordered frame evidence persists native sourcePts and artifact URI only","equivalent rational source time bases normalize before durable insert","semantic re-registration is idempotent and conflicting immutable evidence rolls back","schema introduces no seconds or milliseconds timing authority"]},
+      {"id":"P2-11-confined-shell-free-bounded-real-ffmpeg-keyframe-extraction","implementationCommit":"57f68a113d15f914d193cb53c9d4df70595eec4c","status":"verified","evidence":["packages/keyframe-library/src/generator.ts","packages/keyframe-library/src/generator.test.ts","infra/verify-real-keyframe-extraction-runtime.mts","AI Editor CI run 32899647168 job 97970214362 success","AI Editor Local Stack Gate run 32899647404 job 97970215910 success","ai-editor-ci/all success on exact implementation commit","ai-editor-local-stack/all success on exact implementation commit"],"invariants":["managed-original input is realpath-confined and symlink input fails closed","FFmpeg execution is shell-free, bounded by timeout/output limits and bounded frame fan-out","exact safe-integer native sourcePts values drive FFmpeg frame selection","caller IDs never become filesystem path segments","artifact URIs must match confined deterministic revision outputs","temporary images publish to final paths without overwriting existing immutable revision artifacts","image bytes and URIs remain rebuildable derivative state only"]}
     ],
-    "next": "implement confined shell-free bounded real FFmpeg keyframe extraction against managed immutable originals, then reconcile the Phase-2 gate"
+    "next": "reconcile the Phase-2 Bible gate without advancing until versioned scene sets, exact source mapping, and the required quality baseline all have exact standalone evidence"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
