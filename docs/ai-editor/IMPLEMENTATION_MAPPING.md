@@ -30,9 +30,12 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | ffprobe native stream normalization/persistence | `packages/media-catalog/src/index.ts` | verified on `705e1dc8`, CI run `32782942297` |
 | Durable PostgreSQL media-catalog schema | `db/migrations/0002_create_media_catalog.sql` | verified against real PostgreSQL on run `32793644151` |
 | PostgreSQL media-catalog adapter | `packages/media-catalog/src/postgres.ts` + runtime verifier | verified real round-trip on `303f0118`, run `32793644151`, job `97640306272` |
+| Confined local-file ingest boundary | `packages/media-catalog/src/local-file-ingest.ts` | verified on `f9d704b3`, CI run `32799561623`, job `97657612381`; allowed-root confinement, direct symlink rejection, read-only/no-follow open, bounded streaming hash, stable file snapshot before catalog publish |
 
-PostgreSQL persistence preserves the same authority boundary: `asset_id` is SHA-256 byte identity, storage URI is mutable location state, stream replacement is transactional, and only native integer PTS plus rational time-base columns represent source timing. Decimal seconds/milliseconds are absent from the durable schema and the runtime verifier checks this boundary.
+PostgreSQL persistence preserves the authority boundary: `asset_id` is SHA-256 byte identity, storage URI is mutable location state, stream replacement is transactional, and only native integer PTS plus rational time-base columns represent source timing. Decimal seconds/milliseconds are absent from the durable schema.
+
+Local-file ingest adds a security/correctness boundary without changing identity semantics: the resolved path must stay inside an explicit root, direct symlinks fail closed, content is read through a read-only handle, and catalog state is not published if file identity/size/timestamps drift during hashing.
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/ffprobe.
 
-Phase 0 is complete: 22/22 standalone items verified. Phase 1 is now 4/14 verified. The next run should audit the remaining Phase-1 checklist against current standalone capabilities before adding new code, then implement the smallest independent immutable-ingest item without duplicating existing behavior.
+Phase 0 is complete: 22/22 standalone items verified. Phase 1 is now 5/14 verified. The next run should audit immutable-original materialization/managed-storage semantics before adding the smallest next Phase-1 slice.
