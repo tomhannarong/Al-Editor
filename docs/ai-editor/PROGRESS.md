@@ -2,12 +2,12 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** audit the three remaining Phase-1 checklist items and select the smallest independent ingest/catalog gap
+**Current task:** audit the two remaining Phase-1 checklist items; leading gap is whether real ffprobe-on-managed-original evidence is required for phase closure
 
 ```text
-Standalone verified: 33 / 162 = 20.37%
+Standalone verified: 34 / 162 = 20.99%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1:             11 / 14  = 78.57% verified
+Phase 1:             12 / 14  = 85.71% verified
 ```
 
 Phase 0 verified: P0-01 through P0-22.
@@ -45,18 +45,21 @@ Implementation `71bd875abcd4b8eef6102f75159f71000955c3c5`; AI Editor CI run `328
 Implementation `f7f90f8ef48d6fb551de218e100ad8f1bf0f809e`; AI Editor CI run `32815455806`, job `97702665656`, success; AI Editor Local Stack Gate run `32815455771`, job `97702665269`, success. Asset + source location + managed location + native stream projection commit in one transaction and injected late stream failure rolls all writes back.
 
 ### P1-11 — durable filesystem-to-PostgreSQL ingest composition
-Implementation/runtime-proof commit `fea5a180e8a7b3b98d018d7bbc6f8aafd2845033` adds `infra/verify-postgres-durable-ingest-runtime.mts` and extends the existing selective local-stack workflow to execute it after the lower-level PostgreSQL catalog verifier.
+Implementation/runtime-proof commit `fea5a180e8a7b3b98d018d7bbc6f8aafd2845033`; AI Editor Local Stack Gate run `32819714185`, job `97715097100`, `ai-editor-local-stack/all = success`. Real confined filesystem source, managed content-addressed original, deterministic ffprobe/native timing, atomic PostgreSQL persistence and idempotent re-ingest were proven together.
 
-The runtime proof creates a real confined local source file, materializes and byte-verifies the SHA-256-addressed managed original, injects deterministic ffprobe JSON, preserves native integer PTS + rational stream time base, calls `ingestImmutableLocalMediaDurably(...)` with a real `PostgresMediaCatalog`, verifies PostgreSQL readback, then re-ingests the same bytes and proves the managed content path and durable asset identity are reused.
+### P1-12 — managed-original read-only invariant on verified reuse
+Implementation commit `58432e1fd35569d230ea060f6b3b82ea08d96946` closes an immutability hole in the existing managed-original reuse path. Previously a valid existing content-addressed original was byte-verified but a caller or external process could have made the file writable after first publication; a later idempotent ingest reused it without restoring the application-level read-only guard.
 
-Exact evidence: **AI Editor Local Stack Gate run `32819714185`, job `97715097100`, `ai-editor-local-stack/all = success` on `fea5a180...`**. Docker, PostgreSQL/Qdrant health, both PostgreSQL media-catalog runtime verifiers, API dependency health, cleanup and observable status publication all passed. The durable-ingest verifier itself completed successfully before the API health step. No normal CI run was triggered because the change was confined to the selective runtime verifier/workflow; the code paths it composes already have exact normal CI evidence.
+`materializeManagedOriginal(...)` now byte-verifies the final content first, then enforces mode `0444` on every successful materialization/reuse before publishing/returning managed location state. New deterministic coverage changes an already verified managed original to `0644`, re-ingests the same immutable bytes, and proves the same content path is reused while its mode is restored to `0444`.
+
+Exact evidence: **AI Editor CI run `32824631728`, job `97729857134`, `ai-editor-ci/all = success` on `58432e1f...`**. Install, strict TypeScript, Vitest, deterministic migration, contract/policy gates and observable status publication all passed.
 
 ## Validation / free-tier discipline
 
-This run intentionally changed only the selective PostgreSQL runtime verifier and its workflow path/command. It triggered one local-stack workflow and no normal CI workflow. No matrix, FFmpeg real-media integration or unchanged rerun was used.
+This slice changed only the managed-original implementation and one deterministic filesystem test. It used one normal CI run as the final confidence gate. No PostgreSQL/Qdrant local-stack run, matrix, FFmpeg real-media workflow or unchanged rerun was triggered.
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Decimal `start_time`/`duration` emitted by the deterministic ffprobe fixture remain non-authoritative and are not persisted as source timing.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Stable identity remains SHA-256 byte-derived and native integer PTS + rational stream time base remain source timing authority.
 
 ## Next task
 
-Audit the three remaining Phase-1 checklist items against the now-verified end-to-end durable ingest path. Select the smallest dependency-correct catalog/ingest gap and keep Phase-2 derivative work blocked until Phase 1 is explicitly resolved.
+Audit the two remaining Phase-1 checklist items against the verified durable ingest path. The leading candidate is a narrow phase-gate proof using the real `ffprobe` executable against a generated/managed original, but only if the Bible requires runtime media evidence beyond the already verified bounded process behavior and deterministic native-timing normalization. Keep heavyweight media work selective and do not start Phase 2 until Phase 1 is explicitly resolved.
