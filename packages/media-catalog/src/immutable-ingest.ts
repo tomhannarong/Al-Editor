@@ -38,14 +38,15 @@ export async function ingestImmutableLocalMedia(
   input: ImmutableLocalMediaIngestInput,
   persistence: MediaCatalogPersistence,
 ): Promise<ImmutableLocalMediaIngestResult> {
-  const source = await ingestLocalMediaFile({
+  const sourceInput: IngestLocalMediaFileInput = {
     filePath: input.filePath,
     allowedRoot: input.allowedRoot,
     firstIngestedAt: input.firstIngestedAt,
     locationId: input.locationId,
     observedAt: input.observedAt,
-    chunkSize: input.chunkSize,
-  }, persistence);
+    ...(input.chunkSize === undefined ? {} : { chunkSize: input.chunkSize }),
+  };
+  const source = await ingestLocalMediaFile(sourceInput, persistence);
 
   const managedOriginal = await materializeManagedOriginal({
     sourceFilePath: input.filePath,
@@ -54,7 +55,7 @@ export async function ingestImmutableLocalMedia(
     asset: source.asset,
     locationId: input.managedLocationId,
     observedAt: input.managedObservedAt,
-    chunkSize: input.chunkSize,
+    ...(input.chunkSize === undefined ? {} : { chunkSize: input.chunkSize }),
   }, persistence);
 
   const streams = await probeAndIngestFfprobeStreamMetadata(
