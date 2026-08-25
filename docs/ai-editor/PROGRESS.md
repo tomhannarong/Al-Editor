@@ -2,13 +2,13 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 2 — Scene Library, Proxies, Keyframes  
-**Current task:** audit the smallest rebuildable/versioned proxy derivative contract now that durable scene-set source mapping is verified
+**Current task:** audit the smallest proxy derivative persistence/idempotency boundary before real proxy generation
 
 ```text
-Standalone verified: 39 / 162 = 24.07%
+Standalone verified: 40 / 162 = 24.69%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
-Phase 2:              3 / 11  =  27.27% verified
+Phase 2:              4 / 11  =  36.36% verified
 ```
 
 Phase 0 remains verified: P0-01 through P0-22. Phase 1 remains verified-complete: P1-01 through P1-14.
@@ -25,34 +25,33 @@ Implementation `c877b5e91f190ba490a1b6767759b4ff69268e02`, repaired by `e221be70
 
 ### P2-03 — PostgreSQL durable scene-set revision persistence/readback
 
-Implementation commit `5c91fa9a4acf2ea23b198d3027142109d04cd630` adds:
+Implementation `5c91fa9a4acf2ea23b198d3027142109d04cd630`, runtime repair `7cf7b857bfef8585897f208f21cbbe50d723a34c`. Normal CI run `32852840324`, job `97817616436`, success. Selective real PostgreSQL gate run `32853149558`, job `97818643421`, success. Durable mapping references the existing immutable media stream tuple and stores only native PTS + rational time-base source authority.
 
-- `db/migrations/0003_create_scene_library.sql`
-- `packages/scene-library/src/postgres.ts`
-- `packages/scene-library/src/postgres.test.ts`
-- `infra/verify-postgres-scene-library-runtime.mts`
-- selective local-stack integration
+### P2-04 — versioned rebuildable proxy derivative contract
 
-Migration 0003 persists immutable scene-set revisions and ordered scene intervals. Durable source mapping references the existing media stream tuple `(asset_id, stream_id, stream_index)` and stores only native PTS plus rational time-base integers as source authority.
+Implementation commit `236dba5785f33eb861094f08459840cbec223a93` adds:
 
-Normal CI passed on the implementation commit: **run `32852840324`, job `97817616436`, `ai-editor-ci/all = success`**. Install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status all passed.
+- `packages/contracts/src/proxy-derivative.contract.ts`
+- `packages/contracts/src/proxy-derivative.contract.test.ts`
 
-The first selective PostgreSQL run `32852840321`, job `97817616179`, failed because the new scene-library verifier reapplied all migrations after the preceding media-catalog verifier had already applied `0001..0003`, producing `relation "media_assets" already exists`. This was verifier control-flow duplication, not scene persistence semantics, and the unchanged failed run was not rerun.
+A proxy derivative revision now requires immutable scene-set lineage (`sceneSetId` + `sceneSetRevisionId`), stable SHA-256 asset/stream identity, stream index, normalized rational source time base, explicit derivative-profile version, pinned toolchain name/version, artifact URI and revision evidence.
 
-Repair commit `7cf7b857bfef8585897f208f21cbbe50d723a34c` changes only the verifier to assert/reuse the already migrated schema. The new selective runtime run **`32853149558`, job `97818643421`** passed Docker, PostgreSQL/Qdrant health, existing media-catalog/durable-ingest runtime checks, scene-library PostgreSQL proof, API dependency health, cleanup and status publication. Exact repaired status: **`ai-editor-local-stack/all = success`**.
+The contract deliberately excludes proxy duration/seconds/milliseconds from canonical source authority. `artifactUri`, derivative profile and toolchain metadata are downstream derivative state and do not participate in `sameProxyDerivativeSource(...)` source identity.
 
-Real PostgreSQL proof covers first insert, normalized rational readback, exact idempotent re-registration, conflicting detector evidence rejection without mutation, one revision row + two ordered interval rows, and absence of seconds/milliseconds timing columns.
+Exact final-gate evidence: **AI Editor CI run `32857635477`, job `97833415918`, `ai-editor-ci/all = success` on `236dba5785...`**. Install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status all passed.
+
+No PostgreSQL/Qdrant local-stack, FFmpeg proxy generation, matrix or heavyweight media workflow was used for this contract-only slice.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and FFmpeg `-copyts` behavior remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, immutable scene-set evidence and FFmpeg `-copyts` behavior remain unchanged.
 
-Proxy/keyframe work is still downstream: no derivative URI or codec property can become source mapping authority. Scene-set durable evidence remains immutable asset/stream identity + native integer PTS + rational source time base.
+Proxy derivatives are explicitly rebuildable/disposable and remain downstream of scene-set source authority. No derivative URI, presentation duration or codec-derived decimal time can replace native PTS + rational source time base.
 
 ## Validation / free-tier discipline
 
-The execution container could not resolve `github.com`, so no local clone/test pass is claimed. Related code/migration/runtime work was batched into one substantive commit. That commit triggered the two distinct gates justified by the slice: normal CI for static/behavioral/migration checks and selective local-stack for real PostgreSQL proof. A real runtime verifier failure was repaired by code/config change; no unchanged run was rerun. The repair touched only the selective verifier, so it triggered only the local-stack gate and did not spend another normal CI run.
+The execution environment still has no usable local GitHub clone path, so no local test pass is claimed. The contract and tests were batched into one substantive implementation commit and exactly one normal CI run was used as the final confidence gate. No selective runtime gate was justified because this slice changes no database or media-process runtime behavior.
 
 ## Next task
 
-Audit the smallest **rebuildable/versioned proxy derivative contract**. A proxy should reference an immutable scene-set revision and source stream mapping, carry an explicit derivative/toolchain profile version, and remain disposable/rebuildable. Do not let proxy duration/seconds/path become canonical source authority, and do not add heavyweight media generation until the derivative contract/persistence boundary is explicit.
+Audit the smallest **proxy derivative persistence/idempotency boundary**. Prefer an additive in-memory or durable metadata store that treats exact revision re-registration as idempotent, conflicting revision reuse as fail-closed, and artifact location as rebuildable state. Do not start real FFmpeg proxy generation until derivative revision semantics are explicit and independently testable.

@@ -38,7 +38,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Phase-1 gate reconciliation | Bible Phase-1 proof mapped to P1-01..P1-13 evidence | verified on docs closure `54223a0d`; no redundant Actions run required |
 | Versioned scene-set source mapping | `packages/contracts/src/scene-set.contract.ts` | verified on `8759bc04`, CI `32840639465`, job `97779125483` |
 | Immutable scene-set revision persistence | `packages/scene-library/src/index.ts` | verified on repaired `e221be70`, CI `32845521695`, job `97794189378` |
-| PostgreSQL scene-set revision persistence | migration 0003 + `packages/scene-library/src/postgres.ts` | verified static CI `32852840324`, job `97817616436`; real PostgreSQL repaired runtime `32853149558`, job `97818643421`, exact `ai-editor-local-stack/all = success` |
+| PostgreSQL scene-set revision persistence | migration 0003 + `packages/scene-library/src/postgres.ts` | verified static CI `32852840324`, job `97817616436`; real PostgreSQL repaired runtime `32853149558`, job `97818643421` |
+| Versioned rebuildable proxy derivative | `packages/contracts/src/proxy-derivative.contract.ts` | verified on `236dba57`, CI `32857635477`, job `97833415918`; explicit scene-set lineage/profile/toolchain, rebuildable artifact URI, source identity remains immutable asset/stream + rational time base |
 
 ## Phase 1 closure
 
@@ -50,12 +51,14 @@ P2-01 establishes versioned scene-set identity and exact source mapping to one i
 
 P2-02 establishes immutable scene-set revision semantics: exact semantic re-registration is idempotent, conflicting `revisionId` reuse fails closed, and new revisions are additive.
 
-P2-03 makes that evidence durable. Migration `0003_create_scene_library.sql` adds immutable scene-set revision rows plus ordered interval rows and references the existing media stream `(asset_id, stream_id, stream_index)` tuple. `PostgresSceneSetRevisionStore` validates before transaction side effects, normalizes rational time bases exactly, commits new revisions and intervals transactionally, and reads native PTS/rational mapping back without decimal-time authority.
+P2-03 makes scene-set evidence durable in PostgreSQL and preserves the existing media-stream source tuple without decimal-time authority. Static CI and real PostgreSQL runtime proof are both verified.
 
-Implementation `5c91fa9a4acf2ea23b198d3027142109d04cd630` passed normal CI run `32852840324`, job `97817616436`. The first selective runtime `32852840321` failed because the new verifier reapplied migrations that the preceding verifier had already applied. No unchanged rerun was used. Repair `7cf7b857bfef8585897f208f21cbbe50d723a34c` reuses/asserts the migrated schema; local-stack run `32853149558`, job `97818643421`, then passed all real PostgreSQL/Qdrant/media/scene/API checks and published `ai-editor-local-stack/all = success`.
+P2-04 establishes the proxy derivative boundary before generation/persistence. `ProxyDerivativeRevision` references immutable scene-set revision lineage and stable asset/stream mapping, pins derivative-profile and toolchain versions, and records a rebuildable artifact URI. `sameProxyDerivativeSource(...)` intentionally ignores artifact URI/profile/toolchain state so derivative state cannot become source authority.
 
-The next Phase-2 slice should define the smallest rebuildable/versioned proxy derivative contract. Proxy/keyframe derivatives must reference immutable scene-set/source evidence and never become canonical timing authority.
+Implementation `236dba5785f33eb861094f08459840cbec223a93` passed normal AI Editor CI run `32857635477`, job `97833415918`, with exact `ai-editor-ci/all = success`. No runtime/local-stack gate was needed for this contract-only slice.
+
+The next Phase-2 slice should define proxy derivative persistence/idempotency before invoking real FFmpeg proxy generation. Exact semantic revision reuse should be idempotent; conflicting revision evidence must fail closed; artifact location remains rebuildable state.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 3/11 verified.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 4/11 verified.
