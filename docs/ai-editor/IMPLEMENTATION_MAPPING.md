@@ -41,6 +41,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | PostgreSQL scene-set revision persistence | migration 0003 + `packages/scene-library/src/postgres.ts` | verified static CI `32852840324`; real PostgreSQL `32853149558` |
 | Versioned rebuildable proxy derivative | `packages/contracts/src/proxy-derivative.contract.ts` | verified CI `32857635477`; explicit scene-set lineage/profile/toolchain, rebuildable artifact URI, source identity remains immutable asset/stream + rational time base |
 | Immutable proxy derivative revision persistence | `packages/proxy-library/src/index.ts` | verified on `f950775f`, CI `32863422284`, job `97852730546`; semantic re-registration idempotent, conflicting revision reuse fail-closed, rebuilds require additive revision identity |
+| PostgreSQL proxy derivative revision persistence | migration 0004 + `packages/proxy-library/src/postgres.ts` + runtime verifier | verified on `577a1445`; CI `32869312338` job `97872229894`; real PostgreSQL `32869312804` job `97872230411`; exact scene/source tuple constrained durably |
 
 ## Phase 1 closure
 
@@ -50,12 +51,12 @@ Phase 1 remains complete: content-addressed identities are idempotent, originals
 
 P2-01 through P2-03 establish versioned scene-set identity, immutable revision semantics and real PostgreSQL durability with exact native source mapping.
 
-P2-04 establishes the rebuildable proxy derivative contract. P2-05 establishes immutable proxy revision persistence semantics before durable storage/generation: exact semantic reuse is idempotent; conflicting `revisionId` evidence fails closed; equivalent rational time bases normalize exactly; historical revision evidence is defensively copied; and changed rebuild state creates a new revision rather than mutating history.
+P2-04 and P2-05 establish the rebuildable proxy derivative contract plus immutable/idempotent revision semantics before generation. P2-06 makes that evidence durable in PostgreSQL: migration 0004 constrains each proxy revision to the exact referenced scene-set revision and immutable asset/stream/rational-time-base tuple, while the store preserves fail-closed `revisionId` semantics and defensive readback.
 
-Implementation `f950775fadea9b3681c4c7fdec93cb27b59f29f8` passed AI Editor CI run `32863422284`, job `97852730546`, with `ai-editor-ci/all = success`. No local-stack or real FFmpeg gate was required because P2-05 changes deterministic metadata behavior only.
+Implementation `577a14456b5b7c48860f52f88dd0ac6a11d2f380` passed AI Editor CI run `32869312338`, job `97872229894`, and selective real PostgreSQL run `32869312804`, job `97872230411`. Exact commit statuses are `ai-editor-ci/all = success` and `ai-editor-local-stack/all = success`.
 
-The next Phase-2 slice should define durable PostgreSQL proxy derivative revision persistence/readback before invoking real FFmpeg proxy generation.
+The next Phase-2 slice should audit real FFmpeg proxy generation behind this durable boundary. Generation remains rebuildable and selective; it must not establish a competing decimal-time or proxy-time authority.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence and FFmpeg `-copyts` behavior are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 5/11 verified.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is now 6/11 verified.
