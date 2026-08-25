@@ -12,6 +12,7 @@ on:
       - 'infra/verify-postgres-durable-ingest-runtime.mts'
       - 'infra/verify-postgres-scene-library-runtime.mts'
       - 'infra/verify-postgres-proxy-library-runtime.mts'
+      - 'infra/verify-real-proxy-generation-runtime.mts'
       - 'apps/api/health-server.mjs'
       - 'scripts/test-api-health.mjs'
       - 'scripts/verify-api-health-runtime.sh'
@@ -31,37 +32,29 @@ jobs:
     timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
       - name: Verify deterministic verifier control flow
         run: bash infra/test-verify-local-stack.sh
-
       - name: Verify API health contract locally
         run: node scripts/test-api-health.mjs
-
       - name: Verify Docker runtime
         run: |
           docker version
           docker compose version
-
       - name: Boot and verify PostgreSQL + Qdrant
         id: stack
         run: bash infra/verify-local-stack.sh
-
       - name: Install FFmpeg runtime verifier tools
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
-
       - name: Install PostgreSQL runtime verifier dependencies
         id: runtime_deps
         run: npm install --ignore-scripts --no-audit --no-fund --no-save pg tsx
-
       - name: Verify PostgreSQL media catalog, durable ingest, scene library and proxy library runtime
         id: media_catalog
         run: |
@@ -69,15 +62,13 @@ jobs:
           npx --no-install tsx infra/verify-postgres-durable-ingest-runtime.mts
           npx --no-install tsx infra/verify-postgres-scene-library-runtime.mts
           npx --no-install tsx infra/verify-postgres-proxy-library-runtime.mts
-
+          npx --no-install tsx infra/verify-real-proxy-generation-runtime.mts
       - name: Verify API health against real local dependencies
         id: api_health
         run: bash scripts/verify-api-health-runtime.sh
-
       - name: Cleanup local stack
         if: always()
         run: docker compose -f infra/docker-compose.yml down -v --remove-orphans || true
-
       - name: Publish observable stack status
         if: always()
         env:
@@ -91,28 +82,14 @@ jobs:
           context='ai-editor-local-stack/all'
           description='PostgreSQL, Qdrant, media, scene, proxy and API runtime gates passed'
           if [ "$STACK_OUTCOME" != 'success' ]; then
-            state=failure
-            context='ai-editor-local-stack/runtime'
-            description='PostgreSQL or Qdrant runtime gate failed'
+            state=failure; context='ai-editor-local-stack/runtime'; description='PostgreSQL or Qdrant runtime gate failed'
           elif [ "$RUNTIME_DEPS_OUTCOME" != 'success' ]; then
-            state=failure
-            context='ai-editor-local-stack/media-catalog-deps'
-            description='media catalog runtime verifier dependency install failed'
+            state=failure; context='ai-editor-local-stack/media-catalog-deps'; description='media catalog runtime verifier dependency install failed'
           elif [ "$MEDIA_CATALOG_OUTCOME" != 'success' ]; then
-            state=failure
-            context='ai-editor-local-stack/media-catalog'
-            description='PostgreSQL media, scene or proxy library runtime gate failed'
+            state=failure; context='ai-editor-local-stack/media-catalog'; description='PostgreSQL media, scene or proxy runtime gate failed'
           elif [ "$API_HEALTH_OUTCOME" != 'success' ]; then
-            state=failure
-            context='ai-editor-local-stack/api-health'
-            description='API dependency health runtime gate failed'
+            state=failure; context='ai-editor-local-stack/api-health'; description='API dependency health runtime gate failed'
           fi
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           payload=$(node -e "process.stdout.write(JSON.stringify({state:process.argv[1],context:process.argv[2],description:process.argv[3],target_url:process.argv[4]}))" "$state" "$context" "$description" "$run_url")
-          curl --fail-with-body --silent --show-error \
-            --request POST \
-            --header "Authorization: Bearer ${GH_TOKEN}" \
-            --header 'Accept: application/vnd.github+json' \
-            --header 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            --data "$payload"
+          curl --fail-with-body --silent --show-error --request POST --header "Authorization: Bearer ${GH_TOKEN}" --header 'Accept: application/vnd.github+json' --header 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" --data "$payload"
