@@ -2,10 +2,11 @@ import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { generateProxyDerivative } from './generator.js';
 import { PROXY_DERIVATIVE_SCHEMA_VERSION, type ProxyDerivativeRevision } from '../../contracts/src/proxy-derivative.contract.js';
+import type { BoundedProcessOptions, ProcessExecutor } from '../../media-catalog/src/ffprobe.js';
 
 async function fixture(): Promise<{ revision: ProxyDerivativeRevision; source: string; root: string }> {
   const dir = await mkdtemp(join(tmpdir(), 'proxy-generator-'));
@@ -36,17 +37,20 @@ async function fixture(): Promise<{ revision: ProxyDerivativeRevision; source: s
 describe('generateProxyDerivative', () => {
   it('uses shell-free bounded executor with deterministic proxy arguments', async () => {
     const { revision, source, root } = await fixture();
-    const executor = vi.fn(async () => ({ stdout: '', stderr: '' }));
+    let observed: { command: string; args: readonly string[]; options: BoundedProcessOptions } | undefined;
+    const executor: ProcessExecutor = async (command, args, options) => {
+      observed = { command, args, options };
+      return { stdout: '', stderr: '' };
+    };
     const output = await generateProxyDerivative(revision, source, root, { executor, ffmpegPath: '/usr/bin/ffmpeg' });
     expect(pathToFileURL(output).href).toBe(revision.artifactUri);
-    expect(executor).toHaveBeenCalledOnce();
-    const [command, args, options] = executor.mock.calls[0]!;
-    expect(command).toBe('/usr/bin/ffmpeg');
-    expect(args).toContain('-nostdin');
-    expect(args).toContain(source);
-    expect(args).toContain('0:0');
-    expect(args.at(-1)).toBe(output);
-    expect(options.timeoutMs).toBe(120000);
+    expect(observed).toBeDefined();
+    expect(observed!.command).toBe('/usr/bin/ffmpeg');
+    expect(observed!.args).toContain('-nostdin');
+    expect(observed!.args).toContain(source);
+    expect(observed!.args).toContain('0:0');
+    expect(observed!.args.at(-1)).toBe(output);
+    expect(observed!.options.timeoutMs).toBe(120000);
   });
 
   it('fails closed when artifact URI does not match confined output', async () => {
