@@ -2,12 +2,12 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** audit immutable-original materialization / managed storage semantics before implementing the next smallest Phase-1 slice
+**Current task:** audit the remaining Phase-1 ingest surface for a shell-free bounded ffprobe execution boundary before adding any new metadata capability
 
 ```text
-Standalone verified: 27 / 162 = 16.67%
+Standalone verified: 28 / 162 = 17.28%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1:              5 / 14  = 35.71% verified
+Phase 1:              6 / 14  = 42.86% verified
 ```
 
 Phase 0 verified: P0-01 through P0-22.
@@ -29,18 +29,21 @@ Implementation `d74ae15817958df9279dffa6fcf9313a2f456fee`, strict-TypeScript rep
 Static/behavioral gate: `ai-editor-ci/all = success`, run `32788230358`. Real PostgreSQL runtime gate: AI Editor Local Stack Gate run `32793644151`, job `97640306272` = success on `303f0118...`.
 
 ### P1-05 — confined local-file immutable ingest
-Implementation commit `f9d704b3ce5474fe035d40f598e35ea9d871fd2b` adds `packages/media-catalog/src/local-file-ingest.ts` plus deterministic filesystem tests.
+Implementation commit `f9d704b3ce5474fe035d40f598e35ea9d871fd2b`; AI Editor CI run `32799561623`, job `97657612381` = success. Allowed-root confinement, direct symlink rejection, read-only/no-follow open, bounded hashing and stable file snapshots are verified before catalog publication.
 
-The local-file boundary now resolves an explicit allowed root, rejects path escape and direct symbolic-link media paths, opens originals read-only with `O_NOFOLLOW` where the platform supports it, hashes by bounded chunks, compares device/inode/size/mtime/ctime before and after hashing, and publishes catalog state only after the snapshot remains stable. The catalog URI is derived from the resolved file path and never contributes to content identity.
+### P1-06 — managed content-addressed immutable original materialization
+Implementation commit `ab2ad1346c56012f6c464cbb0cf7f9f813d82f56` added `packages/media-catalog/src/managed-original.ts` and deterministic filesystem tests. Managed copies are stored at `managedRoot/sha256/<prefix>/<digest>`, use a temporary exclusive file plus atomic hard-link publish, are made read-only, and are fully byte-verified against the registered immutable asset before a managed storage location is published.
 
-Exact evidence: **AI Editor CI run `32799561623`, job `97657612381` = success on `f9d704b3...`**. Install, strict TypeScript, Vitest, deterministic migration, contract/policy gates and observable status publication all passed; combined status is `ai-editor-ci/all = success`.
+The first CI run `32803732504` failed only at strict TypeScript because one test fixture hardcoded an obsolete schema literal; Vitest/migration/contract gates were skipped and the run was not rerun unchanged. Repair commit `1e7dbc208dc66d6e9080c3c104b00ce2a9104aed` aligned the fixture with the existing `MEDIA_ASSET_IDENTITY_SCHEMA_VERSION = "1.0"` contract.
+
+Exact repaired evidence: **AI Editor CI run `32803814061`, job `97669865113`, `ai-editor-ci/all = success`**. TypeScript passed, Vitest passed **87/87** including 5 managed-original tests, migration gates passed, and all contract/policy gates passed.
 
 ## Validation / free-tier discipline
 
-A local clone was attempted first but the execution environment still could not resolve `github.com`, so no local pass is claimed. Exactly one normal CI run was used as the final confidence gate for this code slice. No local-stack, PostgreSQL/Qdrant, FFmpeg/media integration, matrix or rerun was triggered because this slice requires only Node filesystem + deterministic contract behavior.
+Local cloning was attempted first but the execution environment still could not resolve `github.com`, so no local pass is claimed. The implementation was batched into one code commit; after a real TypeScript failure, only the causative test fixture was repaired and a fresh CI run was allowed. No unchanged failed run was rerun. No PostgreSQL/Qdrant local-stack, FFmpeg integration, matrix or heavyweight media workflow was triggered for this filesystem-only slice.
 
 Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence, PostgreSQL media-catalog semantics and FFmpeg `-copyts` behavior remain unchanged.
 
 ## Next task
 
-Audit the remaining Phase-1 checklist for **immutable-original materialization / managed storage semantics**. If the Bible requires a managed original copy, implement the smallest content-addressed copy/commit boundary that verifies destination bytes before publishing location state; otherwise select the next independent Phase-1 item without duplicating the five verified slices.
+Audit the remaining Phase-1 checklist for the smallest independent ingest gap. The leading candidate is a **shell-free, bounded ffprobe execution boundary** that invokes ffprobe without shell authority, caps runtime/output, validates JSON before normalization, and preserves native PTS/rational time-base authority. Do not add heavyweight real-media CI unless the Bible gate for that slice requires runtime proof.
