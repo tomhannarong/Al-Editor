@@ -1,7 +1,4 @@
 import assert from 'node:assert/strict';
-import { readdir, readFile } from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 
 import { PostgresMediaCatalog } from '../packages/media-catalog/src/postgres.ts';
@@ -9,8 +6,6 @@ import { PostgresSceneSetRevisionStore } from '../packages/scene-library/src/pos
 import type { SceneSetRevision } from '../packages/contracts/src/scene-set.contract.ts';
 
 const { Client } = pg;
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const migrationsDir = path.join(root, 'db', 'migrations');
 const client = new Client({
   host: process.env.POSTGRES_HOST ?? '127.0.0.1',
   port: Number(process.env.POSTGRES_PORT ?? '5432'),
@@ -21,11 +16,13 @@ const client = new Client({
 
 try {
   await client.connect();
-  const migrationFiles = (await readdir(migrationsDir)).filter((name) => /^\d{4}_.+\.sql$/.test(name)).sort();
-  assert(migrationFiles.includes('0003_create_scene_library.sql'), 'migration 0003 is missing');
-  for (const migrationFile of migrationFiles) {
-    await client.query(await readFile(path.join(migrationsDir, migrationFile), 'utf8'));
-  }
+
+  const schemaCheck = await client.query<{ scene_set_revisions: string | null; scene_set_intervals: string | null }>(
+    `SELECT to_regclass('public.scene_set_revisions')::text AS scene_set_revisions,
+            to_regclass('public.scene_set_intervals')::text AS scene_set_intervals`,
+  );
+  assert.equal(schemaCheck.rows[0]?.scene_set_revisions, 'scene_set_revisions', 'migration 0003 scene_set_revisions is not applied');
+  assert.equal(schemaCheck.rows[0]?.scene_set_intervals, 'scene_set_intervals', 'migration 0003 scene_set_intervals is not applied');
 
   const digest = 'e'.repeat(64);
   const assetId = `sha256:${digest}`;
@@ -95,7 +92,7 @@ try {
   );
   assert(!columns.rows.some((row) => /second|millisecond/i.test(row.column_name)));
 
-  process.stdout.write('PostgreSQL scene-library runtime proof passed: migration 0003, immutable idempotent revision persistence, exact native PTS/rational source mapping readback, and conflicting revisionId rejection.\n');
+  process.stdout.write('PostgreSQL scene-library runtime proof passed: migration 0003 is applied, immutable idempotent revision persistence, exact native PTS/rational source mapping readback, and conflicting revisionId rejection.\n');
 } finally {
   await client.end().catch(() => undefined);
 }
