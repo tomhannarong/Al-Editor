@@ -33,16 +33,16 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Confined local-file ingest boundary | `packages/media-catalog/src/local-file-ingest.ts` | verified on `f9d704b3`, CI run `32799561623`, job `97657612381` |
 | Managed content-addressed original storage | `packages/media-catalog/src/managed-original.ts` | verified on repaired head `1e7dbc2`, CI run `32803814061`, job `97669865113` |
 | Shell-free bounded ffprobe execution | `packages/media-catalog/src/ffprobe.ts` | verified on `e2bd213a`, CI run `32806749817`, job `97678251159` |
-| End-to-end immutable local ingest coordinator | `packages/media-catalog/src/immutable-ingest.ts` | verified on repaired head `9fc35f46`, CI run `32809327532`, job `97685529112`; source → managed original → ffprobe/native metadata ordering and idempotency tests |
-| Validated ingest before durable commit boundary | `packages/media-catalog/src/durable-ingest.ts` | verified on `71bd875a`, CI run `32810880801`, job `97689838481`; durable callback occurs only after complete deterministic media validation and receives one defensive aggregate |
-| PostgreSQL atomic validated-ingest commit | next Phase-1 slice | pending; must atomically persist asset + both locations + native streams and roll back together |
+| End-to-end immutable local ingest coordinator | `packages/media-catalog/src/immutable-ingest.ts` | verified on repaired head `9fc35f46`, CI run `32809327532`, job `97685529112` |
+| Validated ingest before durable commit boundary | `packages/media-catalog/src/durable-ingest.ts` | verified on `71bd875a`, CI run `32810880801`, job `97689838481` |
+| PostgreSQL atomic validated-ingest commit | `packages/media-catalog/src/postgres.ts` + `infra/verify-postgres-media-catalog-runtime.mts` | verified on `f7f90f8e`; CI run `32815455806`, job `97702665656`; real local-stack run `32815455771`, job `97702665269`; successful aggregate commit plus injected late-write rollback proven on real PostgreSQL |
 
 PostgreSQL persistence preserves the authority boundary: `asset_id` is SHA-256 byte identity, storage URI is mutable location state, stream replacement is transactional, and only native integer PTS plus rational time-base columns represent source timing. Decimal seconds/milliseconds are absent from the durable schema.
 
 Local-file ingest and managed-original materialization enforce path confinement, stable source snapshots, content-addressed managed paths and byte verification before metadata processing. The ffprobe process boundary remains shell-free and bounded.
 
-The P1-08 coordinator composes those verified primitives without creating a second identity or timing implementation. The P1-09 durable handoff adds isolated staging: no durable catalog callback can happen until the full source/managed/ffprobe pipeline has validated successfully. This explicitly separates deterministic media validation from durable transaction authority.
+P1-08 composes the filesystem/media primitives without creating a second identity or timing implementation. P1-09 ensures no durable callback is possible until all deterministic media validation succeeds. P1-10 now supplies the real durable authority: a validated aggregate commits asset, both locations and native streams in one PostgreSQL transaction, and a late failure rolls all earlier writes back.
 
 Canonical timing remains integer frames + rational FPS and native PTS + rational stream time base. FFmpeg adapters must preserve source timestamps (`-copyts`) before native-PTS trims. Telemetry is observational only; renderer adapters cannot become timing authority. Final media measurement remains FFmpeg/ffprobe.
 
-Phase 0 is complete: 22/22 standalone items verified. Phase 1 is now 9/14 verified. The next run should implement the PostgreSQL atomic commit boundary for the validated immutable-ingest aggregate, then selectively prove the transaction on real PostgreSQL.
+Phase 0 is complete: 22/22 standalone items verified. Phase 1 is now 10/14 verified. The next run should audit the four remaining Phase-1 items and select the smallest dependency-correct ingest/catalog gap before introducing Phase-2 derivatives.

@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 1,
-  "currentTask": "phase1-postgresql-atomic-validated-ingest-commit",
+  "currentTask": "phase1-audit-remaining-smallest-independent-ingest-gap",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 31,
-    "standaloneRevalidatedPercent": 19.14
+    "standaloneRevalidated": 32,
+    "standaloneRevalidatedPercent": 19.75
   },
   "phase0": {
     "total": 22,
@@ -30,48 +30,29 @@
   },
   "phase1": {
     "total": 14,
-    "standaloneRevalidated": 9,
-    "standaloneRevalidatedPercent": 64.29,
+    "standaloneRevalidated": 10,
+    "standaloneRevalidatedPercent": 71.43,
     "state": "in-progress",
     "implementedSlices": [
       {
         "id": "P1-01-stable-media-identity-contract",
         "implementationCommit": "c68362f7166aba1a33137b89474caa93a8cf163f",
         "status": "verified",
-        "evidence": [
-          "packages/contracts/src/media-catalog.contract.ts",
-          "packages/contracts/src/media-catalog.contract.test.ts",
-          "ai-editor-ci/all success run 32772298608"
-        ]
+        "evidence": ["packages/contracts/src/media-catalog.contract.ts", "packages/contracts/src/media-catalog.contract.test.ts", "ai-editor-ci/all success run 32772298608"]
       },
       {
         "id": "P1-02-streaming-content-addressed-ingest",
         "implementationCommit": "2cba444a4890b81eb565ca22687fd8e7c2d43a86",
         "repairCommit": "b820fc809f99f438b8ff7b8681c6b983e26122ee",
         "status": "verified",
-        "evidence": [
-          "packages/media-catalog/src/index.ts",
-          "packages/media-catalog/src/index.test.ts",
-          "run 32776611559 failed at typecheck and was not rerun unchanged",
-          "ai-editor-ci/all success run 32776732634"
-        ]
+        "evidence": ["packages/media-catalog/src/index.ts", "packages/media-catalog/src/index.test.ts", "run 32776611559 failed at typecheck and was not rerun unchanged", "ai-editor-ci/all success run 32776732634"]
       },
       {
         "id": "P1-03-normalized-ffprobe-native-stream-metadata",
         "implementationCommit": "705e1dc8c1b348b5b2189f23a239969368434412",
         "status": "verified",
-        "evidence": [
-          "packages/media-catalog/src/index.ts",
-          "packages/media-catalog/src/index.test.ts",
-          "ai-editor-ci/all success run 32782942297",
-          "validate job 97608726144: install/typecheck/Vitest/migration/contracts/status all success"
-        ],
-        "invariants": [
-          "native startPts/durationPts plus rational timeBase remain timing authority",
-          "ffprobe decimal seconds are ignored",
-          "malformed or unsafe timing fails closed",
-          "stream projections bind only to registered immutable assets"
-        ]
+        "evidence": ["packages/media-catalog/src/index.ts", "packages/media-catalog/src/index.test.ts", "ai-editor-ci/all success run 32782942297", "validate job 97608726144 success"],
+        "invariants": ["native startPts/durationPts plus rational timeBase remain timing authority", "ffprobe decimal seconds are ignored", "malformed or unsafe timing fails closed"]
       },
       {
         "id": "P1-04-postgresql-media-catalog-persistence",
@@ -80,87 +61,64 @@
         "runtimeVerifierCommit": "b31086c30d9c8a6e949e661363236226bfad015e",
         "runtimeRepairCommit": "303f01181aea935d0a87dd6472d48fcacbdce340",
         "status": "verified",
-        "evidence": [
-          "db/migrations/0002_create_media_catalog.sql",
-          "packages/media-catalog/src/postgres.ts",
-          "packages/media-catalog/src/postgres.test.ts",
-          "ai-editor-ci/all success run 32788230358",
-          "local-stack run 32793590693 failed before runtime at setup-node cache configuration and was not rerun unchanged",
-          "AI Editor Local Stack Gate run 32793644151 job 97640306272 success on 303f0118",
-          "real PostgreSQL migration 0002 plus PostgresMediaCatalog round trip passed"
-        ]
+        "evidence": ["db/migrations/0002_create_media_catalog.sql", "packages/media-catalog/src/postgres.ts", "packages/media-catalog/src/postgres.test.ts", "ai-editor-ci/all success run 32788230358", "local-stack run 32793590693 failed before runtime at setup-node cache configuration and was not rerun unchanged", "AI Editor Local Stack Gate run 32793644151 job 97640306272 success", "real PostgreSQL migration 0002 plus PostgresMediaCatalog round trip passed"]
       },
       {
         "id": "P1-05-confined-local-file-ingest",
         "implementationCommit": "f9d704b3ce5474fe035d40f598e35ea9d871fd2b",
         "status": "verified",
-        "evidence": [
-          "packages/media-catalog/src/local-file-ingest.ts",
-          "packages/media-catalog/src/local-file-ingest.test.ts",
-          "AI Editor CI run 32799561623 job 97657612381 success"
-        ]
+        "evidence": ["packages/media-catalog/src/local-file-ingest.ts", "packages/media-catalog/src/local-file-ingest.test.ts", "AI Editor CI run 32799561623 job 97657612381 success"]
       },
       {
         "id": "P1-06-managed-content-addressed-original-materialization",
         "implementationCommit": "ab2ad1346c56012f6c464cbb0cf7f9f813d82f56",
         "repairCommit": "1e7dbc208dc66d6e9080c3c104b00ce2a9104aed",
         "status": "verified",
-        "evidence": [
-          "packages/media-catalog/src/managed-original.ts",
-          "packages/media-catalog/src/managed-original.test.ts",
-          "AI Editor CI run 32803732504 failed at strict TypeScript because a test fixture used an obsolete schema literal; no unchanged rerun",
-          "AI Editor CI run 32803814061 job 97669865113 success"
-        ]
+        "evidence": ["packages/media-catalog/src/managed-original.ts", "packages/media-catalog/src/managed-original.test.ts", "AI Editor CI run 32803732504 failed at strict TypeScript because a test fixture used an obsolete schema literal; no unchanged rerun", "AI Editor CI run 32803814061 job 97669865113 success"]
       },
       {
         "id": "P1-07-shell-free-bounded-ffprobe-execution",
         "implementationCommit": "e2bd213a3f8754d7345e0fd733c55497735bd1b7",
         "status": "verified",
-        "evidence": [
-          "packages/media-catalog/src/ffprobe.ts",
-          "packages/media-catalog/src/ffprobe.test.ts",
-          "AI Editor CI run 32806749817 job 97678251159 success"
-        ]
+        "evidence": ["packages/media-catalog/src/ffprobe.ts", "packages/media-catalog/src/ffprobe.test.ts", "AI Editor CI run 32806749817 job 97678251159 success"]
       },
       {
         "id": "P1-08-end-to-end-immutable-local-ingest-orchestration",
         "implementationCommit": "79e4b427d474a9edbe4120d150bea1a61b89d940",
         "repairCommit": "9fc35f46157b845fa6bfdaf18231cca22892dd49",
         "status": "verified",
-        "evidence": [
-          "packages/media-catalog/src/immutable-ingest.ts",
-          "packages/media-catalog/src/immutable-ingest.test.ts",
-          "AI Editor CI run 32809256441 failed at strict TypeScript exactOptionalPropertyTypes and was not rerun unchanged",
-          "repair commit 9fc35f46157b845fa6bfdaf18231cca22892dd49",
-          "AI Editor CI run 32809327532 job 97685529112 success",
-          "ai-editor-ci/all success on exact repaired commit"
-        ],
-        "invariants": [
-          "confined source registration precedes managed-original materialization",
-          "ffprobe runs only against the verified managed original",
-          "malformed native timing fails before stream metadata publication",
-          "re-ingest remains content-addressed and idempotent"
-        ]
+        "evidence": ["packages/media-catalog/src/immutable-ingest.ts", "packages/media-catalog/src/immutable-ingest.test.ts", "AI Editor CI run 32809256441 failed at strict TypeScript exactOptionalPropertyTypes and was not rerun unchanged", "repair commit 9fc35f46157b845fa6bfdaf18231cca22892dd49", "AI Editor CI run 32809327532 job 97685529112 success", "ai-editor-ci/all success on exact repaired commit"]
       },
       {
         "id": "P1-09-validated-ingest-before-durable-commit-boundary",
         "implementationCommit": "71bd875abcd4b8eef6102f75159f71000955c3c5",
         "status": "verified",
+        "evidence": ["packages/media-catalog/src/durable-ingest.ts", "packages/media-catalog/src/durable-ingest.test.ts", "AI Editor CI run 32810880801 job 97689838481 success", "strict TypeScript, Vitest, migration, contract/policy and status publication all success"]
+      },
+      {
+        "id": "P1-10-postgresql-atomic-validated-ingest-commit",
+        "implementationCommit": "f7f90f8ef48d6fb551de218e100ad8f1bf0f809e",
+        "status": "verified",
         "evidence": [
-          "packages/media-catalog/src/durable-ingest.ts",
-          "packages/media-catalog/src/durable-ingest.test.ts",
-          "AI Editor CI run 32810880801 job 97689838481 success",
-          "strict TypeScript, Vitest, migration, contract/policy and status publication all success"
+          "packages/media-catalog/src/postgres.ts",
+          "packages/media-catalog/src/postgres.test.ts",
+          "infra/verify-postgres-media-catalog-runtime.mts",
+          "AI Editor CI run 32815455806 job 97702665656 success: install, strict TypeScript, Vitest, migration, contract/policy and status publication",
+          "AI Editor Local Stack Gate run 32815455771 job 97702665269 success on exact implementation commit",
+          "real PostgreSQL verifier proved atomic validated-ingest commit and injected late stream-write rollback",
+          "exact statuses ai-editor-ci/all and ai-editor-local-stack/all success"
         ],
         "invariants": [
-          "durable persistence is not invoked until source hashing, managed-original verification and ffprobe/native-timing validation all succeed",
-          "the durable handoff is one validated aggregate containing immutable asset, source location, managed location and native stream metadata",
-          "durable persistence receives defensive copies and cannot mutate the returned validated ingest result",
-          "this slice does not claim PostgreSQL atomic commit runtime proof"
+          "complete validated ingest bundle is checked before BEGIN",
+          "immutable asset, source location, managed location and native streams commit in one PostgreSQL transaction",
+          "existing immutable asset identity is checked inside the transaction before mutable projections are updated",
+          "source and managed locations must be distinct and bind the same immutable asset",
+          "an injected late stream insert failure rolls back the new asset and both location writes on real PostgreSQL",
+          "native integer PTS plus rational stream time base remain authoritative; no seconds or milliseconds authority is introduced"
         ]
       }
     ],
-    "next": "implement Postgres atomic commitValidatedImmutableIngest for the validated bundle, then use the selective PostgreSQL runtime gate once to prove all-or-nothing durable asset/location/native-stream persistence"
+    "next": "audit the four remaining Phase-1 checklist items and select the smallest independent ingest/catalog gap; leading candidate is durable filesystem-to-PostgreSQL composition using the verified staged ingest and atomic transaction without introducing new media semantics"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},

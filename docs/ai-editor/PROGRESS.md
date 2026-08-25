@@ -2,12 +2,12 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** implement PostgreSQL atomic commit for a fully validated immutable-ingest bundle
+**Current task:** audit the four remaining Phase-1 checklist items and select the smallest independent ingest/catalog gap
 
 ```text
-Standalone verified: 31 / 162 = 19.14%
+Standalone verified: 32 / 162 = 19.75%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1:              9 / 14  = 64.29% verified
+Phase 1:             10 / 14  = 71.43% verified
 ```
 
 Phase 0 verified: P0-01 through P0-22.
@@ -36,21 +36,26 @@ Implementation `ab2ad1346c56012f6c464cbb0cf7f9f813d82f56`, repaired by `1e7dbc20
 Implementation `e2bd213a3f8754d7345e0fd733c55497735bd1b7`; CI run `32806749817`, job `97678251159`, success.
 
 ### P1-08 — end-to-end immutable local ingest orchestration
-Implementation `79e4b427d474a9edbe4120d150bea1a61b89d940` added the thin coordinator ordering confined source registration → managed immutable original → bounded ffprobe/native metadata persistence. CI run `32809256441` failed at strict TypeScript because optional `chunkSize` was forwarded as explicit `undefined` under `exactOptionalPropertyTypes`; the failed run was not rerun unchanged. Repair commit `9fc35f46157b845fa6bfdaf18231cca22892dd49` omitted the optional property when absent. Exact repaired CI run `32809327532`, job `97685529112`, passed install, TypeScript, Vitest, migrations, contract/policy gates and observable status publication; `ai-editor-ci/all = success`.
+Implementation `79e4b427d474a9edbe4120d150bea1a61b89d940`, repaired by `9fc35f46157b845fa6bfdaf18231cca22892dd49`. First CI run `32809256441` failed only at strict TypeScript `exactOptionalPropertyTypes` and was not rerun unchanged. Repaired CI run `32809327532`, job `97685529112`, passed all normal gates.
 
 ### P1-09 — validated ingest before durable commit boundary
-Implementation `71bd875abcd4b8eef6102f75159f71000955c3c5` adds `packages/media-catalog/src/durable-ingest.ts` plus deterministic tests. The boundary runs the already verified immutable-ingest coordinator against isolated in-memory staging first; durable persistence receives one aggregate only after source hashing, managed-original byte verification and ffprobe/native-timing validation all succeed. Failed metadata validation never invokes durable persistence. Aggregate inputs are defensive copies.
+Implementation `71bd875abcd4b8eef6102f75159f71000955c3c5`; AI Editor CI run `32810880801`, job `97689838481`, success. Full source hashing, managed-original verification and ffprobe/native-timing validation finish before one durable callback receives the defensive aggregate.
 
-Exact CI evidence: AI Editor CI run `32810880801`, job `97689838481`, success. Strict TypeScript, Vitest, deterministic migration, contract/policy and observable status gates all passed.
+### P1-10 — PostgreSQL atomic validated-ingest commit
+Implementation `f7f90f8ef48d6fb551de218e100ad8f1bf0f809e` extends `PostgresMediaCatalog` with `commitValidatedImmutableIngest(...)` and adds deterministic transaction tests plus real PostgreSQL rollback proof.
 
-This does **not** yet claim PostgreSQL atomic ingest commit. `PostgresMediaCatalog` remains an async durable adapter whose existing methods are individually durable; the next slice must implement one all-or-nothing commit for the validated aggregate and prove it on real PostgreSQL.
+The complete bundle is validated before `BEGIN`. The transaction idempotently inserts/reuses the immutable asset, verifies an existing immutable identity inside the transaction, upserts distinct source and managed locations, replaces the native stream projection and then commits. Any failure rolls the entire aggregate back.
+
+Exact normal evidence: **AI Editor CI run `32815455806`, job `97702665656`, `ai-editor-ci/all = success`**. Install, strict TypeScript, Vitest, deterministic migration, contract/policy and observable-status gates all passed.
+
+Exact runtime evidence: **AI Editor Local Stack Gate run `32815455771`, job `97702665269`, `ai-editor-local-stack/all = success`**. PostgreSQL and Qdrant booted healthy; the verifier applied migration 0002, committed a complete validated ingest bundle, then injected a late stream-insert failure for a second bundle and confirmed the new asset, both locations and streams were absent after rollback. The verifier printed: `PostgreSQL media catalog runtime proof passed: migration 0002, idempotent identity, mutable rebinding, native PTS/time-base readback, and atomic validated-ingest commit/rollback.`
 
 ## Validation / free-tier discipline
 
-The execution container still cannot resolve `github.com`, so no local clone/test pass is claimed. Code changes were assembled as one Git tree/commit before moving `main`. Exactly one normal CI run was used for P1-09. No PostgreSQL/Qdrant local-stack, real FFmpeg integration, matrix or rerun was triggered because this slice only establishes the deterministic pre-durable handoff boundary.
+The execution container still could not resolve `github.com`, so no local clone/test pass is claimed. The transaction implementation, deterministic tests and real-PostgreSQL verifier were assembled into one code tree and pushed once. That single substantive commit triggered exactly the normal CI gate and the already-selective local-stack gate because the runtime verifier changed. No unchanged failed run was rerun, no matrix was used and no FFmpeg/media integration workflow was triggered.
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence, PostgreSQL media-catalog semantics and FFmpeg `-copyts` behavior remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence and FFmpeg `-copyts` behavior remain unchanged. Native integer PTS + rational stream time base remain source-timing authority; no seconds/milliseconds columns or semantics were introduced.
 
 ## Next task
 
-Implement a PostgreSQL-backed `commitValidatedImmutableIngest` transaction for the validated bundle so asset registration, source/managed location rebinding and native stream replacement commit atomically or roll back together. Reuse migration 0002 and existing validation helpers. After static CI passes, run the selective PostgreSQL local-stack verifier once to prove all-or-nothing runtime durability; do not run unrelated heavyweight media workflows.
+Audit the four remaining Phase-1 checklist items against the now-verified stable identity, staging and atomic PostgreSQL durability boundaries. Choose the smallest independent unfinished ingest/catalog gap. The leading candidate is a thin durable filesystem-to-PostgreSQL composition proof using `ingestImmutableLocalMediaDurably(...)` with `PostgresMediaCatalog`, deterministic ffprobe injection and real PostgreSQL, without adding new metadata semantics or starting Phase 2 early.
