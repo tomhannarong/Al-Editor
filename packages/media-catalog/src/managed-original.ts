@@ -40,7 +40,7 @@ export interface ManagedOriginalMaterializationResult {
  * Materializes an already-registered immutable asset into managed,
  * content-addressed storage. The final path is derived only from SHA-256,
  * never from caller filenames. Catalog location state is published only after
- * the final managed file has been byte-verified against the immutable asset.
+ * the final managed file has been byte-verified and restored to read-only mode.
  */
 export async function materializeManagedOriginal(
   input: MaterializeManagedOriginalInput,
@@ -92,6 +92,7 @@ export async function materializeManagedOriginal(
   }
 
   await verifyManagedOriginal(destinationPath, input.asset, chunkSize);
+  await chmod(destinationPath, 0o444);
   const location = persistence.rebindLocation({
     locationId: input.locationId,
     assetId: input.asset.assetId,
