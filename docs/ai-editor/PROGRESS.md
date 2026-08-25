@@ -2,12 +2,12 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 1 — Global Media Catalog + Immutable Ingest  
-**Current task:** audit the remaining Phase-1 ingest surface for a shell-free bounded ffprobe execution boundary before adding any new metadata capability
+**Current task:** audit the smallest end-to-end immutable-ingest orchestration gap across the seven verified Phase-1 primitives
 
 ```text
-Standalone verified: 28 / 162 = 17.28%
+Standalone verified: 29 / 162 = 17.90%
 Phase 0:             22 / 22  = 100.00% COMPLETE
-Phase 1:              6 / 14  = 42.86% verified
+Phase 1:              7 / 14  = 50.00% verified
 ```
 
 Phase 0 verified: P0-01 through P0-22.
@@ -32,18 +32,21 @@ Static/behavioral gate: `ai-editor-ci/all = success`, run `32788230358`. Real Po
 Implementation commit `f9d704b3ce5474fe035d40f598e35ea9d871fd2b`; AI Editor CI run `32799561623`, job `97657612381` = success. Allowed-root confinement, direct symlink rejection, read-only/no-follow open, bounded hashing and stable file snapshots are verified before catalog publication.
 
 ### P1-06 — managed content-addressed immutable original materialization
-Implementation commit `ab2ad1346c56012f6c464cbb0cf7f9f813d82f56` added `packages/media-catalog/src/managed-original.ts` and deterministic filesystem tests. Managed copies are stored at `managedRoot/sha256/<prefix>/<digest>`, use a temporary exclusive file plus atomic hard-link publish, are made read-only, and are fully byte-verified against the registered immutable asset before a managed storage location is published.
+Implementation commit `ab2ad1346c56012f6c464cbb0cf7f9f813d82f56`, repaired by `1e7dbc208dc66d6e9080c3c104b00ce2a9104aed`; AI Editor CI run `32803814061`, job `97669865113`, `ai-editor-ci/all = success`. Managed originals use deterministic SHA-256 paths, exclusive temporary copy, atomic create-if-absent publication, full byte verification and read-only final content before catalog location publication.
 
-The first CI run `32803732504` failed only at strict TypeScript because one test fixture hardcoded an obsolete schema literal; Vitest/migration/contract gates were skipped and the run was not rerun unchanged. Repair commit `1e7dbc208dc66d6e9080c3c104b00ce2a9104aed` aligned the fixture with the existing `MEDIA_ASSET_IDENTITY_SCHEMA_VERSION = "1.0"` contract.
+### P1-07 — shell-free bounded ffprobe execution boundary
+Implementation commit `e2bd213a3f8754d7345e0fd733c55497735bd1b7` adds `packages/media-catalog/src/ffprobe.ts` and deterministic tests.
 
-Exact repaired evidence: **AI Editor CI run `32803814061`, job `97669865113`, `ai-editor-ci/all = success`**. TypeScript passed, Vitest passed **87/87** including 5 managed-original tests, migration gates passed, and all contract/policy gates passed.
+The boundary invokes processes with `spawn(..., { shell: false })`, validates positive safe timeout/output limits, caps stdout/stderr, kills timed-out/over-limit children, treats non-zero exit as failure, uses a fixed ffprobe argv contract with the media path passed after `-i`, requires non-empty valid JSON stdout, and hands parsed data to the already verified native-stream normalizer/persistence path. Decimal `start_time`/`duration` remain non-authoritative and are ignored by normalization.
+
+Exact evidence: **AI Editor CI run `32806749817`, job `97678251159`, `ai-editor-ci/all = success` on `e2bd213a...`**. Install, strict TypeScript, Vitest, deterministic migration, contract/policy gates and observable commit status all passed.
 
 ## Validation / free-tier discipline
 
-Local cloning was attempted first but the execution environment still could not resolve `github.com`, so no local pass is claimed. The implementation was batched into one code commit; after a real TypeScript failure, only the causative test fixture was repaired and a fresh CI run was allowed. No unchanged failed run was rerun. No PostgreSQL/Qdrant local-stack, FFmpeg integration, matrix or heavyweight media workflow was triggered for this filesystem-only slice.
+The execution container still cannot resolve `github.com`, so no local clone/test pass is claimed. The substantive change was assembled as one Git tree/commit before moving `main`, avoiding intermediate broken pushes. Exactly one normal CI run was used as the final confidence gate. No PostgreSQL/Qdrant local-stack, FFmpeg real-media integration, matrix or rerun was triggered because this slice validates the process boundary deterministically without requiring codec/media correctness evidence.
 
 Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, immutable revision/render evidence, PostgreSQL media-catalog semantics and FFmpeg `-copyts` behavior remain unchanged.
 
 ## Next task
 
-Audit the remaining Phase-1 checklist for the smallest independent ingest gap. The leading candidate is a **shell-free, bounded ffprobe execution boundary** that invokes ffprobe without shell authority, caps runtime/output, validates JSON before normalization, and preserves native PTS/rational time-base authority. Do not add heavyweight real-media CI unless the Bible gate for that slice requires runtime proof.
+Audit the smallest **end-to-end immutable-ingest orchestration** gap across the seven verified primitives. Prefer an additive coordinator that orders confined source registration, managed-original publication and bounded ffprobe normalization without duplicating those implementations, with explicit fail-closed side-effect ordering and idempotency tests. Do not add heavyweight runtime CI unless the selected Bible gate requires it.
