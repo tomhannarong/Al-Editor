@@ -57,6 +57,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Validated ASR alignment -> native PTS normalization | `packages/transcript-library/src/asr-alignment.ts` | verified on `17e0eac4`; CI `32932548445` job `98067436909`; untrusted integer-microsecond input normalized through centralized media-time authority into native PTS |
 | Deterministic transcript correction revision builder | `packages/transcript-library/src/correction-revision.ts` | verified on `02d5c273`; CI `32936036706` job `98077317683`; additive correction preserves immutable source + stable word identity/native timing |
 | Phase-3 gate reconciliation | P3-01..P3-08 exact evidence + checkpoint 0071 | verified; immutable ASR/corrections, stable word timing and editorial segments all satisfied without redundant Actions run |
+| Baseline scene retrieval query schema | `packages/contracts/src/baseline-scene-retrieval-query.contract.ts` | verified on `22db5e27`; CI `32945732425` job `98105919843`; exact `ai-editor-ci/all = success` |
 
 ## Phase 1 closure
 
@@ -84,6 +85,8 @@ Canonical timing remains integer project frames + rational FPS and native PTS + 
 
 Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is complete: 9/9 plus exact gate reconciliation.
 
-## Phase 4 next
+## Phase 4 status
 
-Phase 4 — Baseline Scene Retrieval — now becomes the active phase. The Bible gate requires a query schema, indexed scenes and a labeled Recall@10 baseline. P4-01 should begin by auditing the existing retrieval surface and implementing only the smallest missing versioned query-schema contract tied to exact indexed scene-set/source identity. Hybrid retrieval and reranking remain Phase 5 concerns and must not leak into the baseline.
+P4-01 establishes the versioned baseline query schema. Retrieval requests are bounded validated text plus exact scene-set/source scope; duplicate scopes are normalized and rejected, and mutable source identity cannot enter the contract. Hybrid weights, reranker policy and editorial judgment remain out of Phase 4.
+
+The next smallest missing slice is P4-02: a versioned indexed-scene document contract bound to exact scene-set revision + scene ID + immutable source lineage and explicit embedding/model revision metadata. The remaining Phase-4 gate still requires actual indexed scenes and a labeled Recall@10 baseline.

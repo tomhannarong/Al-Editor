@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 4,
-  "currentTask": "P4-01-baseline-retrieval-query-schema-contract-audit",
+  "currentTask": "P4-02-versioned-indexed-scene-document-contract",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 56,
-    "standaloneRevalidatedPercent": 34.57
+    "standaloneRevalidated": 57,
+    "standaloneRevalidatedPercent": 35.19
   },
   "phase0": {
     "total": 22,
@@ -96,7 +96,15 @@
       "stableWordTiming": ["P3-01 requires native integer PTS plus rational source time base","P3-07 deterministically normalizes untrusted aligned timing into that authority before persistence","P3-08 preserves word IDs, ordinals and native PTS across correction revisions"],
       "editorialSegments": ["P3-04 through P3-06 provide versioned, immutable and durable segment evidence over stable transcript words"]
     },
-    "next": "Phase 3 gate is verified complete; advance to P4-01 baseline retrieval query-schema contract audit"
+    "next": "Phase 3 gate is verified complete"
+  },
+  "phase4": {
+    "standaloneRevalidated": 1,
+    "state": "in-progress",
+    "implementedSlices": [
+      {"id":"P4-01-baseline-scene-retrieval-query-schema-contract","implementationCommit":"22db5e278b96d8a064c0fd50ef96894d1f72c1a4","status":"verified","evidence":["packages/contracts/src/baseline-scene-retrieval-query.contract.ts","packages/contracts/src/baseline-scene-retrieval-query.contract.test.ts","AI Editor CI run 32945732425 job 98105919843 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["query schema is versioned and immutable-evidence friendly through queryId/revisionId","query scope binds exact sceneSetId/sceneSetRevisionId plus immutable asset/stream/index/source time base","scope rational time bases are normalized for exact identity comparisons","queryText and topK are bounded validated data","hybrid weights, reranker policy and editorial scoring are deliberately absent from the Phase-4 baseline query contract"]}
+    ],
+    "next": "P4-02-versioned-indexed-scene-document-contract"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
