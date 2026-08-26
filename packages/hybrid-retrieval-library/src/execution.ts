@@ -297,7 +297,7 @@ function cosineSimilarity(left: readonly number[], right: readonly number[]): nu
 }
 
 function sourceSceneKey(source: IndexedSceneSourceLineage): string {
-  return [source.sceneSetId, source.sceneSetRevisionId, source.sceneId].join('\u0000');
+  return JSON.stringify([source.sceneSetId, source.sceneSetRevisionId, source.sceneId]);
 }
 
 function cloneSource(source: IndexedSceneSourceLineage): IndexedSceneSourceLineage {
