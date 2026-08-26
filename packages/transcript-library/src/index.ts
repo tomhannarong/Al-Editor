@@ -8,6 +8,13 @@ import {
   type TranscriptWord,
 } from '../../contracts/src/transcript.contract.js';
 
+export {
+  AsrAlignmentNormalizationError,
+  normalizeAlignedAsrInput,
+  type AlignedAsrInput,
+  type AlignedAsrWordInput,
+} from './asr-alignment.js';
+
 export class TranscriptPersistenceInvariantError extends Error {
   constructor(message: string) {
     super(message);
