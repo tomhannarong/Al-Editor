@@ -56,6 +56,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | PostgreSQL editorial segment revision persistence | migration 0007 + `packages/editorial-segment-library/src/postgres.ts` | verified static CI on `695e5105`, run `32928880002` job `98057124865`; verifier fixture repaired on `f5b8fba3`; real PostgreSQL/local-stack run `32929033073` job `98057560645` success |
 | Validated ASR alignment -> native PTS normalization | `packages/transcript-library/src/asr-alignment.ts` | verified on `17e0eac4`; CI `32932548445` job `98067436909`; untrusted integer-microsecond input normalized through centralized media-time authority into native PTS |
 | Deterministic transcript correction revision builder | `packages/transcript-library/src/correction-revision.ts` | verified on `02d5c273`; CI `32936036706` job `98077317683`; additive correction preserves immutable source + stable word identity/native timing |
+| Phase-3 gate reconciliation | P3-01..P3-08 exact evidence + checkpoint 0071 | verified; immutable ASR/corrections, stable word timing and editorial segments all satisfied without redundant Actions run |
 
 ## Phase 1 closure
 
@@ -71,14 +72,18 @@ P2-08 through P2-11 establish versioned keyframe evidence, immutable revision se
 
 The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/src/quality-baseline.ts`, deterministic tests and `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`. Exact implementation `4fca4d89dae48d57e381420bea91b6d321efba41` passed AI Editor CI `32903495078` / job `97982328934`.
 
-## Phase 3 status
+## Phase 3 closure
 
-Phase 3 contains 9 checklist items. P3-01 through P3-03 establish versioned immutable transcript/ASR-correction lineage plus in-memory and PostgreSQL durability. P3-04 through P3-06 establish versioned, immutable and durable editorial segments over stable transcript word identities. P3-07 normalizes untrusted aligned ASR timing through the centralized media-time authority into native integer PTS before persistence.
+Phase 3 contains 9 checklist items and is verified-complete.
 
-P3-08 now establishes deterministic additive correction construction from an immutable parent transcript. `packages/transcript-library/src/correction-revision.ts` binds the new correction to the exact parent revision, preserves immutable source mapping, ASR/language lineage, stable word IDs/ordinals/native PTS and existing confidence evidence, and permits only explicit corrected text to change. Unknown/duplicate word IDs, no-op corrections, invalid parent evidence and parent revision-ID reuse fail closed. Exact implementation `02d5c273d15f87603539bb08893c4f8eb3917dbd` passed AI Editor CI `32936036706` / job `98077317683` with `ai-editor-ci/all = success`.
+P3-01 through P3-03 establish versioned immutable transcript/ASR-correction lineage plus in-memory and PostgreSQL durability. P3-04 through P3-06 establish versioned, immutable and durable editorial segments over stable transcript word identities. P3-07 normalizes untrusted aligned ASR timing through the centralized media-time authority into native integer PTS before persistence. P3-08 establishes deterministic additive correction construction from an immutable parent transcript while preserving source mapping, stable word IDs/ordinals and native timing.
 
-The Phase-3 gate now has implementation evidence for all three required proof areas: immutable ASR/corrections, stable word timing and editorial segments. P3-09 should reconcile exact evidence and close the phase without inventing another capability if no gap is found.
+P3-09 reconciles these exact proofs against the Bible gate. Immutable ASR/corrections are covered by P3-01/P3-02/P3-03/P3-08; stable word timing is covered by P3-01/P3-07/P3-08; editorial segments are covered by P3-04/P3-05/P3-06. No additional subsystem or redundant Actions run is required to close the phase.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 8/9.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is complete: 9/9 plus exact gate reconciliation.
+
+## Phase 4 next
+
+Phase 4 — Baseline Scene Retrieval — now becomes the active phase. The Bible gate requires a query schema, indexed scenes and a labeled Recall@10 baseline. P4-01 should begin by auditing the existing retrieval surface and implementing only the smallest missing versioned query-schema contract tied to exact indexed scene-set/source identity. Hybrid retrieval and reranking remain Phase 5 concerns and must not leak into the baseline.
