@@ -50,6 +50,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Scene-boundary quality baseline | `packages/scene-library/src/quality-baseline.ts` + versioned fixture | verified on `4fca4d89`; CI `32903495078` job `97982328934`; baseline P/R/F1 = 0.75/0.75/0.75 |
 | Versioned immutable transcript / ASR-correction lineage | `packages/contracts/src/transcript.contract.ts` | verified on repaired `0921bcd2`; CI `32909410505` job `98000354561` |
 | Immutable transcript revision persistence | `packages/transcript-library/src/index.ts` | verified on `92037f27`; CI `32914047941` job `98013856761` |
+| PostgreSQL transcript revision persistence | migration 0006 + `packages/transcript-library/src/postgres.ts` | verified on `e01b9818`; CI `32917035651` job `98022790043`; real PostgreSQL/local-stack `32917035721` job `98022789688` |
 
 ## Phase 1 closure
 
@@ -67,8 +68,8 @@ The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/
 
 ## Phase 3 status
 
-Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 now establishes immutable in-memory revision persistence/idempotency in `packages/transcript-library/src/index.ts`: equivalent rational source time bases normalize for semantic equality; conflicting reuse of a revision identity fails closed; additive correction revisions preserve historical ASR evidence; returned source/word evidence is defensively copied. Exact implementation `92037f27e0a5180e1706fc405d3ff7ecc5e8a148` passed AI Editor CI `32914047941`, job `98013856761`, with `ai-editor-ci/all = success`.
+Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 established immutable in-memory revision persistence/idempotency. P3-03 now establishes durable PostgreSQL transcript persistence with exact audio-stream/time-base foreign-key lineage and durable same-transcript/same-source correction-parent lineage. Ordered native-PTS words and optional confidence are durable; semantic re-registration is idempotent; conflicting immutable evidence rolls back. Exact implementation `e01b981876af149332304fe4cfd59b4f78b9a5f5` passed AI Editor CI `32917035651` / job `98022790043` and AI Editor Local Stack Gate `32917035721` / job `98022789688`, with both observable statuses successful.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 2/9.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 3/9.

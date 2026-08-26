@@ -2,33 +2,31 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 3 — Voice / Transcript Alignment  
-**Current task:** P3-03 — PostgreSQL durable transcript revision persistence/readback
+**Current task:** P3-04 — versioned editorial segment contract over immutable transcript word timing
 
 ```text
-Standalone verified: 49 / 162 = 30.25%
+Standalone verified: 50 / 162 = 30.86%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
-Phase 3:              2 / 9   =  22.22%
+Phase 3:              3 / 9   =  33.33%
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14. Phase 2 remains verified-complete through P2-11 plus its exact quality-baseline gate evidence.
 
-## Phase 3 — P3-02 verified
+## Phase 3 — P3-03 verified
 
-P3-02 adds the in-memory immutable transcript revision persistence boundary in `packages/transcript-library/src/index.ts` plus deterministic tests.
+P3-03 adds durable PostgreSQL transcript revision persistence/readback in `packages/transcript-library/src/postgres.ts`, migration `0006_create_transcript_library.sql`, deterministic store tests and a selective real-PostgreSQL verifier.
 
-A `revisionId` is immutable evidence identity. Semantically equivalent re-registration is idempotent, including rationally equivalent source time bases. Reuse of the same `revisionId` with changed source mapping, correction lineage, ASR model version, language, creation evidence, word IDs/text/order/native timing or confidence fails closed before store mutation.
+The durable schema constrains every transcript revision to an exact persisted **audio** stream tuple: immutable asset identity, stream identity/index and normalized rational time base. Correction parent lineage is additionally constrained to the same transcript and exact source tuple, preventing a correction from silently pointing across media/source lineage.
 
-Correction work remains additive: a correction uses a new revision ID and explicit parent lineage while the prior ASR revision remains readable and unchanged. Stored source/time-base and word arrays are defensively copied so callers cannot mutate historical evidence through returned objects.
-
-Native source PTS + rational stream time base remain the only timing authority. No milliseconds or decimal-second authority was introduced.
+Ordered words persist native integer `source_start_pts` / `source_end_pts` plus optional confidence only. No seconds or milliseconds timing columns were introduced. Equivalent rational time bases normalize before insert; exact semantic re-registration is idempotent; conflicting reuse of an immutable revision ID rolls back without replacing durable evidence.
 
 ### Validation evidence
 
-Implementation commit `92037f27e0a5180e1706fc405d3ff7ecc5e8a148` was committed directly to `main` as one batched code/test change.
+Implementation commit `e01b981876af149332304fe4cfd59b4f78b9a5f5` was committed directly to `main` as one batched schema/store/test/runtime-verifier change.
 
-AI Editor CI run `32914047941`, job `98013856761`:
+AI Editor CI run `32917035651`, job `98022790043`:
 
 - dependency install: success
 - TypeScript strict gate: success
@@ -37,14 +35,23 @@ AI Editor CI run `32914047941`, job `98013856761`:
 - contract/policy gates: success
 - observable commit status: `ai-editor-ci/all = success`
 
-No PostgreSQL/Qdrant local-stack, FFmpeg/media integration, matrix or rerun was used because P3-02 is a pure deterministic persistence-semantics slice. A heavier runtime gate would be redundant at this stage.
+AI Editor Local Stack Gate run `32917035721`, job `98022789688`:
+
+- Docker runtime: success
+- PostgreSQL + Qdrant boot/health: success
+- media/durable-ingest/scene/proxy/keyframe/transcript PostgreSQL runtime verification: success
+- existing real FFmpeg derivative regressions: success
+- API dependency health: success
+- observable commit status: `ai-editor-local-stack/all = success`
+
+No unchanged failed job was rerun and no matrix was introduced. The transcript runtime verifier was consolidated into the existing single local-stack persistence step.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 ingest/media durability and Phase-2 scene/proxy/keyframe evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and Phase-2 scene/proxy/keyframe evidence remain unchanged.
 
-Transcript model output remains untrusted data. Corrections remain additive immutable revisions rather than destructive rewrites.
+Transcript/model evidence remains untrusted data. Corrections remain additive immutable revisions rather than destructive rewrites. Native source PTS + rational stream time base remain authoritative.
 
 ## Next task
 
-P3-03 — PostgreSQL durable transcript revision persistence/readback. Reuse the P3-02 conflict/idempotency semantics, preserve exact asset/audio-stream/native-PTS lineage and prove durable correction lineage/readback against real PostgreSQL with the selective local-stack gate only when the database slice is ready.
+P3-04 — define a versioned editorial segment contract over immutable transcript revision/word IDs and native word timing. The segment layer must remain additive, must not duplicate ASR timing authority, and must preserve exact transcript revision lineage before any segment persistence or alignment runtime is introduced.

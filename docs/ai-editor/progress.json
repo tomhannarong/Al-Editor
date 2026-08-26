@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 3,
-  "currentTask": "P3-03-postgresql-transcript-revision-persistence-readback",
+  "currentTask": "P3-04-versioned-editorial-segment-contract",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 49,
-    "standaloneRevalidatedPercent": 30.25
+    "standaloneRevalidated": 50,
+    "standaloneRevalidatedPercent": 30.86
   },
   "phase0": {
     "total": 22,
@@ -73,18 +73,19 @@
       "exactSourceMapping": ["P2-01, P2-03 and derivative lineage evidence preserve immutable asset/stream/native-PTS mapping"],
       "qualityBaseline": ["implementation commit 4fca4d89dae48d57e381420bea91b6d321efba41","packages/scene-library/src/quality-baseline.ts","packages/scene-library/src/quality-baseline.test.ts","docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md","AI Editor CI run 32903495078 job 97982328934 success","ai-editor-ci/all success on exact implementation commit"]
     },
-    "next": "Phase 2 gate is verified complete; Phase 3 P3-02 is now verified"
+    "next": "Phase 2 gate is verified complete; Phase 3 P3-03 is now verified"
   },
   "phase3": {
     "total": 9,
-    "standaloneRevalidated": 2,
-    "standaloneRevalidatedPercent": 22.22,
+    "standaloneRevalidated": 3,
+    "standaloneRevalidatedPercent": 33.33,
     "state": "in-progress",
     "implementedSlices": [
       {"id":"P3-01-versioned-immutable-transcript-revision-contract","implementationCommit":"af1b62e8cd1aa154cadfad0d1afcbf20106a3049","repairCommit":"0921bcd24909620f989b61a7764f78358c0ea466","status":"verified","evidence":["packages/contracts/src/transcript.contract.ts","packages/contracts/src/transcript.contract.test.ts","AI Editor CI run 32909410505 job 98000354561 success","ai-editor-ci/all success on exact repair commit"],"invariants":["transcript revisions bind to immutable sha256 asset and exact audio stream identity","word authority is safe-integer native sourceStartPts/sourceEndPts plus rational source time base","word IDs are unique and ordinals are stable zero-based positions","ASR root revisions cannot claim a parent; correction revisions require explicit immutable parent lineage","confidence remains bounded untrusted model evidence rather than executable or timing authority","milliseconds and decimal seconds are deliberately absent from the canonical transcript contract"]},
-      {"id":"P3-02-immutable-transcript-revision-persistence-idempotency","implementationCommit":"92037f27e0a5180e1706fc405d3ff7ecc5e8a148","status":"verified","evidence":["packages/transcript-library/src/index.ts","packages/transcript-library/src/index.test.ts","AI Editor CI run 32914047941 job 98013856761 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable evidence identity","semantic re-registration including equivalent rational source time bases is idempotent","changed source, correction lineage, ASR model, language, createdAt or word evidence under the same revisionId fails closed before mutation","additive correction revisions preserve prior ASR evidence","stored source and word evidence is defensively copied","native source PTS plus rational time base remain timing authority"]}
+      {"id":"P3-02-immutable-transcript-revision-persistence-idempotency","implementationCommit":"92037f27e0a5180e1706fc405d3ff7ecc5e8a148","status":"verified","evidence":["packages/transcript-library/src/index.ts","packages/transcript-library/src/index.test.ts","AI Editor CI run 32914047941 job 98013856761 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable evidence identity","semantic re-registration including equivalent rational source time bases is idempotent","changed source, correction lineage, ASR model, language, createdAt or word evidence under the same revisionId fails closed before mutation","additive correction revisions preserve prior ASR evidence","stored source and word evidence is defensively copied","native source PTS plus rational time base remain timing authority"]},
+      {"id":"P3-03-postgresql-transcript-revision-persistence-readback","implementationCommit":"e01b981876af149332304fe4cfd59b4f78b9a5f5","status":"verified","evidence":["db/migrations/0006_create_transcript_library.sql","packages/transcript-library/src/postgres.ts","packages/transcript-library/src/postgres.test.ts","infra/verify-postgres-transcript-library-runtime.mts","AI Editor CI run 32917035651 job 98022790043 success","AI Editor Local Stack Gate run 32917035721 job 98022789688 success","ai-editor-ci/all success on exact implementation commit","ai-editor-local-stack/all success on exact implementation commit"],"invariants":["durable transcript revisions reference the exact persisted audio stream/index/rational time-base tuple","correction parent lineage is constrained to the same transcript and exact source tuple","ordered word evidence persists native sourceStartPts/sourceEndPts and optional confidence only","equivalent rational source time bases normalize before durable insert","semantic re-registration is idempotent and conflicting immutable evidence rolls back","schema introduces no seconds or milliseconds timing authority"]}
     ],
-    "next": "P3-03 PostgreSQL durable transcript revision persistence/readback"
+    "next": "P3-04 versioned editorial segment contract over immutable transcript word timing"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},
