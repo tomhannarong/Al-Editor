@@ -69,6 +69,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned retrieval duplicate-control policy | `packages/contracts/src/retrieval-duplicate-control-policy.contract.ts` | verified on repaired `6b32226c`; implementation CI `32992622547` failed strict TypeScript test-fixture typing; repair CI `32994487679` job `98260037304` passed all gates; production contract unchanged |
 | Deterministic retrieval duplicate-control execution | `packages/hybrid-retrieval-library/src/duplicate-control.ts` | verified on test commit `699e7c7a`; AI Editor CI `32996581754` job `98267379517`; same-source asset/stream native-PTS interval IoU suppression, exact lineage validation and bounded maxResults; no quality-gain claim yet |
 | Same-benchmark hybrid + duplicate-control evaluation | `packages/hybrid-retrieval-library/src/benchmark-evaluation.ts` + `docs/ai-editor/benchmarks/phase5-hybrid-duplicate-control-evaluation-v1.md` | verified on `699615af`; CI `33003534039` job `98291207703`; Macro Recall@10 `0.8333333333333334 -> 1.0`, Micro `0.75 -> 1.0`; exact Phase-4 benchmark revision; duplicate occupancy measured `0.0` on the non-overlapping control fixture |
+| Exact canonical frame/source mapping golden | `packages/preview-renderer/src/index.test.ts` + `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md` | verified on `72780c37`; CI `33013977827` job `98327280374`; exact `90` project frames at `30000/1001` map to `90090` native PTS at `1/30000` from non-zero source origin; preview uses the same absolute PTS boundaries |
 
 ## Phase 1 closure
 
@@ -86,22 +87,16 @@ The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/
 
 ## Phase 3 closure
 
-Phase 3 contains 9 checklist items and is verified-complete.
-
-P3-01 through P3-03 establish versioned immutable transcript/ASR-correction lineage plus in-memory and PostgreSQL durability. P3-04 through P3-06 establish versioned, immutable and durable editorial segments over stable transcript word identities. P3-07 normalizes untrusted aligned ASR timing through the centralized media-time authority into native integer PTS before persistence. P3-08 establishes deterministic additive correction construction from an immutable parent transcript while preserving source mapping, stable word IDs/ordinals and native timing.
-
-P3-09 reconciles these exact proofs against the Bible gate. Immutable ASR/corrections are covered by P3-01/P3-02/P3-03/P3-08; stable word timing is covered by P3-01/P3-07/P3-08; editorial segments are covered by P3-04/P3-05/P3-06. No additional subsystem or redundant Actions run is required to close the phase.
+Phase 3 contains 9 checklist items and is verified-complete. P3-01 through P3-08 establish immutable transcript/correction lineage, native-PTS alignment and editorial segments; P3-09 reconciles those proofs against the Bible gate without redundant Actions.
 
 ## Phase 4 closure
 
-Phase 4 contains six verified slices including the evidence-reconciliation closure. P4-01 establishes the versioned baseline query schema. P4-02/P4-03 establish versioned immutable indexed-scene evidence and idempotent persistence. P4-04 proves real-Qdrant indexing/readback while retaining vector storage as rebuildable state. P4-05 establishes the versioned labeled Recall@10 benchmark. P4-06 maps those exact proofs to the Bible gate and closes the phase without a redundant Actions run.
+Phase 4 contains six verified slices including evidence reconciliation. The versioned query schema, immutable indexed scenes, real Qdrant durability and labeled Recall@10 baseline satisfy the Phase-4 gate.
 
-The Phase-4 benchmark remains the comparison control for Phase 5. Hybrid retrieval, reranking and duplicate control must demonstrate measurable quality gain on the same versioned evidence before an upgrade is accepted.
+## Phase 5 closure
 
-Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
+Phase 5 contains seven verified slices including evidence reconciliation. The exact Phase-4 benchmark control improves from Macro Recall@10 `0.8333333333333334` to `1.0` and Micro `0.75` to `1.0`, while P5-04/P5-05 provide versioned deterministic duplicate control.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is complete: 9/9 plus exact gate reconciliation. Phase 4 is complete: 6/6 plus exact gate reconciliation.
+## Phase 6 status
 
-## Phase 5 status
-
-P5-01 through P5-06 are verified. P5-06 demonstrates measurable Recall@10 gain on the exact versioned Phase-4 benchmark while P5-04/P5-05 provide versioned duplicate-control policy and deterministic native-PTS overlap suppression evidence. The immutable Phase-4 fixture contains no overlapping source intervals, so its actual duplicate occupancy is `0.0`; that measured result is preserved rather than modifying benchmark evidence. Phase 5 is gate-ready and awaits P5-07 evidence reconciliation before advance.
+P6-01 is verified. It adds the previously missing cross-layer exact frame/source mapping golden while preserving the canonical timeline and renderer-neutral adapter semantics. The remaining explicit gate is preview/final delivery validation; P6-02 will audit existing real-preview/rerender/delivery evidence before deciding whether any new heavyweight runtime proof is needed.

@@ -12,91 +12,33 @@
   },
   "status": "in-progress",
   "currentPhase": 6,
-  "currentTask": "P6-01-phase6-exact-frame-source-mapping-golden-audit",
+  "currentTask": "P6-02-phase6-preview-final-delivery-validation-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 69,
-    "standaloneRevalidatedPercent": 42.59
+    "standaloneRevalidated": 70,
+    "standaloneRevalidatedPercent": 43.21
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0085-phase5-gate-reconciled-and-closed.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0086-phase6-exact-frame-source-mapping-golden-verified.md"
   },
-  "phase0": {
-    "total": 22,
-    "standaloneRevalidated": 22,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "evidence": ["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]
-  },
-  "phase1": {
-    "total": 14,
-    "standaloneRevalidated": 14,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "evidence": ["checkpoint 0050 Phase-1 gate reconciliation", "P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]
-  },
-  "phase2": {
-    "total": 11,
-    "standaloneRevalidated": 11,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "gateEvidence": {
-      "versionedSceneSets": ["P2-01 through P2-03 exact standalone evidence"],
-      "exactSourceMapping": ["immutable asset/stream/native-PTS mapping preserved through scene and derivative evidence"],
-      "qualityBaseline": ["docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md", "AI Editor CI run 32903495078 job 97982328934 success"]
-    }
-  },
-  "phase3": {
-    "total": 9,
-    "standaloneRevalidated": 9,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "gateEvidence": {
-      "immutableAsrAndCorrections": ["P3-01/P3-02/P3-03/P3-08 exact evidence"],
-      "stableWordTiming": ["P3-01/P3-07/P3-08 native-PTS evidence"],
-      "editorialSegments": ["P3-04 through P3-06 exact evidence"]
-    }
-  },
-  "phase4": {
-    "total": 6,
-    "standaloneRevalidated": 6,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "gateEvidence": {
-      "querySchema": ["P4-01 exact query-schema evidence"],
-      "indexedScenes": ["P4-02/P4-03 immutable indexed-scene evidence", "P4-04 real-Qdrant indexing/readback evidence"],
-      "labeledRecallAt10Baseline": ["phase4-labeled-recall-at-10:v1", "macro Recall@10 0.8333333333333334", "micro Recall@10 0.75", "AI Editor CI run 32965904224 job 98168207773 success"]
-    }
-  },
-  "phase5": {
-    "total": 7,
-    "standaloneRevalidated": 7,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "implementedSlices": [
-      {"id":"P5-01-versioned-hybrid-retrieval-policy-contract","implementationCommit":"92e06e995290568d82632a1259a3b51c369dcf82","status":"verified","evidence":["AI Editor CI run 32977400310 job 98205379475 success"]},
-      {"id":"P5-02-immutable-hybrid-retrieval-policy-persistence-idempotency","implementationCommit":"3a0efdd40a38a6a7d9b3dcdf7df4d2814a607564","status":"verified","evidence":["AI Editor CI run 32983383147 job 98225313631 success"]},
-      {"id":"P5-03-deterministic-hybrid-retrieval-execution","implementationCommit":"e82991755c6219f3d817de1c0fcdaa06cda9ab83","repairCommit":"0dd6179e55412466378bf09eb8363819da2f1fb4","status":"verified","evidence":["AI Editor CI run 32988192562 job 98239245541 success"]},
-      {"id":"P5-04-versioned-retrieval-duplicate-control-policy","implementationCommit":"1bbf79e637c4786bd24109429bc69f30c23b2ceb","repairCommit":"6b32226c42f78c993bf96a93908d9b550a75d33a","status":"verified","evidence":["implementation CI run 32992622547 failed strict TypeScript; no unchanged rerun", "repair CI run 32994487679 job 98260037304 success"]},
-      {"id":"P5-05-deterministic-retrieval-duplicate-control-execution","implementationCommit":"a2532cd464c950cfcb3098cbbf9b2542ece12e92","testCommit":"699e7c7af3e96470e5a34b5d12baf3f89179a753","status":"verified","evidence":["AI Editor CI run 32996581754 job 98267379517 success"]},
-      {"id":"P5-06-same-benchmark-hybrid-duplicate-control-evaluation","implementationCommit":"699615afa2bf3e45e3fa41079d9d8422eb8a9f60","status":"verified","evidence":["AI Editor CI run 33003534039 job 98291207703 success", "ai-editor-ci/all success on exact implementation commit", "Phase-4 macro Recall@10 0.8333333333333334 -> Phase-5 1.0", "Phase-4 micro Recall@10 0.75 -> Phase-5 1.0", "same-benchmark duplicate occupancy 0.0 -> 0.0 on immutable non-overlapping fixture"]},
-      {"id":"P5-07-phase5-gate-reconciliation","status":"verified","evidence":["checkpoint 0085 reconciles exact P5-01 through P5-06 evidence", "measurable same-benchmark gain satisfied by P5-06", "duplicate control satisfied by P5-04/P5-05 with actual benchmark occupancy measured by P5-06", "no redundant Actions run used for documentation-only closure"]}
-    ],
-    "gateEvidence": {
-      "measurableQualityGainOnSameBenchmark": ["exact benchmark phase4-labeled-recall-at-10:v1", "macro Recall@10 gain 0.16666666666666663", "micro Recall@10 gain 0.25", "AI Editor CI run 33003534039 job 98291207703 success"],
-      "duplicateControl": ["P5-04 versioned policy", "P5-05 deterministic native-PTS interval suppression", "P5-06 actual same-benchmark occupancy measurement"]
-    },
-    "next": "Phase 5 gate is verified complete"
-  },
+  "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
+  "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
+  "phase2": {"total":11,"standaloneRevalidated":11,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"versionedSceneSets":["P2-01 through P2-03 exact standalone evidence"],"exactSourceMapping":["immutable asset/stream/native-PTS mapping preserved through scene and derivative evidence"],"qualityBaseline":["docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md","AI Editor CI run 32903495078 job 97982328934 success"]}},
+  "phase3": {"total":9,"standaloneRevalidated":9,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"immutableAsrAndCorrections":["P3-01/P3-02/P3-03/P3-08 exact evidence"],"stableWordTiming":["P3-01/P3-07/P3-08 native-PTS evidence"],"editorialSegments":["P3-04 through P3-06 exact evidence"]}},
+  "phase4": {"total":6,"standaloneRevalidated":6,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"querySchema":["P4-01 exact query-schema evidence"],"indexedScenes":["P4-02/P4-03 immutable indexed-scene evidence","P4-04 real-Qdrant indexing/readback evidence"],"labeledRecallAt10Baseline":["phase4-labeled-recall-at-10:v1","macro Recall@10 0.8333333333333334","micro Recall@10 0.75","AI Editor CI run 32965904224 job 98168207773 success"]}},
+  "phase5": {"total":7,"standaloneRevalidated":7,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"measurableQualityGainOnSameBenchmark":["exact benchmark phase4-labeled-recall-at-10:v1","macro Recall@10 gain 0.16666666666666663","micro Recall@10 gain 0.25","AI Editor CI run 33003534039 job 98291207703 success"],"duplicateControl":["P5-04 versioned policy","P5-05 deterministic native-PTS interval suppression","P5-06 actual same-benchmark occupancy measurement"]}},
   "phase6": {
     "state": "in-progress",
-    "standaloneRevalidated": 0,
-    "next": "P6-01-phase6-exact-frame-source-mapping-golden-audit",
+    "standaloneRevalidated": 1,
+    "implementedSlices": [
+      {"id":"P6-01-phase6-exact-frame-source-mapping-golden","implementationCommit":"72780c37b5456fa4a31fdfdacca8023c6e79fcd2","status":"verified","evidence":["docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md","AI Editor CI run 33013977827 job 98327280374 success","ai-editor-ci/all success on exact implementation commit"]}
+    ],
+    "next": "P6-02-phase6-preview-final-delivery-validation-audit",
     "requiredGate": ["exact frame/source mapping goldens", "preview/final delivery validation"]
   },
   "rules": {
