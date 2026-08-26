@@ -51,6 +51,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned immutable transcript / ASR-correction lineage | `packages/contracts/src/transcript.contract.ts` | verified on repaired `0921bcd2`; CI `32909410505` job `98000354561` |
 | Immutable transcript revision persistence | `packages/transcript-library/src/index.ts` | verified on `92037f27`; CI `32914047941` job `98013856761` |
 | PostgreSQL transcript revision persistence | migration 0006 + `packages/transcript-library/src/postgres.ts` | verified on `e01b9818`; CI `32917035651` job `98022790043`; real PostgreSQL/local-stack `32917035721` job `98022789688` |
+| Versioned editorial segment over immutable transcript words | `packages/contracts/src/editorial-segment.contract.ts` | verified on `747e9151`; CI `32920801878` job `98033851515` |
 
 ## Phase 1 closure
 
@@ -68,8 +69,8 @@ The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/
 
 ## Phase 3 status
 
-Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 established immutable in-memory revision persistence/idempotency. P3-03 now establishes durable PostgreSQL transcript persistence with exact audio-stream/time-base foreign-key lineage and durable same-transcript/same-source correction-parent lineage. Ordered native-PTS words and optional confidence are durable; semantic re-registration is idempotent; conflicting immutable evidence rolls back. Exact implementation `e01b981876af149332304fe4cfd59b4f78b9a5f5` passed AI Editor CI `32917035651` / job `98022790043` and AI Editor Local Stack Gate `32917035721` / job `98022789688`, with both observable statuses successful.
+Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 established immutable in-memory revision persistence/idempotency. P3-03 established durable PostgreSQL transcript persistence with exact audio-stream/time-base and correction-parent lineage. P3-04 now establishes versioned editorial segmentation over exact immutable transcript revision and stable word identities. Segment source PTS/time-base is derived read state from the bound transcript rather than duplicated durable timing authority. Exact implementation `747e9151f685a517c50da77629ec0a93ff634b8f` passed AI Editor CI `32920801878` / job `98033851515` with observable `ai-editor-ci/all = success`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 3/9.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 4/9.
