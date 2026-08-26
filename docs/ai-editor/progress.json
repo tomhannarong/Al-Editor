@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 5,
-  "currentTask": "P5-02-immutable-hybrid-retrieval-policy-persistence-idempotency",
+  "currentTask": "P5-03-deterministic-hybrid-retrieval-execution",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 63,
-    "standaloneRevalidatedPercent": 38.89
+    "standaloneRevalidated": 64,
+    "standaloneRevalidatedPercent": 39.51
   },
   "phase0": {
     "total": 22,
@@ -119,12 +119,13 @@
     "next": "Phase 4 gate is verified complete"
   },
   "phase5": {
-    "standaloneRevalidated": 1,
+    "standaloneRevalidated": 2,
     "state": "in-progress",
     "implementedSlices": [
-      {"id":"P5-01-versioned-hybrid-retrieval-policy-contract","implementationCommit":"92e06e995290568d82632a1259a3b51c369dcf82","status":"verified","evidence":["packages/contracts/src/hybrid-retrieval-policy.contract.ts","packages/contracts/src/hybrid-retrieval-policy.contract.test.ts","AI Editor CI run 32977400310 job 98205379475 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["policy binds exact Phase-4 benchmark control revision without changing the control","at least two representation revisions and their embedding/model versions are explicitly pinned","weights are positive safe-integer basis points summing exactly to 10000","fusion method and candidate pool are explicit bounded policy evidence","reranking, duplicate-control behavior and editorial scoring are deliberately absent","no measurable quality-gain claim is made by the policy contract alone"]}
+      {"id":"P5-01-versioned-hybrid-retrieval-policy-contract","implementationCommit":"92e06e995290568d82632a1259a3b51c369dcf82","status":"verified","evidence":["packages/contracts/src/hybrid-retrieval-policy.contract.ts","packages/contracts/src/hybrid-retrieval-policy.contract.test.ts","AI Editor CI run 32977400310 job 98205379475 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["policy binds exact Phase-4 benchmark control revision without changing the control","at least two representation revisions and their embedding/model versions are explicitly pinned","weights are positive safe-integer basis points summing exactly to 10000","fusion method and candidate pool are explicit bounded policy evidence","reranking, duplicate-control behavior and editorial scoring are deliberately absent","no measurable quality-gain claim is made by the policy contract alone"]},
+      {"id":"P5-02-immutable-hybrid-retrieval-policy-persistence-idempotency","implementationCommit":"3a0efdd40a38a6a7d9b3dcdf7df4d2814a607564","status":"verified","evidence":["packages/hybrid-retrieval-library/src/index.ts","packages/hybrid-retrieval-library/src/index.test.ts","AI Editor CI run 32983383147 job 98225313631 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable hybrid-policy evidence identity","semantic re-registration is idempotent even when representation array ordering differs","changed Phase-4 benchmark control under the same revisionId fails closed before mutation","changed representation/embedding/model revisions, weights, fusion method, candidate pool or createdAt evidence fails closed","policy upgrades require additive revision IDs and preserve historical evidence","read/write results are deep defensive copies","runtime candidates, scores, Qdrant state, reranking, duplicate control and editorial scoring remain outside this persistence boundary"]}
     ],
-    "next": "P5-02-immutable-hybrid-retrieval-policy-persistence-idempotency"
+    "next": "P5-03-deterministic-hybrid-retrieval-execution"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},

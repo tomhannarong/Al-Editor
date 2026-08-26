@@ -46,7 +46,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned rebuildable keyframe derivative | `packages/contracts/src/keyframe-derivative.contract.ts` | verified on `59aa02ed`; CI `32881831056` job `97912919380` |
 | Immutable keyframe derivative revision persistence | `packages/keyframe-library/src/index.ts` | verified on `5ce040ae`; CI `32886479355` job `97928027272` |
 | PostgreSQL keyframe derivative revision persistence | migration 0005 + `packages/keyframe-library/src/postgres.ts` | verified on `bc8431df`; CI `32892664602` job `97947954572`; real PostgreSQL/local-stack `32892664650` job `97947954495` |
-| Confined bounded real keyframe extraction | `packages/keyframe-library/src/generator.ts` + `infra/verify-real-keyframe-extraction-runtime.mts` | verified on `57f68a11`; CI `32899647168` job `97970214362`; real FFmpeg/local-stack `32899647404` job `97970215910` |
+| Confined bounded real keyframe extraction | `packages/keyframe-library/src/generator.ts` + `infra/verify-real-keyframe-extraction-runtime.mts` | verified on `57f68a11`; CI `32899647168` job `97970215910`; real FFmpeg/local-stack `32899647404` job `97970215910` |
 | Scene-boundary quality baseline | `packages/scene-library/src/quality-baseline.ts` + versioned fixture | verified on `4fca4d89`; CI `32903495078` job `97982328934`; baseline P/R/F1 = 0.75/0.75/0.75 |
 | Versioned immutable transcript / ASR-correction lineage | `packages/contracts/src/transcript.contract.ts` | verified on repaired `0921bcd2`; CI `32909410505` job `98000354561` |
 | Immutable transcript revision persistence | `packages/transcript-library/src/index.ts` | verified on `92037f27`; CI `32914047941` job `98013856761` |
@@ -64,6 +64,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Labeled Recall@10 retrieval baseline | `packages/indexed-scene-library/src/recall-baseline.ts` + versioned benchmark fixture | verified on `3e3571ab`; CI `32965904224` job `98168207773`; Macro Recall@10 `0.8333333333333334`, Micro Recall@10 `0.75`; no acceptance threshold invented |
 | Phase-4 gate reconciliation | P4-01..P4-05 exact evidence + checkpoint 0077 | verified; query schema, indexed scenes and labeled Recall@10 baseline satisfied without redundant Actions run |
 | Versioned hybrid retrieval policy | `packages/contracts/src/hybrid-retrieval-policy.contract.ts` | verified on `92e06e99`; CI `32977400310` job `98205379475`; exact benchmark-control revision + pinned representation/embedding/model revisions + deterministic basis-point weights; no quality-gain claim |
+| Immutable hybrid retrieval policy persistence | `packages/hybrid-retrieval-library/src/index.ts` | verified on `3a0efdd4`; CI `32983383147` job `98225313631`; semantic re-registration idempotent, immutable conflicts fail closed, representation ordering normalized deterministically |
 
 ## Phase 1 closure
 
@@ -99,6 +100,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 5 status
 
-P5-01 is verified. It defines the versioned hybrid retrieval policy boundary while preserving the Phase-4 benchmark as control. At least two representation/model revisions must be pinned; deterministic integer weights must sum to 10,000 basis points; the fusion method and candidate pool are versioned policy evidence.
+P5-01 and P5-02 are verified. P5-01 defines the versioned hybrid retrieval policy boundary. P5-02 provides immutable/idempotent persistence for that policy while keeping runtime candidate state and editorial judgment outside the immutable policy store.
 
-No reranker, duplicate-control behavior or editorial scoring is included yet. The Bible gate still requires measurable quality gain on the same benchmark and duplicate-control evidence before Phase 5 may close.
+The Bible gate still requires measurable quality gain on the same Phase-4 benchmark plus duplicate-control evidence. No quality gain has been claimed yet.
