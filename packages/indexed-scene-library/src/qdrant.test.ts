@@ -102,9 +102,9 @@ describe('Qdrant indexed-scene durability boundary', () => {
     expect(fake.getUpserts()).toBe(0);
   });
 
-  it('derives stable UUID-shaped point IDs from immutable revision IDs', () => {
+  it('derives stable RFC-versioned UUID point IDs from immutable revision IDs', () => {
     const first = qdrantPointIdForRevision('indexed-scene-revision:v1');
-    expect(first).toMatch(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/);
+    expect(first).toMatch(/^[a-f0-9]{8}-[a-f0-9]{4}-5[a-f0-9]{3}-8[a-f0-9]{3}-[a-f0-9]{12}$/);
     expect(qdrantPointIdForRevision('indexed-scene-revision:v1')).toBe(first);
     expect(qdrantPointIdForRevision('indexed-scene-revision:v2')).not.toBe(first);
   });

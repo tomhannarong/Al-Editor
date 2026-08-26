@@ -47,8 +47,13 @@ export function qdrantPointIdForRevision(revisionId: string): string {
   if (!revisionId.trim()) {
     throw new QdrantIndexedSceneInvariantError('revisionId is required for Qdrant point identity');
   }
-  const hex = createHash('sha256').update(revisionId, 'utf8').digest('hex').slice(0, UUID_HEX_LENGTH);
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+
+  // Qdrant string point IDs are UUIDs. Keep the identity deterministic while
+  // setting explicit RFC 4122 version/variant bits instead of merely formatting
+  // arbitrary hash bytes as UUID-shaped text.
+  const raw = createHash('sha256').update(revisionId, 'utf8').digest('hex').slice(0, UUID_HEX_LENGTH);
+  const uuidHex = `${raw.slice(0, 12)}5${raw.slice(13, 16)}8${raw.slice(17)}`;
+  return `${uuidHex.slice(0, 8)}-${uuidHex.slice(8, 12)}-${uuidHex.slice(12, 16)}-${uuidHex.slice(16, 20)}-${uuidHex.slice(20, 32)}`;
 }
 
 /** Rebuildable Qdrant boundary; immutable evidence remains owned by the metadata store. */
