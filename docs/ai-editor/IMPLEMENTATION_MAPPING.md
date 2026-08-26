@@ -49,6 +49,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Confined bounded real keyframe extraction | `packages/keyframe-library/src/generator.ts` + `infra/verify-real-keyframe-extraction-runtime.mts` | verified on `57f68a11`; CI `32899647168` job `97970214362`; real FFmpeg/local-stack `32899647404` job `97970215910` |
 | Scene-boundary quality baseline | `packages/scene-library/src/quality-baseline.ts` + versioned fixture | verified on `4fca4d89`; CI `32903495078` job `97982328934`; baseline P/R/F1 = 0.75/0.75/0.75 |
 | Versioned immutable transcript / ASR-correction lineage | `packages/contracts/src/transcript.contract.ts` | verified on repaired `0921bcd2`; CI `32909410505` job `98000354561` |
+| Immutable transcript revision persistence | `packages/transcript-library/src/index.ts` | verified on `92037f27`; CI `32914047941` job `98013856761` |
 
 ## Phase 1 closure
 
@@ -66,8 +67,8 @@ The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/
 
 ## Phase 3 status
 
-The historical checklist authority defines Phase 3 as 9 items. P3-01 is now verified: `packages/contracts/src/transcript.contract.ts` defines immutable transcript revisions bound to stable SHA-256 media/audio-stream identity, native safe-integer word PTS with rational time base, explicit ASR-vs-correction revision lineage, stable word IDs/ordinals and bounded confidence evidence. Initial implementation `af1b62e8cd1aa154cadfad0d1afcbf20106a3049` correctly failed the TypeScript strict gate due to two strict test-harness spreads; repair `0921bcd24909620f989b61a7764f78358c0ea466` passed AI Editor CI `32909410505`, job `98000354561`, with `ai-editor-ci/all = success`.
+Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 now establishes immutable in-memory revision persistence/idempotency in `packages/transcript-library/src/index.ts`: equivalent rational source time bases normalize for semantic equality; conflicting reuse of a revision identity fails closed; additive correction revisions preserve historical ASR evidence; returned source/word evidence is defensively copied. Exact implementation `92037f27e0a5180e1706fc405d3ff7ecc5e8a148` passed AI Editor CI `32914047941`, job `98013856761`, with `ai-editor-ci/all = success`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 1/9.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 2/9.
