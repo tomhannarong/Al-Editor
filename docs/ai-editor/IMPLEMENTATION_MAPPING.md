@@ -66,7 +66,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned hybrid retrieval policy | `packages/contracts/src/hybrid-retrieval-policy.contract.ts` | verified on `92e06e99`; CI `32977400310` job `98205379475`; exact benchmark-control revision + pinned representation/embedding/model revisions + deterministic basis-point weights; no quality-gain claim |
 | Immutable hybrid retrieval policy persistence | `packages/hybrid-retrieval-library/src/index.ts` | verified on `3a0efdd4`; CI `32983383147` job `98225313631`; semantic re-registration idempotent, immutable conflicts fail closed, representation ordering normalized deterministically |
 | Deterministic hybrid retrieval execution | `packages/hybrid-retrieval-library/src/execution.ts` | verified on repaired `0dd6179e`; AI Editor CI `32988192562` job `98239245541`; deterministic bounded weighted-cosine execution with pinned representation/model evidence and fail-closed immutable source conflicts |
-| Versioned retrieval duplicate-control policy | `packages/contracts/src/retrieval-duplicate-control-policy.contract.ts` | implementation `1bbf79e6` failed AI Editor CI `32992622547` job `98253713871` at strict TypeScript test-fixture typing; repaired on `6b32226c` without production-contract change; exact repair CI/status still pending, so not verified |
+| Versioned retrieval duplicate-control policy | `packages/contracts/src/retrieval-duplicate-control-policy.contract.ts` | verified on repaired `6b32226c`; implementation CI `32992622547` failed strict TypeScript test-fixture typing; repair CI `32994487679` job `98260037304` passed all gates; production contract unchanged |
+| Deterministic retrieval duplicate-control execution | `packages/hybrid-retrieval-library/src/duplicate-control.ts` | verified on test commit `699e7c7a`; AI Editor CI `32996581754` job `98267379517`; same-source asset/stream native-PTS interval IoU suppression, exact lineage validation and bounded maxResults; no quality-gain claim yet |
 
 ## Phase 1 closure
 
@@ -102,6 +103,4 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 5 status
 
-P5-01, P5-02 and P5-03 are verified. P5-04 introduces the first deterministic versioned duplicate-control policy over exact hybrid-policy lineage and same-source native-PTS interval IoU. Its first repository CI run failed at strict TypeScript because of an intentionally-invalid test fixture typing issue; repair `6b32226c` changes only that test harness and still awaits exact repository CI/status evidence before it can be counted as verified.
-
-The Bible gate still requires measurable quality gain on the same Phase-4 benchmark plus duplicate-control evidence. No quality gain has been claimed yet.
+P5-01 through P5-05 are verified. P5-04 provides the versioned duplicate-control policy and P5-05 provides deterministic same-source native-PTS IoU execution. The Phase-5 gate still requires measurable quality gain on the same Phase-4 benchmark plus duplicate-control evidence. Duplicate-control policy/execution evidence now exists, but no measurable quality-gain claim has been made yet.
