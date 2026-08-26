@@ -65,7 +65,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Phase-4 gate reconciliation | P4-01..P4-05 exact evidence + checkpoint 0077 | verified; query schema, indexed scenes and labeled Recall@10 baseline satisfied without redundant Actions run |
 | Versioned hybrid retrieval policy | `packages/contracts/src/hybrid-retrieval-policy.contract.ts` | verified on `92e06e99`; CI `32977400310` job `98205379475`; exact benchmark-control revision + pinned representation/embedding/model revisions + deterministic basis-point weights; no quality-gain claim |
 | Immutable hybrid retrieval policy persistence | `packages/hybrid-retrieval-library/src/index.ts` | verified on `3a0efdd4`; CI `32983383147` job `98225313631`; semantic re-registration idempotent, immutable conflicts fail closed, representation ordering normalized deterministically |
-| Deterministic hybrid retrieval execution | `packages/hybrid-retrieval-library/src/execution.ts` | implemented on `e8299175`, serialization-safety repair `0dd6179e`; targeted strict TypeScript harness passed; exact repository CI/status pending because connector writes emitted no workflow run; not yet verified |
+| Deterministic hybrid retrieval execution | `packages/hybrid-retrieval-library/src/execution.ts` | verified on repaired `0dd6179e`; AI Editor CI `32988192562` job `98239245541`; deterministic bounded weighted-cosine execution with pinned representation/model evidence and fail-closed immutable source conflicts |
+| Versioned retrieval duplicate-control policy | `packages/contracts/src/retrieval-duplicate-control-policy.contract.ts` | implemented on `1bbf79e6`; targeted strict TypeScript/runtime harness passed; exact repository CI pending, so not yet verified |
 
 ## Phase 1 closure
 
@@ -101,6 +102,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 5 status
 
-P5-01 and P5-02 are verified. P5-03 implementation is present on `main` with deterministic weighted-cosine execution and fail-closed immutable evidence validation, but exact repository validation is still pending and it is not counted as verified.
+P5-01, P5-02 and P5-03 are verified. P5-04 introduces the first deterministic versioned duplicate-control policy over exact hybrid-policy lineage and same-source native-PTS interval IoU; it is implemented and locally validated but awaits exact repository CI before it can be counted as verified.
 
 The Bible gate still requires measurable quality gain on the same Phase-4 benchmark plus duplicate-control evidence. No quality gain has been claimed yet.

@@ -2,54 +2,62 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 5 — Hybrid Retrieval + Reranking  
-**Current task:** P5-03 — Deterministic hybrid retrieval execution — exact repository validation pending
+**Current task:** P5-04 — Versioned retrieval duplicate-control policy — exact repository validation pending
 
 ```text
-Standalone verified: 64 / 162 = 39.51%
+Standalone verified: 65 / 162 = 40.12%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
 Phase 3:              9 / 9   = 100.00% COMPLETE + GATE VERIFIED
 Phase 4:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
-Phase 5:              2 verified slices + P5-03 implemented/validation-pending; denominator not invented before checklist authority
+Phase 5:              3 verified slices + P5-04 implemented/validation-pending; denominator not invented before checklist authority
 ```
 
-## Phase 5 — P5-03 implementation state
+## P5-03 — deterministic hybrid retrieval execution
 
-P5-03 is implemented on `main` but is deliberately **not** counted as verified yet. `packages/hybrid-retrieval-library/src/execution.ts` executes the exact immutable P5 policy with bounded deterministic weighted-cosine fusion and deterministic tie-breaking while keeping reranking, duplicate-control policy and editorial scoring outside this boundary.
+P5-03 is now **verified**. The previously missing repository evidence appeared for repair commit `0dd6179e55412466378bf09eb8363819da2f1fb4`:
 
-The execution validates every query representation against pinned `representationRevisionId`, `embeddingRevisionId`, `modelId` and `modelVersion` evidence. Candidate `IndexedSceneDocument` evidence is contract-validated before scoring, its source vector SHA-256 is recomputed, dimensions are checked, per-representation candidate counts are bounded by `candidatePoolSize`, duplicate representation/scene candidates are rejected, and conflicting immutable source lineage across representations fails closed.
+- AI Editor CI run `32988192562`
+- job `98239245541`
+- dependency install: success
+- strict TypeScript: success
+- Vitest behavioral gate: success
+- deterministic migrations: success
+- contract/policy gates: success
+- observable commit status: success
+- exact `ai-editor-ci/all = success`
 
-## Exact implementation evidence
+The implementation remains the same deterministic bounded weighted-cosine execution from `packages/hybrid-retrieval-library/src/execution.ts`; no quality-gain, reranker or duplicate-control acceptance claim is implied by this validation.
 
-Implementation commit: `e82991755c6219f3d817de1c0fcdaa06cda9ab83` (`feat: execute deterministic hybrid retrieval`).
+## P5-04 — versioned retrieval duplicate-control policy
 
-Serialization-safety repair: `0dd6179e55412466378bf09eb8363819da2f1fb4` (`fix: make hybrid scene keys serialization-safe`).
+Implementation commit: `1bbf79e637c4786bd24109429bc69f30c23b2ceb` (`feat: add versioned retrieval duplicate-control policy`).
 
-Current implementation blobs:
+Added:
 
-- `execution.ts`: `4e250790ce9c34dd79ae1e5382db845cf64057f0`
-- `execution.test.ts`: `45aa823454f919e948a9b57a9aa7471fc07a012d`
-- `index.ts` export: `f55653ffa959d45df6717cd0b48c902eae38a2bd`
+- `packages/contracts/src/retrieval-duplicate-control-policy.contract.ts`
+- `packages/contracts/src/retrieval-duplicate-control-policy.contract.test.ts`
+- contracts barrel export
 
-A targeted TypeScript harness passed with strict mode, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. A full repository clone/test could not run because this execution environment could not resolve `github.com`; that is not counted as a test pass or code failure.
+The policy is versioned and pins an exact `hybridPolicyRevisionId`. Its first deterministic method is `same-source-interval-iou-v1`: duplicate suppression is defined only for candidates sharing immutable source asset/stream lineage, using native-PTS interval IoU with an integer basis-point threshold. `maxResults` and the IoU threshold are bounded safe integers.
 
-## CI / validation state
+Semantic/perceptual duplicate models, reranking and editorial scoring remain outside this contract. The Phase-4 labeled Recall@10 benchmark remains the comparison control.
 
-The repository CI workflow covers `packages/**`, but GitHub connector writes in this run did not emit workflow runs: Actions queries for both `e829917...` and `0dd6179...` returned `total_count: 0`, and the current repair commit has no combined status. There is no exposed workflow-dispatch action in this connector environment.
+## Validation state
 
-Accordingly, P5-03 remains `implemented-validation-pending`; no CI pass is claimed, no failed gate is skipped, and no unchanged job was rerun.
+A targeted local harness passed strict TypeScript with `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, and executed valid/bounded-invalid policy checks successfully.
+
+The full repository cannot be cloned in this execution environment because `github.com` DNS resolution is unavailable. This is not counted as a test pass or a code failure.
+
+At this checkpoint, GitHub Actions query for exact P5-04 implementation SHA `1bbf79e637c4786bd24109429bc69f30c23b2ceb` returns `total_count: 0`. Therefore P5-04 is **implemented-validation-pending** and is not included in the verified count. No unchanged job was rerun.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, Phase-2 scene/proxy/keyframe evidence, Phase-3 transcript/editorial-segment evidence and the Phase-4 single-vector Recall@10 benchmark remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, Phase-2 scene/proxy/keyframe evidence, Phase-3 transcript/editorial-segment evidence, and the Phase-4 single-vector Recall@10 benchmark remain unchanged.
 
-Retrieval relevance remains separate from editorial judgment. The Phase-4 benchmark remains the control. P5-03 makes no measurable quality-gain claim and introduces no duplicate-control or reranking acceptance evidence.
-
-## Phase 5 gate state
-
-The Bible still requires measurable quality gain on the same benchmark plus duplicate control before Phase 5 may advance. P5-01/P5-02 are verified; P5-03 code exists but awaits exact repository validation. Do not start P5-04 if it directly depends on P5-03 until this validation is available.
+Retrieval relevance remains separate from editorial judgment. Phase 5 still requires measurable quality gain on the same benchmark plus duplicate-control evidence before advancing.
 
 ## Next task
 
-P5-03 exact repository validation. Obtain a full-repository type/test gate on the current implementation/repair state without rerunning an unchanged failed job. Only after that evidence passes should P5-03 be marked verified and the next smallest dependent Phase-5 slice be selected.
+Obtain exact repository CI/full-repository evidence for P5-04. If the exact implementation state passes, mark P5-04 verified and continue with the smallest dependent duplicate-control execution/evaluation slice. Do not claim measurable quality gain until the Phase-5 system is measured against the exact Phase-4 benchmark.
