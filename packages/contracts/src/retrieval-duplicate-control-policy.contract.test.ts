@@ -51,11 +51,13 @@ describe('retrieval duplicate-control policy contract', () => {
   });
 
   it('rejects an unsupported method and malformed creation evidence', () => {
-    const policy = validPolicy() as RetrievalDuplicateControlPolicy & { method: string };
-    policy.method = 'perceptual-model-v1';
-    policy.createdAt = 'not-a-timestamp';
+    const policy = {
+      ...validPolicy(),
+      method: 'perceptual-model-v1',
+      createdAt: 'not-a-timestamp',
+    } as unknown as RetrievalDuplicateControlPolicy;
 
-    const result = validateRetrievalDuplicateControlPolicy(policy as RetrievalDuplicateControlPolicy);
+    const result = validateRetrievalDuplicateControlPolicy(policy);
     expect(result.valid).toBe(false);
     expect(result.errors).toContain('unsupported duplicate-control method');
     expect(result.errors).toContain('createdAt must be an ISO-compatible timestamp');
