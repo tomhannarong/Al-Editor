@@ -53,6 +53,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | PostgreSQL transcript revision persistence | migration 0006 + `packages/transcript-library/src/postgres.ts` | verified on `e01b9818`; CI `32917035651` job `98022790043`; real PostgreSQL/local-stack `32917035721` job `98022789688` |
 | Versioned editorial segment over immutable transcript words | `packages/contracts/src/editorial-segment.contract.ts` | verified on `747e9151`; CI `32920801878` job `98033851515` |
 | Immutable editorial segment revision persistence | `packages/editorial-segment-library/src/index.ts` | verified on `90e0d6d8`; CI `32924861455` job `98045600642` |
+| PostgreSQL editorial segment revision persistence | migration 0007 + `packages/editorial-segment-library/src/postgres.ts` | verified static CI on `695e5105`, run `32928880002` job `98057124865`; verifier fixture repaired on `f5b8fba3`; real PostgreSQL/local-stack run `32929033073` job `98057560645` success |
 
 ## Phase 1 closure
 
@@ -70,8 +71,10 @@ The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/
 
 ## Phase 3 status
 
-Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 established immutable in-memory transcript revision persistence/idempotency. P3-03 established durable PostgreSQL transcript persistence with exact audio-stream/time-base and correction-parent lineage. P3-04 established versioned editorial segmentation over exact immutable transcript revision and stable word identities. P3-05 now establishes immutable in-memory editorial segment revision persistence/idempotency, with exact semantic re-registration idempotent and conflicting revision-ID reuse failing closed before mutation. Exact implementation `90e0d6d80d35080bc4998028b5b00b11966ef728` passed AI Editor CI `32924861455` / job `98045600642` with observable `ai-editor-ci/all = success`.
+Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 established immutable in-memory transcript revision persistence/idempotency. P3-03 established durable PostgreSQL transcript persistence with exact audio-stream/time-base and correction-parent lineage. P3-04 established versioned editorial segmentation over exact immutable transcript revision and stable word identities. P3-05 established immutable in-memory editorial segment revision persistence/idempotency.
+
+P3-06 now establishes durable PostgreSQL editorial segment revision persistence. Migration 0007 and the PostgreSQL store bind every revision to the exact transcript revision and every segment boundary to stable word IDs from that same revision; the schema intentionally persists no duplicate PTS/seconds/milliseconds timing authority. Exact implementation `695e5105e6bb124d99857d8770e898ac813aa264` passed AI Editor CI `32928880002` / job `98057124865`. The first runtime run `32928879417` exposed a verifier-only fixture identity collision with earlier scene evidence; it was not rerun unchanged. Repair `f5b8fba375272a2ed69a06a2e6cadb9125e9516c` isolated the fixture, and selective Local Stack run `32929033073` / job `98057560645` passed with `ai-editor-local-stack/all = success`.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 5/9.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 6/9.

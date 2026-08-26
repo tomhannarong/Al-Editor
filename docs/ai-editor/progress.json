@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 3,
-  "currentTask": "P3-06-postgresql-editorial-segment-revision-persistence-readback",
+  "currentTask": "P3-07-phase3-gate-evidence-audit-and-next-independent-slice",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 52,
-    "standaloneRevalidatedPercent": 32.1
+    "standaloneRevalidated": 53,
+    "standaloneRevalidatedPercent": 32.72
   },
   "phase0": {
     "total": 22,
@@ -73,21 +73,22 @@
       "exactSourceMapping": ["P2-01, P2-03 and derivative lineage evidence preserve immutable asset/stream/native-PTS mapping"],
       "qualityBaseline": ["implementation commit 4fca4d89dae48d57e381420bea91b6d321efba41","packages/scene-library/src/quality-baseline.ts","packages/scene-library/src/quality-baseline.test.ts","docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md","AI Editor CI run 32903495078 job 97982328934 success","ai-editor-ci/all success on exact implementation commit"]
     },
-    "next": "Phase 2 gate is verified complete; Phase 3 P3-05 is now verified"
+    "next": "Phase 2 gate is verified complete; Phase 3 P3-06 is now verified"
   },
   "phase3": {
     "total": 9,
-    "standaloneRevalidated": 5,
-    "standaloneRevalidatedPercent": 55.56,
+    "standaloneRevalidated": 6,
+    "standaloneRevalidatedPercent": 66.67,
     "state": "in-progress",
     "implementedSlices": [
       {"id":"P3-01-versioned-immutable-transcript-revision-contract","implementationCommit":"af1b62e8cd1aa154cadfad0d1afcbf20106a3049","repairCommit":"0921bcd24909620f989b61a7764f78358c0ea466","status":"verified","evidence":["packages/contracts/src/transcript.contract.ts","packages/contracts/src/transcript.contract.test.ts","AI Editor CI run 32909410505 job 98000354561 success","ai-editor-ci/all success on exact repair commit"]},
       {"id":"P3-02-immutable-transcript-revision-persistence-idempotency","implementationCommit":"92037f27e0a5180e1706fc405d3ff7ecc5e8a148","status":"verified","evidence":["packages/transcript-library/src/index.ts","packages/transcript-library/src/index.test.ts","AI Editor CI run 32914047941 job 98013856761 success","ai-editor-ci/all success on exact implementation commit"]},
       {"id":"P3-03-postgresql-transcript-revision-persistence-readback","implementationCommit":"e01b981876af149332304fe4cfd59b4f78b9a5f5","status":"verified","evidence":["db/migrations/0006_create_transcript_library.sql","packages/transcript-library/src/postgres.ts","packages/transcript-library/src/postgres.test.ts","infra/verify-postgres-transcript-library-runtime.mts","AI Editor CI run 32917035651 job 98022790043 success","AI Editor Local Stack Gate run 32917035721 job 98022789688 success","ai-editor-ci/all success on exact implementation commit","ai-editor-local-stack/all success on exact implementation commit"]},
       {"id":"P3-04-versioned-editorial-segment-contract","implementationCommit":"747e9151f685a517c50da77629ec0a93ff634b8f","status":"verified","evidence":["packages/contracts/src/editorial-segment.contract.ts","packages/contracts/src/editorial-segment.contract.test.ts","AI Editor CI run 32920801878 job 98033851515 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["segment revisions bind to exact immutable transcriptId and transcriptRevisionId","persisted segments reference stable startWordId/endWordId rather than duplicating source timing","native sourceStartPts/sourceEndPts and source time base are derived only from the bound immutable transcript revision","resolution fails closed for lineage mismatch, missing word IDs, reversed intervals and overlapping/out-of-order segments","segment contract introduces no seconds or milliseconds timing authority"]},
-      {"id":"P3-05-immutable-editorial-segment-revision-persistence-idempotency","implementationCommit":"90e0d6d80d35080bc4998028b5b00b11966ef728","status":"verified","evidence":["packages/editorial-segment-library/src/index.ts","packages/editorial-segment-library/src/index.test.ts","AI Editor CI run 32924861455 job 98045600642 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable evidence identity","exact semantic re-registration is idempotent","conflicting transcript lineage, segment boundaries/order or creation evidence fails closed before mutation","additive revisions preserve prior immutable evidence","read/write results are defensive copies"]}
+      {"id":"P3-05-immutable-editorial-segment-revision-persistence-idempotency","implementationCommit":"90e0d6d80d35080bc4998028b5b00b11966ef728","status":"verified","evidence":["packages/editorial-segment-library/src/index.ts","packages/editorial-segment-library/src/index.test.ts","AI Editor CI run 32924861455 job 98045600642 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["revisionId is immutable evidence identity","exact semantic re-registration is idempotent","conflicting transcript lineage, segment boundaries/order or creation evidence fails closed before mutation","additive revisions preserve prior immutable evidence","read/write results are defensive copies"]},
+      {"id":"P3-06-postgresql-editorial-segment-revision-persistence-readback","implementationCommit":"695e5105e6bb124d99857d8770e898ac813aa264","runtimeRepairCommit":"f5b8fba375272a2ed69a06a2e6cadb9125e9516c","status":"verified","evidence":["db/migrations/0007_create_editorial_segment_library.sql","packages/editorial-segment-library/src/postgres.ts","packages/editorial-segment-library/src/postgres.test.ts","infra/verify-postgres-editorial-segment-library-runtime.mts","AI Editor CI run 32928880002 job 98057124865 success","first Local Stack run 32928879417 job 98057123430 failed on verifier fixture identity collision; no unchanged rerun","AI Editor Local Stack Gate run 32929033073 job 98057560645 success on repaired verifier","ai-editor-local-stack/all success on exact runtime repair commit"],"invariants":["durable revision binds to exact transcriptId/transcriptRevisionId","durable segment boundaries reference exact transcript word rows by stable word IDs","schema persists no duplicate PTS/seconds/milliseconds timing authority","semantic re-registration is idempotent and conflicting revisionId reuse fails closed","missing transcript word references fail closed through PostgreSQL foreign keys"]}
     ],
-    "next": "P3-06 PostgreSQL durable editorial segment revision persistence/readback"
+    "next": "P3-07 audit remaining Phase-3 gate evidence and select the smallest independent missing slice without inventing checklist authority"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},

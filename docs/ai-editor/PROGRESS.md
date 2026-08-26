@@ -2,49 +2,44 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 3 — Voice / Transcript Alignment  
-**Current task:** P3-06 — PostgreSQL durable editorial segment revision persistence/readback
+**Current task:** P3-07 — audit remaining Phase-3 gate evidence and select the smallest independent missing slice
 
 ```text
-Standalone verified: 52 / 162 = 32.10%
+Standalone verified: 53 / 162 = 32.72%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
-Phase 3:              5 / 9   =  55.56%
+Phase 3:              6 / 9   =  66.67%
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14. Phase 2 remains verified-complete through P2-11 plus its exact quality-baseline gate evidence.
 
-## Phase 3 — P3-05 verified
+## Phase 3 — P3-06 verified
 
-P3-05 adds immutable editorial segment revision persistence in `packages/editorial-segment-library/src/index.ts` with deterministic tests.
+P3-06 adds durable PostgreSQL editorial-segment revision persistence through migration `0007_create_editorial_segment_library.sql` and `packages/editorial-segment-library/src/postgres.ts`.
 
-`revisionId` is treated as immutable evidence identity. Exact semantic re-registration is idempotent, while reuse of the same revision ID with changed transcript lineage, segment word boundaries/order, segment identity or creation evidence fails closed before mutation.
+Durable editorial revisions bind to the exact immutable `transcriptId` + `transcriptRevisionId`. Segment rows persist stable `startWordId` / `endWordId` references with PostgreSQL foreign keys back to the exact transcript revision's word rows. No segment-level PTS, seconds or milliseconds columns are persisted, so native transcript PTS + rational stream time base remain the only source-time authority.
 
-Additive revisions under the same `segmentSetId` remain allowed and do not mutate prior evidence. Store reads and registration results are defensive copies so callers cannot mutate historical segment evidence after persistence.
-
-This persistence boundary deliberately does not create any new timing authority: editorial segments still store stable transcript word IDs only, while native PTS and rational source time base remain derived from the bound immutable transcript revision.
+The store preserves P3-05 semantics: exact semantic re-registration is idempotent; conflicting reuse of an immutable `revisionId` fails closed and rolls back; missing transcript word references fail closed through database constraints; readback preserves ordered stable word-boundary evidence.
 
 ### Validation evidence
 
-Implementation commit `90e0d6d80d35080bc4998028b5b00b11966ef728` was committed directly to `main` as one batched implementation/test change.
+Implementation commit `695e5105e6bb124d99857d8770e898ac813aa264` was committed directly to `main` as one batched migration/store/test/runtime-verifier change.
 
-AI Editor CI run `32924861455`, job `98045600642`:
+AI Editor CI run `32928880002`, job `98057124865` passed dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status.
 
-- dependency install: success
-- TypeScript strict gate: success
-- Vitest behavioral gate: success
-- migration deterministic gate: success
-- contract/policy gates: success
-- observable commit status: `ai-editor-ci/all = success`
+The first selective Local Stack run `32928879417`, job `98057123430` failed in the new verifier before editorial persistence because the fixture reused an asset digest already owned by the earlier scene verifier. PostgreSQL correctly rejected stream replacement through the existing `scene_set_revisions_source_stream_fk`. This was treated as a verifier-fixture failure, not a code pass and not a runner failure; the unchanged commit was not rerun.
 
-No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or unchanged rerun was used because P3-05 is a deterministic in-memory persistence slice.
+Repair commit `f5b8fba375272a2ed69a06a2e6cadb9125e9516c` changes only the verifier fixture identity. The repaired selective Local Stack run `32929033073`, job `98057560645` passed PostgreSQL + Qdrant health, all media/scene/proxy/keyframe/transcript/editorial-segment persistence verifiers, real FFmpeg derivative regressions, API health and observable `ai-editor-local-stack/all = success`.
+
+No redundant normal CI was triggered for the verifier-only repair.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, Phase-2 scene/proxy/keyframe evidence and Phase-3 immutable transcript/PostgreSQL lineage remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and Phase-2 scene/proxy/keyframe evidence remain unchanged.
 
-Transcript/model evidence remains untrusted data. Corrections and editorial segment revisions remain additive immutable evidence. Native source PTS + rational stream time base remain authoritative and editorial segment persistence does not introduce a parallel timing system.
+Transcript/model evidence remains untrusted data. ASR corrections and editorial segment revisions remain additive immutable evidence. Editorial segmentation derives source timing from stable words in its bound immutable transcript revision rather than creating a parallel timing system.
 
 ## Next task
 
-P3-06 — add PostgreSQL durable editorial segment revision persistence/readback. Reuse P3-05 conflict/idempotency semantics, bind durable rows to the exact transcript revision and stable word references, and use the selective real PostgreSQL runtime gate only after the database slice is ready.
+P3-07 — reconcile the remaining Phase-3 Bible gate evidence before naming a new capability. Audit whether immutable ASR/correction, stable word timing and editorial-segment requirements already have exact standalone proof; then choose the smallest genuinely missing independent slice without inventing checklist authority or spending an Actions run for redundant evidence.
