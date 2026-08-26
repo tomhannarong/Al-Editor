@@ -70,6 +70,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Deterministic retrieval duplicate-control execution | `packages/hybrid-retrieval-library/src/duplicate-control.ts` | verified on test commit `699e7c7a`; AI Editor CI `32996581754` job `98267379517`; same-source asset/stream native-PTS interval IoU suppression, exact lineage validation and bounded maxResults; no quality-gain claim yet |
 | Same-benchmark hybrid + duplicate-control evaluation | `packages/hybrid-retrieval-library/src/benchmark-evaluation.ts` + `docs/ai-editor/benchmarks/phase5-hybrid-duplicate-control-evaluation-v1.md` | verified on `699615af`; CI `33003534039` job `98291207703`; Macro Recall@10 `0.8333333333333334 -> 1.0`, Micro `0.75 -> 1.0`; exact Phase-4 benchmark revision; duplicate occupancy measured `0.0` on the non-overlapping control fixture |
 | Exact canonical frame/source mapping golden | `packages/preview-renderer/src/index.test.ts` + `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md` | verified on `72780c37`; CI `33013977827` job `98327280374`; exact `90` project frames at `30000/1001` map to `90090` native PTS at `1/30000` from non-zero source origin; preview uses the same absolute PTS boundaries |
+| Final delivery profile compliance validator | `packages/final-delivery-validator/src/index.ts` | verified on `6d645c87`; CI `33017556928` job `98339605165`; exact profile identity/version plus video/audio/color/bitrate/loudness/caption measurement checks without adding timing authority |
 
 ## Phase 1 closure
 
@@ -99,4 +100,4 @@ Phase 5 contains seven verified slices including evidence reconciliation. The ex
 
 ## Phase 6 status
 
-P6-01 is verified. It adds the previously missing cross-layer exact frame/source mapping golden while preserving the canonical timeline and renderer-neutral adapter semantics. The remaining explicit gate is preview/final delivery validation; P6-02 will audit existing real-preview/rerender/delivery evidence before deciding whether any new heavyweight runtime proof is needed.
+P6-01 and P6-02 are verified. Existing checkpoint 0033 proves real preview and immutable rerender behavior with FFmpeg/FFprobe. P6-02 adds the deterministic final-delivery compliance boundary. The remaining Phase-6 gate gap is selective real final-output measurement evidence (FFprobe plus loudness/caption inspection) that passes P6-02; P6-03 will provide that without moving heavyweight media validation into normal CI.

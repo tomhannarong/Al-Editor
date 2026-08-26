@@ -2,49 +2,46 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 6 — Canonical Timeline + Deterministic Render  
-**Current task:** P6-02 — Phase-6 preview/final delivery validation audit
+**Current task:** P6-03 — real final-delivery output runtime validation
 
 ```text
-Standalone verified: 70 / 162 = 43.21%
+Standalone verified: 71 / 162 = 43.83%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
 Phase 3:              9 / 9   = 100.00% COMPLETE + GATE VERIFIED
 Phase 4:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 5:              7 / 7   = 100.00% COMPLETE + GATE VERIFIED
-Phase 6:              1 verified slice
+Phase 6:              2 verified slices
 ```
 
 ## Phase-6 P6-01 verified
 
-The Phase-6 exact frame/source mapping audit found a narrow missing cross-layer proof. Existing Phase-0 media-time tests already covered CFR/fractional frame-rate conversions and ten-minute round trips, while the preview adapter already consumed native PTS with `-copyts`; however, no single golden tied one canonical clip's project-frame span to its native source-PTS span and the renderer adapter boundary.
+P6-01 adds a cross-layer exact frame/source mapping golden tying one canonical clip's integer project-frame span to its native source-PTS span and renderer argv, preserving rational FPS and native source time-base authority.
 
-P6-01 adds that exact golden without changing canonical contracts or renderer semantics:
+Evidence: implementation `72780c37b5456fa4a31fdfdacca8023c6e79fcd2`; benchmark `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md`; AI Editor CI `33013977827`, job `98327280374`, exact `ai-editor-ci/all = success`.
 
-- project rate `30000/1001`;
-- project interval `[0, 90)` = `90` frames;
-- source time base `1/30000`;
-- non-zero source interval `[29010, 119100)` = `90090` PTS;
-- exact duration equivalence `3.003s`;
-- `frameToSourcePts(90) = 90090` and `sourcePtsToFrame(90090) = 90`;
-- preview adapter consumes the same absolute `trim=start_pts=29010:end_pts=119100`, preserves `-copyts`, renders at `30000/1001`, and caps output at `90` frames.
+## Phase-6 P6-02 verified
+
+The delivery audit confirmed that real preview and immutable rerender already had FFmpeg/FFprobe runtime evidence, while final-delivery only had policy/schema validation. The missing boundary was deterministic compliance validation of measured render evidence against the exact immutable Delivery Profile version.
+
+P6-02 adds `packages/final-delivery-validator/src/index.ts` and tests. It validates exact profile identity/version plus container, video codec/pixel format/canvas/rational frame rate/color, bitrate ceiling, audio codec/sample rate/channels, integrated loudness/true peak and caption delivery evidence. Measurement evidence is explicitly non-canonical and does not introduce another timing authority.
 
 Evidence:
 
-- implementation SHA `72780c37b5456fa4a31fdfdacca8023c6e79fcd2`;
-- `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md`;
-- AI Editor CI run `33013977827`, job `98327280374`;
+- implementation SHA `6d645c87a6079c657e0507fd9e4ff5fe5feed5e8`;
+- AI Editor CI run `33017556928`, job `98339605165`;
 - TypeScript strict, Vitest, deterministic migrations and contract/policy gates all succeeded;
 - exact status `ai-editor-ci/all = success`.
 
-No PostgreSQL/Qdrant local-stack or heavyweight FFmpeg runtime was spent on this deterministic mapping-only slice.
+No PostgreSQL/Qdrant or heavyweight FFmpeg run was spent on this pure validation boundary.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, and all verified Phase-1 through Phase-5 evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, and all verified Phase-1 through Phase-5 evidence remain unchanged.
 
 Integer project frames + rational FPS and native source PTS + rational stream time base remain the only canonical timing authorities.
 
 ## Next task
 
-P6-02 — audit the remaining `preview/final delivery validation` half of the Phase-6 gate. Reuse exact existing real-preview/rerender/delivery-profile evidence first; add a new heavyweight FFmpeg run only if a concrete delivery-proof gap remains.
+P6-03 — add the smallest selective real-output proof needed to feed actual FFprobe/loudness/caption measurement evidence into the verified final-delivery validator. Keep heavyweight media validation manual/selective; do not add it to normal CI unless a later release gate requires that.
