@@ -52,18 +52,36 @@ jobs:
       - name: Boot and verify PostgreSQL + Qdrant
         id: stack
         run: bash infra/verify-local-stack.sh
+      - name: Verify Qdrant REST point round-trip smoke
+        id: qdrant_rest
+        run: |
+          set -euo pipefail
+          base='http://127.0.0.1:6333'
+          collection='ai_editor_qdrant_rest_smoke_v1'
+          trap 'curl --fail --silent --show-error -X DELETE "${base}/collections/${collection}" >/dev/null 2>&1 || true' EXIT
+          curl --fail-with-body --silent --show-error -X PUT "${base}/collections/${collection}" \
+            -H 'Content-Type: application/json' \
+            --data '{"vectors":{"size":4,"distance":"Cosine"}}' >/dev/null
+          curl --fail-with-body --silent --show-error -X PUT "${base}/collections/${collection}/points?wait=true" \
+            -H 'Content-Type: application/json' \
+            --data '{"points":[{"id":1,"vector":[0.125,-0.25,0.5,1.0],"payload":{"kind":"baseline-smoke"}}]}' >/dev/null
+          response=$(curl --fail-with-body --silent --show-error -X POST "${base}/collections/${collection}/points" \
+            -H 'Content-Type: application/json' \
+            --data '{"ids":[1],"with_payload":true,"with_vector":true}')
+          node -e "const body=JSON.parse(process.argv[1]); const p=body.result?.[0]; if(!p||p.id!==1||p.payload?.kind!=='baseline-smoke'||!Array.isArray(p.vector)||p.vector.length!==4) process.exit(1)" "$response"
+      - name: Install runtime verifier dependencies
+        id: runtime_deps
+        run: npm install --ignore-scripts --no-audit --no-fund --no-save pg tsx
+      - name: Verify typed real-Qdrant indexed-scene durability
+        id: qdrant_index
+        run: npx --no-install tsx infra/verify-qdrant-indexed-scene-runtime.mts
       - name: Install FFmpeg runtime verifier tools
+        id: ffmpeg_deps
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
-      - name: Install PostgreSQL runtime verifier dependencies
-        id: runtime_deps
-        run: npm install --ignore-scripts --no-audit --no-fund --no-save pg tsx
-      - name: Verify real Qdrant indexed-scene durability
-        id: qdrant_index
-        run: npx --no-install tsx infra/verify-qdrant-indexed-scene-runtime.mts
       - name: Verify PostgreSQL media, scene, derivative, transcript and editorial-segment runtime
         id: media_catalog
         run: |
@@ -90,8 +108,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           STACK_OUTCOME: ${{ steps.stack.outcome }}
+          QDRANT_REST_OUTCOME: ${{ steps.qdrant_rest.outcome }}
           RUNTIME_DEPS_OUTCOME: ${{ steps.runtime_deps.outcome }}
           QDRANT_INDEX_OUTCOME: ${{ steps.qdrant_index.outcome }}
+          FFMPEG_DEPS_OUTCOME: ${{ steps.ffmpeg_deps.outcome }}
           MEDIA_CATALOG_OUTCOME: ${{ steps.media_catalog.outcome }}
           DERIVATIVE_GENERATION_OUTCOME: ${{ steps.derivative_generation.outcome }}
           API_HEALTH_OUTCOME: ${{ steps.api_health.outcome }}
@@ -101,10 +121,14 @@ jobs:
           description='PostgreSQL, Qdrant index, media/transcript/segment persistence, derivatives and API runtime gates passed'
           if [ "$STACK_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/runtime'; description='PostgreSQL or Qdrant runtime gate failed'
+          elif [ "$QDRANT_REST_OUTCOME" != 'success' ]; then
+            state=failure; context='ai-editor-local-stack/qdrant-rest'; description='raw Qdrant REST point round-trip failed'
           elif [ "$RUNTIME_DEPS_OUTCOME" != 'success' ]; then
-            state=failure; context='ai-editor-local-stack/media-catalog-deps'; description='media runtime verifier dependency install failed'
+            state=failure; context='ai-editor-local-stack/runtime-deps'; description='runtime verifier dependency install failed'
           elif [ "$QDRANT_INDEX_OUTCOME" != 'success' ]; then
-            state=failure; context='ai-editor-local-stack/qdrant-index'; description='Qdrant indexed-scene durability gate failed'
+            state=failure; context='ai-editor-local-stack/qdrant-index'; description='typed Qdrant indexed-scene durability gate failed'
+          elif [ "$FFMPEG_DEPS_OUTCOME" != 'success' ]; then
+            state=failure; context='ai-editor-local-stack/ffmpeg-deps'; description='FFmpeg runtime verifier tool install failed'
           elif [ "$MEDIA_CATALOG_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/media-catalog'; description='PostgreSQL media, scene, derivative, transcript or editorial-segment persistence gate failed'
           elif [ "$DERIVATIVE_GENERATION_OUTCOME" != 'success' ]; then
