@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildCanonicalPreviewV2Arguments, CanonicalPreviewPlanError } from './index.js';
 import type { CanonicalTimelineV2 } from '../../contracts/src/canonical-timeline.contract.js';
+import { frameToSourcePts, sourcePtsToFrame } from '../../media-time/src/index.js';
 
 const makeTimeline = (): CanonicalTimelineV2 => ({
   schemaVersion: '2.0',
@@ -34,6 +35,23 @@ describe('canonical v2 preview adapter', () => {
     expect(text).not.toContain('trim=start=');
     expect(args).toContain('-copyts');
     expect(args.indexOf('-copyts')).toBeLessThan(args.indexOf('-i'));
+  });
+
+  it('goldens exact project-frame span to native source-PTS span at fractional FPS with a non-zero source origin', () => {
+    const timeline = makeTimeline();
+    const clip = timeline.items[0]!;
+    if (clip.kind !== 'asset-video') throw new Error('fixture');
+
+    const projectFrameSpan = clip.endFrame - clip.startFrame;
+    const sourcePtsSpan = clip.source.sourceEndPts - clip.source.sourceStartPts;
+
+    expect(projectFrameSpan).toBe(90);
+    expect(sourcePtsSpan).toBe(90_090);
+    expect(frameToSourcePts(projectFrameSpan, timeline.frameRate, clip.source.sourceTimeBase, 'nearest-half-away-from-zero')).toBe(sourcePtsSpan);
+    expect(sourcePtsToFrame(sourcePtsSpan, clip.source.sourceTimeBase, timeline.frameRate, 'nearest-half-away-from-zero')).toBe(projectFrameSpan);
+
+    const args = buildCanonicalPreviewV2Arguments({ timeline, verifiedAssetPaths: new Map([['asset-1', '/confined/source.mp4']]), outputPath: '/output/preview.mp4', config });
+    expect(args.join(' ')).toContain(`trim=start_pts=${clip.source.sourceStartPts}:end_pts=${clip.source.sourceEndPts}`);
   });
 
   it('fails closed when a verified source path is absent', () => {
