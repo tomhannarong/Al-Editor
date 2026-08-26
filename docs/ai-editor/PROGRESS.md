@@ -2,17 +2,17 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 6 — Canonical Timeline + Deterministic Render  
-**Current task:** P6-03 — real final-delivery output runtime validation
+**Current task:** P6-04 — Phase-6 gate reconciliation
 
 ```text
-Standalone verified: 71 / 162 = 43.83%
+Standalone verified: 72 / 162 = 44.44%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
 Phase 3:              9 / 9   = 100.00% COMPLETE + GATE VERIFIED
 Phase 4:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 5:              7 / 7   = 100.00% COMPLETE + GATE VERIFIED
-Phase 6:              2 verified slices
+Phase 6:              3 verified slices — gate-ready
 ```
 
 ## Phase-6 P6-01 verified
@@ -27,14 +27,21 @@ The delivery audit confirmed that real preview and immutable rerender already ha
 
 P6-02 adds `packages/final-delivery-validator/src/index.ts` and tests. It validates exact profile identity/version plus container, video codec/pixel format/canvas/rational frame rate/color, bitrate ceiling, audio codec/sample rate/channels, integrated loudness/true peak and caption delivery evidence. Measurement evidence is explicitly non-canonical and does not introduce another timing authority.
 
+Evidence: implementation `6d645c87a6079c657e0507fd9e4ff5fe5feed5e8`; AI Editor CI run `33017556928`, job `98339605165`; exact `ai-editor-ci/all = success`.
+
+## Phase-6 P6-03 verified
+
+P6-03 adds `infra/verify-real-final-delivery-runtime.mts` and wires it only into the selective local-stack runtime gate. The verifier renders a real 1080x1920 H.264/AAC MP4 at 30000/1001, retains a real SRT sidecar while burning the same authored captions into picture, probes actual encoded stream/container/color/bitrate evidence with FFprobe, measures loudness and true peak with FFmpeg loudnorm, inspects caption line-count evidence, and feeds the resulting `FinalDeliveryMeasurementV1` into the P6-02 validator.
+
 Evidence:
 
-- implementation SHA `6d645c87a6079c657e0507fd9e4ff5fe5feed5e8`;
-- AI Editor CI run `33017556928`, job `98339605165`;
-- TypeScript strict, Vitest, deterministic migrations and contract/policy gates all succeeded;
-- exact status `ai-editor-ci/all = success`.
+- implementation verifier commit `42def116fbbe8d8f4920da345af86e019271c0cc`;
+- selective workflow commit / exact runtime SHA `37bd9bde7ccaf4f578f78d97d0c00f9cc1b68f40`;
+- AI Editor Local Stack Gate run `33021782671`, job `98353642048`;
+- PostgreSQL/Qdrant regressions, FFmpeg/FFprobe tooling, media persistence, real derivative generation, final-delivery runtime and API health all succeeded;
+- exact status `ai-editor-local-stack/all = success`.
 
-No PostgreSQL/Qdrant or heavyweight FFmpeg run was spent on this pure validation boundary.
+No normal CI run or matrix was added for P6-03, and no unchanged failed run was retried.
 
 ## Preserved contracts
 
@@ -44,4 +51,4 @@ Integer project frames + rational FPS and native source PTS + rational stream ti
 
 ## Next task
 
-P6-03 — add the smallest selective real-output proof needed to feed actual FFprobe/loudness/caption measurement evidence into the verified final-delivery validator. Keep heavyweight media validation manual/selective; do not add it to normal CI unless a later release gate requires that.
+P6-04 — reconcile P6-01/P6-02/P6-03 plus existing real-preview/immutable-rerender evidence directly against the Bible Phase-6 gate. If no concrete gap remains, close Phase 6 using documentation/evidence only and advance to Phase 7 human review without spending another Actions run.
