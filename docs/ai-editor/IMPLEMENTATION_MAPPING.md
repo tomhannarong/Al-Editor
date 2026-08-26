@@ -55,6 +55,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Immutable editorial segment revision persistence | `packages/editorial-segment-library/src/index.ts` | verified on `90e0d6d8`; CI `32924861455` job `98045600642` |
 | PostgreSQL editorial segment revision persistence | migration 0007 + `packages/editorial-segment-library/src/postgres.ts` | verified static CI on `695e5105`, run `32928880002` job `98057124865`; verifier fixture repaired on `f5b8fba3`; real PostgreSQL/local-stack run `32929033073` job `98057560645` success |
 | Validated ASR alignment -> native PTS normalization | `packages/transcript-library/src/asr-alignment.ts` | verified on `17e0eac4`; CI `32932548445` job `98067436909`; untrusted integer-microsecond input normalized through centralized media-time authority into native PTS |
+| Deterministic transcript correction revision builder | `packages/transcript-library/src/correction-revision.ts` | verified on `02d5c273`; CI `32936036706` job `98077317683`; additive correction preserves immutable source + stable word identity/native timing |
 
 ## Phase 1 closure
 
@@ -72,12 +73,12 @@ The Phase-2 `quality baseline` requirement is backed by `packages/scene-library/
 
 ## Phase 3 status
 
-Phase 3 contains 9 checklist items. P3-01 established versioned immutable transcript/ASR-correction lineage. P3-02 established immutable in-memory transcript revision persistence/idempotency. P3-03 established durable PostgreSQL transcript persistence with exact audio-stream/time-base and correction-parent lineage. P3-04 established versioned editorial segmentation over exact immutable transcript revision and stable word identities. P3-05 established immutable in-memory editorial segment revision persistence/idempotency. P3-06 established durable PostgreSQL editorial segment revision persistence.
+Phase 3 contains 9 checklist items. P3-01 through P3-03 establish versioned immutable transcript/ASR-correction lineage plus in-memory and PostgreSQL durability. P3-04 through P3-06 establish versioned, immutable and durable editorial segments over stable transcript word identities. P3-07 normalizes untrusted aligned ASR timing through the centralized media-time authority into native integer PTS before persistence.
 
-P3-07 now establishes the missing normalization boundary between untrusted ASR/alignment timing and canonical transcript timing. `packages/transcript-library/src/asr-alignment.ts` accepts integer microseconds only as adapter input, validates provider ordering/confidence, normalizes the source rational time base and converts through the centralized media-time authority into native integer PTS. Stable word IDs are deterministic from immutable revision identity plus ordinal, and fractional/overlapping/quantization-collapsed timing fails closed. Exact implementation `17e0eac42a7c2e6270d2c4d1598179f4c325b2c4` passed AI Editor CI `32932548445` / job `98067436909` with `ai-editor-ci/all = success`.
+P3-08 now establishes deterministic additive correction construction from an immutable parent transcript. `packages/transcript-library/src/correction-revision.ts` binds the new correction to the exact parent revision, preserves immutable source mapping, ASR/language lineage, stable word IDs/ordinals/native PTS and existing confidence evidence, and permits only explicit corrected text to change. Unknown/duplicate word IDs, no-op corrections, invalid parent evidence and parent revision-ID reuse fail closed. Exact implementation `02d5c273d15f87603539bb08893c4f8eb3917dbd` passed AI Editor CI `32936036706` / job `98077317683` with `ai-editor-ci/all = success`.
 
-The Phase-3 gate audit now has exact evidence for stable word timing normalization and editorial-segment lineage. The remaining concrete implementation gap is deterministic construction of a correction revision from an immutable parent transcript while preserving source mapping and stable word identity/timing semantics. P3-08 will address that; P3-09 should then be a gate reconciliation if evidence is complete.
+The Phase-3 gate now has implementation evidence for all three required proof areas: immutable ASR/corrections, stable word timing and editorial segments. P3-09 should reconcile exact evidence and close the phase without inventing another capability if no gap is found.
 
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 7/9.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is in progress: 8/9.
