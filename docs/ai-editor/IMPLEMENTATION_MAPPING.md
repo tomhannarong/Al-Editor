@@ -60,6 +60,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Baseline scene retrieval query schema | `packages/contracts/src/baseline-scene-retrieval-query.contract.ts` | verified on `22db5e27`; CI `32945732425` job `98105919843`; exact `ai-editor-ci/all = success` |
 | Versioned indexed-scene document | `packages/contracts/src/indexed-scene-document.contract.ts` | verified on `94573491`; CI `32950451152` job `98120424232`; exact scene/native-PTS lineage + pinned representation/embedding evidence |
 | Immutable indexed-scene document persistence | `packages/indexed-scene-library/src/index.ts` | verified on `f9ee0a20`; CI `32955835977` job `98137171731`; idempotent semantic registration and fail-closed immutable revision conflicts |
+| Real Qdrant indexed-scene durability | `packages/indexed-scene-library/src/qdrant.ts` + `infra/verify-qdrant-indexed-scene-runtime.mts` | verified on repaired `19f3fbe0`; CI `32961921478` job `98155939002`; real Qdrant/local-stack `32961921586` job `98155939837`; source embedding digest is immutable evidence while cosine-normalized Qdrant bytes remain rebuildable state |
 
 ## Phase 1 closure
 
@@ -89,10 +90,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 4 status
 
-P4-01 establishes the versioned baseline query schema. Retrieval requests are bounded validated text plus exact scene-set/source scope; duplicate scopes are normalized and rejected, and mutable source identity cannot enter the contract. Hybrid weights, reranker policy and editorial judgment remain out of Phase 4.
+P4-01 establishes the versioned baseline query schema. P4-02 establishes versioned indexed-scene document evidence. P4-03 establishes immutable indexed-scene metadata persistence. P4-04 now proves selective real-Qdrant indexing/readback with idempotent immutable evidence semantics while keeping Qdrant vector bytes explicitly rebuildable.
 
-P4-02 establishes versioned indexed-scene document evidence bound to exact scene-set revision + scene + immutable asset/stream/native-PTS lineage, plus explicit representation and embedding/model revisions. The vector itself remains rebuildable index state, while its digest and pinned model metadata make the index entry reproducible/auditable.
-
-P4-03 establishes immutable indexed-scene metadata persistence. Exact semantic re-registration is idempotent after rational normalization; conflicting reuse of a revision ID with changed scene/source, representation or embedding evidence fails closed before mutation. Historical revisions are additive and defensive-copy protected, while Qdrant/vector bytes remain rebuildable state.
-
-The next smallest missing slice is P4-04: selective real-Qdrant indexed-scene durability/indexing. The remaining Phase-4 gate still requires actual indexed scenes and a labeled Recall@10 baseline.
+The remaining explicit Phase-4 gate is the labeled Recall@10 baseline over actual indexed scenes. Hybrid weighting, reranking and editorial judgment remain deferred to Phase 5.
