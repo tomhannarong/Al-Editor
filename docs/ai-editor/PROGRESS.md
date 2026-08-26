@@ -2,44 +2,50 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 3 — Voice / Transcript Alignment  
-**Current task:** P3-07 — audit remaining Phase-3 gate evidence and select the smallest independent missing slice
+**Current task:** P3-08 — deterministic transcript correction revision builder
 
 ```text
-Standalone verified: 53 / 162 = 32.72%
+Standalone verified: 54 / 162 = 33.33%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
-Phase 3:              6 / 9   =  66.67%
+Phase 3:              7 / 9   =  77.78%
 ```
 
 Phase 0 remains verified-complete through P0-22. Phase 1 remains verified-complete through P1-14. Phase 2 remains verified-complete through P2-11 plus its exact quality-baseline gate evidence.
 
-## Phase 3 — P3-06 verified
+## Phase 3 — P3-07 verified
 
-P3-06 adds durable PostgreSQL editorial-segment revision persistence through migration `0007_create_editorial_segment_library.sql` and `packages/editorial-segment-library/src/postgres.ts`.
+P3-07 closes the missing ASR/alignment normalization boundary in `packages/transcript-library/src/asr-alignment.ts`.
 
-Durable editorial revisions bind to the exact immutable `transcriptId` + `transcriptRevisionId`. Segment rows persist stable `startWordId` / `endWordId` references with PostgreSQL foreign keys back to the exact transcript revision's word rows. No segment-level PTS, seconds or milliseconds columns are persisted, so native transcript PTS + rational stream time base remain the only source-time authority.
+The boundary accepts integer microseconds only as untrusted adapter input, validates ordering/confidence, normalizes the source rational time base, and converts timing through the centralized media-time package into native integer source PTS before returning an immutable ASR transcript revision. Microseconds and decimal seconds are not persisted as transcript timing authority.
 
-The store preserves P3-05 semantics: exact semantic re-registration is idempotent; conflicting reuse of an immutable `revisionId` fails closed and rolls back; missing transcript word references fail closed through database constraints; readback preserves ordered stable word-boundary evidence.
+Word identities are generated deterministically from the immutable transcript revision identity plus ordinal. Fractional microseconds, overlapping provider timing, invalid confidence and intervals that collapse after PTS quantization fail closed.
+
+### Phase-3 gate audit
+
+The Bible requires immutable ASR/corrections, stable word timing and editorial segments before Phase 3 can advance.
+
+- Immutable ASR/correction evidence: P3-01 defines ASR/correction lineage; P3-02/P3-03 preserve immutable transcript revisions in-memory and PostgreSQL.
+- Stable word timing: P3-01 requires native integer PTS + rational source time base; P3-07 now proves deterministic normalization of untrusted aligned timing into that authority before persistence.
+- Editorial segments: P3-04 through P3-06 provide versioned, immutable and durable segment evidence over stable word identities.
+
+One implementation gap remains before final reconciliation: deterministic construction of a correction revision from an immutable parent transcript. P3-08 will address that boundary; P3-09 is reserved for exact Phase-3 gate reconciliation if the evidence is then complete.
 
 ### Validation evidence
 
-Implementation commit `695e5105e6bb124d99857d8770e898ac813aa264` was committed directly to `main` as one batched migration/store/test/runtime-verifier change.
+Implementation commit `17e0eac42a7c2e6270d2c4d1598179f4c325b2c4` was committed directly to `main` as one batched implementation/test change.
 
-AI Editor CI run `32928880002`, job `98057124865` passed dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status.
+AI Editor CI run `32932548445`, job `98067436909` passed dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status `ai-editor-ci/all = success`.
 
-The first selective Local Stack run `32928879417`, job `98057123430` failed in the new verifier before editorial persistence because the fixture reused an asset digest already owned by the earlier scene verifier. PostgreSQL correctly rejected stream replacement through the existing `scene_set_revisions_source_stream_fk`. This was treated as a verifier-fixture failure, not a code pass and not a runner failure; the unchanged commit was not rerun.
-
-Repair commit `f5b8fba375272a2ed69a06a2e6cadb9125e9516c` changes only the verifier fixture identity. The repaired selective Local Stack run `32929033073`, job `98057560645` passed PostgreSQL + Qdrant health, all media/scene/proxy/keyframe/transcript/editorial-segment persistence verifiers, real FFmpeg derivative regressions, API health and observable `ai-editor-local-stack/all = success`.
-
-No redundant normal CI was triggered for the verifier-only repair.
+A local clone/test was attempted first, but the execution environment could not resolve `github.com`. This is not claimed as a test pass or code failure. No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or unchanged rerun was used because P3-07 is a deterministic normalization slice.
 
 ## Preserved contracts
 
 Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability and Phase-2 scene/proxy/keyframe evidence remain unchanged.
 
-Transcript/model evidence remains untrusted data. ASR corrections and editorial segment revisions remain additive immutable evidence. Editorial segmentation derives source timing from stable words in its bound immutable transcript revision rather than creating a parallel timing system.
+Transcript/model output remains untrusted data. P3-07 does not introduce a parallel timing system: native PTS + rational source time base remain authoritative and microseconds exist only at the adapter boundary.
 
 ## Next task
 
-P3-07 — reconcile the remaining Phase-3 Bible gate evidence before naming a new capability. Audit whether immutable ASR/correction, stable word timing and editorial-segment requirements already have exact standalone proof; then choose the smallest genuinely missing independent slice without inventing checklist authority or spending an Actions run for redundant evidence.
+P3-08 — add a deterministic correction-revision builder over an immutable parent transcript. Preserve source mapping and stable word identity/timing semantics, create an additive correction revision with explicit parent lineage, fail closed on illegal identity/source changes, and avoid PostgreSQL or heavyweight runtime work unless the Bible gate actually requires it.
