@@ -11,3 +11,4 @@ export * from './media-catalog.contract.js';
 export * from './transcript.contract.js';
 export * from './editorial-segment.contract.js';
 export * from './baseline-scene-retrieval-query.contract.js';
+export * from './indexed-scene-document.contract.js';
