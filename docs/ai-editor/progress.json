@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 6,
-  "currentTask": "P6-03-phase6-real-final-delivery-output-runtime-validation",
+  "currentTask": "P6-04-phase6-gate-reconciliation",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 71,
-    "standaloneRevalidatedPercent": 43.83
+    "standaloneRevalidated": 72,
+    "standaloneRevalidatedPercent": 44.44
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0087-phase6-final-delivery-validation-boundary-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0088-phase6-real-final-delivery-runtime-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -34,13 +34,18 @@
   "phase5": {"total":7,"standaloneRevalidated":7,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"measurableQualityGainOnSameBenchmark":["exact benchmark phase4-labeled-recall-at-10:v1","macro Recall@10 gain 0.16666666666666663","micro Recall@10 gain 0.25","AI Editor CI run 33003534039 job 98291207703 success"],"duplicateControl":["P5-04 versioned policy","P5-05 deterministic native-PTS interval suppression","P5-06 actual same-benchmark occupancy measurement"]}},
   "phase6": {
     "state": "in-progress",
-    "standaloneRevalidated": 2,
+    "standaloneRevalidated": 3,
     "implementedSlices": [
       {"id":"P6-01-phase6-exact-frame-source-mapping-golden","implementationCommit":"72780c37b5456fa4a31fdfdacca8023c6e79fcd2","status":"verified","evidence":["docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md","AI Editor CI run 33013977827 job 98327280374 success","ai-editor-ci/all success on exact implementation commit"]},
-      {"id":"P6-02-phase6-final-delivery-validation-boundary","implementationCommit":"6d645c87a6079c657e0507fd9e4ff5fe5feed5e8","status":"verified","evidence":["packages/final-delivery-validator/src/index.ts","AI Editor CI run 33017556928 job 98339605165 success","ai-editor-ci/all success on exact implementation commit"]}
+      {"id":"P6-02-phase6-final-delivery-validation-boundary","implementationCommit":"6d645c87a6079c657e0507fd9e4ff5fe5feed5e8","status":"verified","evidence":["packages/final-delivery-validator/src/index.ts","AI Editor CI run 33017556928 job 98339605165 success","ai-editor-ci/all success on exact implementation commit"]},
+      {"id":"P6-03-phase6-real-final-delivery-output-runtime-validation","implementationCommit":"37bd9bde7ccaf4f578f78d97d0c00f9cc1b68f40","status":"verified","evidence":["infra/verify-real-final-delivery-runtime.mts","AI Editor Local Stack Gate run 33021782671 job 98353642048 success","ai-editor-local-stack/all success on exact implementation commit"]}
     ],
-    "next": "P6-03-phase6-real-final-delivery-output-runtime-validation",
-    "requiredGate": ["exact frame/source mapping goldens", "preview/final delivery validation"]
+    "next": "P6-04-phase6-gate-reconciliation",
+    "requiredGate": ["exact frame/source mapping goldens", "preview/final delivery validation"],
+    "gateEvidence": {
+      "exactFrameSourceMappingGoldens": ["P6-01 exact canonical frame/source mapping golden"],
+      "previewFinalDeliveryValidation": ["checkpoint 0033 real preview + immutable rerender evidence", "P6-02 deterministic final-delivery validator", "P6-03 real FFmpeg/FFprobe/loudness/caption runtime evidence"]
+    }
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",
