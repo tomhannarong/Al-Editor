@@ -68,6 +68,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Deterministic hybrid retrieval execution | `packages/hybrid-retrieval-library/src/execution.ts` | verified on repaired `0dd6179e`; AI Editor CI `32988192562` job `98239245541`; deterministic bounded weighted-cosine execution with pinned representation/model evidence and fail-closed immutable source conflicts |
 | Versioned retrieval duplicate-control policy | `packages/contracts/src/retrieval-duplicate-control-policy.contract.ts` | verified on repaired `6b32226c`; implementation CI `32992622547` failed strict TypeScript test-fixture typing; repair CI `32994487679` job `98260037304` passed all gates; production contract unchanged |
 | Deterministic retrieval duplicate-control execution | `packages/hybrid-retrieval-library/src/duplicate-control.ts` | verified on test commit `699e7c7a`; AI Editor CI `32996581754` job `98267379517`; same-source asset/stream native-PTS interval IoU suppression, exact lineage validation and bounded maxResults; no quality-gain claim yet |
+| Same-benchmark hybrid + duplicate-control evaluation | `packages/hybrid-retrieval-library/src/benchmark-evaluation.ts` + `docs/ai-editor/benchmarks/phase5-hybrid-duplicate-control-evaluation-v1.md` | verified on `699615af`; CI `33003534039` job `98291207703`; Macro Recall@10 `0.8333333333333334 -> 1.0`, Micro `0.75 -> 1.0`; exact Phase-4 benchmark revision; duplicate occupancy measured `0.0` on the non-overlapping control fixture |
 
 ## Phase 1 closure
 
@@ -103,4 +104,4 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 5 status
 
-P5-01 through P5-05 are verified. P5-04 provides the versioned duplicate-control policy and P5-05 provides deterministic same-source native-PTS IoU execution. The Phase-5 gate still requires measurable quality gain on the same Phase-4 benchmark plus duplicate-control evidence. Duplicate-control policy/execution evidence now exists, but no measurable quality-gain claim has been made yet.
+P5-01 through P5-06 are verified. P5-06 demonstrates measurable Recall@10 gain on the exact versioned Phase-4 benchmark while P5-04/P5-05 provide versioned duplicate-control policy and deterministic native-PTS overlap suppression evidence. The immutable Phase-4 fixture contains no overlapping source intervals, so its actual duplicate occupancy is `0.0`; that measured result is preserved rather than modifying benchmark evidence. Phase 5 is gate-ready and awaits P5-07 evidence reconciliation before advance.
