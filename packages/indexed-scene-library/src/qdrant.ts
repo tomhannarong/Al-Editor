@@ -37,7 +37,9 @@ interface QdrantPointResult {
 }
 
 const UUID_HEX_LENGTH = 32;
+const COSINE_DIRECTION_EPSILON = 1e-6;
 
+/** Digest of source embedding evidence before Qdrant applies index-specific transforms. */
 export function computeIndexedSceneVectorSha256(vector: readonly number[]): string {
   assertFiniteVector(vector);
   return createHash('sha256').update(JSON.stringify(vector), 'utf8').digest('hex');
@@ -47,16 +49,20 @@ export function qdrantPointIdForRevision(revisionId: string): string {
   if (!revisionId.trim()) {
     throw new QdrantIndexedSceneInvariantError('revisionId is required for Qdrant point identity');
   }
-
-  // Qdrant string point IDs are UUIDs. Keep the identity deterministic while
-  // setting explicit RFC 4122 version/variant bits instead of merely formatting
-  // arbitrary hash bytes as UUID-shaped text.
   const raw = createHash('sha256').update(revisionId, 'utf8').digest('hex').slice(0, UUID_HEX_LENGTH);
   const uuidHex = `${raw.slice(0, 12)}5${raw.slice(13, 16)}8${raw.slice(17)}`;
   return `${uuidHex.slice(0, 8)}-${uuidHex.slice(8, 12)}-${uuidHex.slice(12, 16)}-${uuidHex.slice(16, 20)}-${uuidHex.slice(20, 32)}`;
 }
 
-/** Rebuildable Qdrant boundary; immutable evidence remains owned by the metadata store. */
+/**
+ * Rebuildable Qdrant boundary for baseline retrieval.
+ *
+ * vectorSha256 authenticates the source embedding supplied to this boundary.
+ * A Cosine Qdrant collection normalizes vectors during upload, so stored vector
+ * bytes are deliberately treated as rebuildable index state rather than compared
+ * byte-for-byte with immutable source-vector evidence. Readback instead proves
+ * dimensions plus cosine-direction equivalence to the validated source vector.
+ */
 export class QdrantIndexedSceneStore {
   readonly #baseUrl: string;
   readonly #collectionName: string;
@@ -72,7 +78,7 @@ export class QdrantIndexedSceneStore {
 
   async upsertDocument(candidate: IndexedSceneDocument, vector: readonly number[]): Promise<UpsertQdrantIndexedSceneResult> {
     const document = normalizeAndValidateDocument(candidate);
-    validateVectorAgainstDocument(document, vector);
+    validateSourceVectorAgainstDocument(document, vector);
     await this.#ensureCollection(document.embedding.dimensions);
 
     const pointId = qdrantPointIdForRevision(document.revisionId);
@@ -83,7 +89,7 @@ export class QdrantIndexedSceneStore {
           `Qdrant point for revisionId ${document.revisionId} conflicts with immutable indexed-scene evidence`,
         );
       }
-      validateVectorAgainstDocument(existing.document, existing.vector);
+      assertCosineDirectionEquivalent(existing.vector, vector);
       return { ...cloneRecord(existing), created: false, pointId };
     }
 
@@ -99,7 +105,7 @@ export class QdrantIndexedSceneStore {
     if (!sameImmutableIndexedSceneDocument(readback.document, document)) {
       throw new QdrantIndexedSceneInvariantError('Qdrant readback does not match immutable indexed-scene evidence');
     }
-    validateVectorAgainstDocument(readback.document, readback.vector);
+    assertCosineDirectionEquivalent(readback.vector, vector);
     return { ...cloneRecord(readback), created: true, pointId };
   }
 
@@ -134,7 +140,7 @@ export class QdrantIndexedSceneStore {
     if (!point) return undefined;
     const document = extractDocument(point.payload);
     const vector = extractVector(point.vector);
-    validateVectorAgainstDocument(document, vector);
+    validateStoredVectorShape(document, vector);
     return { document, vector };
   }
 
@@ -154,16 +160,48 @@ function normalizeAndValidateDocument(candidate: IndexedSceneDocument): IndexedS
   };
 }
 
-function validateVectorAgainstDocument(document: IndexedSceneDocument, vector: readonly number[]): void {
+function validateSourceVectorAgainstDocument(document: IndexedSceneDocument, vector: readonly number[]): void {
+  validateStoredVectorShape(document, vector);
+  if (vectorNorm(vector) === 0) {
+    throw new QdrantIndexedSceneInvariantError('Cosine source vector must have non-zero magnitude');
+  }
+  if (computeIndexedSceneVectorSha256(vector) !== document.embedding.vectorSha256) {
+    throw new QdrantIndexedSceneInvariantError('source vector SHA-256 does not match immutable embedding evidence');
+  }
+}
+
+function validateStoredVectorShape(document: IndexedSceneDocument, vector: readonly number[]): void {
   assertFiniteVector(vector);
   if (vector.length !== document.embedding.dimensions) {
     throw new QdrantIndexedSceneInvariantError(
       `vector dimensions ${vector.length} do not match immutable evidence ${document.embedding.dimensions}`,
     );
   }
-  if (computeIndexedSceneVectorSha256(vector) !== document.embedding.vectorSha256) {
-    throw new QdrantIndexedSceneInvariantError('vector SHA-256 does not match immutable embedding evidence');
+}
+
+function assertCosineDirectionEquivalent(stored: readonly number[], source: readonly number[]): void {
+  if (stored.length !== source.length) {
+    throw new QdrantIndexedSceneInvariantError('Qdrant readback vector dimensions changed');
   }
+  const storedNorm = vectorNorm(stored);
+  const sourceNorm = vectorNorm(source);
+  if (storedNorm === 0 || sourceNorm === 0) {
+    throw new QdrantIndexedSceneInvariantError('Cosine vectors must have non-zero magnitude');
+  }
+  let dot = 0;
+  for (let index = 0; index < source.length; index += 1) {
+    dot += source[index]! * stored[index]!;
+  }
+  const cosine = dot / (sourceNorm * storedNorm);
+  if (!Number.isFinite(cosine) || Math.abs(1 - cosine) > COSINE_DIRECTION_EPSILON) {
+    throw new QdrantIndexedSceneInvariantError('Qdrant readback vector changed source embedding direction');
+  }
+}
+
+function vectorNorm(vector: readonly number[]): number {
+  let sumSquares = 0;
+  for (const value of vector) sumSquares += value * value;
+  return Math.sqrt(sumSquares);
 }
 
 function assertFiniteVector(vector: readonly number[]): void {

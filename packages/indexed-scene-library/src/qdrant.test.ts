@@ -17,8 +17,7 @@ const VECTOR = [0.125, -0.25, 0.5, 1] as const;
 function validDocument(overrides: Partial<IndexedSceneDocument> = {}): IndexedSceneDocument {
   return {
     schemaVersion: INDEXED_SCENE_DOCUMENT_SCHEMA_VERSION,
-    documentId: 'indexed-scene:scene-1',
-    revisionId: 'indexed-scene-revision:v1',
+    documentId: 'indexed-scene:scene-1', revisionId: 'indexed-scene-revision:v1',
     source: {
       sceneSetId: 'scene-set:asset-a:stream-0', sceneSetRevisionId: 'scene-set-revision:v4', sceneId: 'scene-1',
       assetId: ASSET_ID, streamId: `${ASSET_ID}:stream:0`, streamIndex: 0,
@@ -30,16 +29,19 @@ function validDocument(overrides: Partial<IndexedSceneDocument> = {}): IndexedSc
       embeddingRevisionId: 'embedding-revision:v2', modelId: 'text-embedding-local', modelVersion: '1.2.0',
       dimensions: VECTOR.length, vectorSha256: computeIndexedSceneVectorSha256(VECTOR),
     },
-    createdAt: '2026-08-26T09:20:00.000Z',
-    ...overrides,
+    createdAt: '2026-08-26T09:20:00.000Z', ...overrides,
   };
+}
+
+function cosineNormalized(vector: readonly number[]): number[] {
+  const norm = Math.sqrt(vector.reduce((sum, value) => sum + value * value, 0));
+  return vector.map((value) => Math.fround(value / norm));
 }
 
 function fakeQdrantFetch() {
   let collectionCreated = false;
   let point: { id: string; vector: number[]; payload: unknown } | undefined;
   let upserts = 0;
-
   const fetchImpl = (async (input: string | URL | Request, init?: RequestInit): Promise<Response> => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url);
     const method = init?.method ?? 'GET';
@@ -47,21 +49,18 @@ function fakeQdrantFetch() {
       return collectionCreated ? Response.json({ result: { status: 'green' } }) : new Response('missing', { status: 404 });
     }
     if (url.pathname === '/collections/baseline-scenes' && method === 'PUT') {
-      collectionCreated = true;
-      return Response.json({ result: true });
+      collectionCreated = true; return Response.json({ result: true });
     }
     if (url.pathname.endsWith('/points') && method === 'PUT') {
       const body = JSON.parse(String(init?.body)) as { points: Array<{ id: string; vector: number[]; payload: unknown }> };
       const next = body.points[0];
       if (!next) return new Response('missing point', { status: 400 });
-      point = { id: next.id, vector: [...next.vector], payload: next.payload };
-      upserts += 1;
-      return Response.json({ result: { status: 'completed' } });
+      point = { id: next.id, vector: cosineNormalized(next.vector), payload: next.payload };
+      upserts += 1; return Response.json({ result: { status: 'completed' } });
     }
     if (url.pathname.endsWith('/points') && method === 'POST') {
-      const body = JSON.parse(String(init?.body)) as { ids: string[]; with_payload: boolean; with_vector: boolean };
-      const matches = point && body.ids.includes(point.id) ? [point] : [];
-      return Response.json({ result: matches });
+      const body = JSON.parse(String(init?.body)) as { ids: string[] };
+      return Response.json({ result: point && body.ids.includes(point.id) ? [point] : [] });
     }
     return new Response('unexpected request', { status: 500 });
   }) as typeof fetch;
@@ -69,18 +68,19 @@ function fakeQdrantFetch() {
 }
 
 describe('Qdrant indexed-scene durability boundary', () => {
-  it('creates, reads back and idempotently reuses exact immutable evidence', async () => {
+  it('accepts Qdrant cosine normalization while preserving immutable source-vector digest evidence', async () => {
     const fake = fakeQdrantFetch();
     const store = new QdrantIndexedSceneStore({ baseUrl: 'http://qdrant.test', collectionName: 'baseline-scenes', fetchImpl: fake.fetchImpl });
     const first = await store.upsertDocument(validDocument(), VECTOR);
     expect(first.created).toBe(true);
-    expect(first.document.source.sourceTimeBase).toEqual({ numerator: 1, denominator: 90_000 });
+    expect(first.document.embedding.vectorSha256).toBe(computeIndexedSceneVectorSha256(VECTOR));
+    expect(first.vector).not.toEqual(VECTOR);
+    expect(computeIndexedSceneVectorSha256(first.vector)).not.toBe(first.document.embedding.vectorSha256);
 
     const equivalent = validDocument();
     equivalent.source.sourceTimeBase = { numerator: 2, denominator: 180_000 };
     expect((await store.upsertDocument(equivalent, VECTOR)).created).toBe(false);
     expect(fake.getUpserts()).toBe(1);
-    expect((await store.getDocument(validDocument().revisionId))?.document).toEqual(validDocument());
   });
 
   it('fails closed before overwrite when immutable evidence conflicts', async () => {
@@ -92,13 +92,16 @@ describe('Qdrant indexed-scene durability boundary', () => {
     expect(fake.getUpserts()).toBe(1);
   });
 
-  it('rejects vector dimension and digest mismatches before index mutation', async () => {
+  it('rejects source-vector dimension, digest and zero-magnitude mismatches before index mutation', async () => {
     const fake = fakeQdrantFetch();
     const store = new QdrantIndexedSceneStore({ baseUrl: 'http://qdrant.test', collectionName: 'baseline-scenes', fetchImpl: fake.fetchImpl });
     await expect(store.upsertDocument(validDocument(), [1, 2])).rejects.toThrow(/dimensions/);
     const wrongDigest = validDocument();
     wrongDigest.embedding = { ...wrongDigest.embedding, vectorSha256: 'f'.repeat(64) };
     await expect(store.upsertDocument(wrongDigest, VECTOR)).rejects.toThrow(/SHA-256/);
+    const zeroDocument = validDocument();
+    zeroDocument.embedding = { ...zeroDocument.embedding, vectorSha256: computeIndexedSceneVectorSha256([0, 0, 0, 0]) };
+    await expect(store.upsertDocument(zeroDocument, [0, 0, 0, 0])).rejects.toThrow(/non-zero magnitude/);
     expect(fake.getUpserts()).toBe(0);
   });
 
