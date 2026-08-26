@@ -62,6 +62,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Immutable indexed-scene document persistence | `packages/indexed-scene-library/src/index.ts` | verified on `f9ee0a20`; CI `32955835977` job `98137171731`; idempotent semantic registration and fail-closed immutable revision conflicts |
 | Real Qdrant indexed-scene durability | `packages/indexed-scene-library/src/qdrant.ts` + `infra/verify-qdrant-indexed-scene-runtime.mts` | verified on repaired `19f3fbe0`; CI `32961921478` job `98155939002`; real Qdrant/local-stack `32961921586` job `98155939837`; source embedding digest is immutable evidence while cosine-normalized Qdrant bytes remain rebuildable state |
 | Labeled Recall@10 retrieval baseline | `packages/indexed-scene-library/src/recall-baseline.ts` + versioned benchmark fixture | verified on `3e3571ab`; CI `32965904224` job `98168207773`; Macro Recall@10 `0.8333333333333334`, Micro Recall@10 `0.75`; no acceptance threshold invented |
+| Phase-4 gate reconciliation | P4-01..P4-05 exact evidence + checkpoint 0077 | verified; query schema, indexed scenes and labeled Recall@10 baseline satisfied without redundant Actions run |
 
 ## Phase 1 closure
 
@@ -85,12 +86,16 @@ P3-01 through P3-03 establish versioned immutable transcript/ASR-correction line
 
 P3-09 reconciles these exact proofs against the Bible gate. Immutable ASR/corrections are covered by P3-01/P3-02/P3-03/P3-08; stable word timing is covered by P3-01/P3-07/P3-08; editorial segments are covered by P3-04/P3-05/P3-06. No additional subsystem or redundant Actions run is required to close the phase.
 
+## Phase 4 closure
+
+Phase 4 contains six verified slices including the evidence-reconciliation closure. P4-01 establishes the versioned baseline query schema. P4-02/P4-03 establish versioned immutable indexed-scene evidence and idempotent persistence. P4-04 proves real-Qdrant indexing/readback while retaining vector storage as rebuildable state. P4-05 establishes the versioned labeled Recall@10 benchmark. P4-06 maps those exact proofs to the Bible gate and closes the phase without a redundant Actions run.
+
+The Phase-4 benchmark remains the comparison control for Phase 5. Hybrid retrieval, reranking and duplicate control must demonstrate measurable quality gain on the same versioned evidence before an upgrade is accepted.
+
 Canonical timing remains integer project frames + rational FPS and native PTS + rational stream time base. Existing canonical timeline v1/v2 compatibility, renderer-neutral boundary, style/delivery/provenance/model contracts, structured logging and immutable revision/render evidence are unchanged.
 
-Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is complete: 9/9 plus exact gate reconciliation.
+Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/11 plus exact gate evidence. Phase 3 is complete: 9/9 plus exact gate reconciliation. Phase 4 is complete: 6/6 plus exact gate reconciliation.
 
-## Phase 4 status
+## Phase 5 status
 
-P4-01 establishes the versioned baseline query schema. P4-02 establishes versioned indexed-scene document evidence. P4-03 establishes immutable indexed-scene metadata persistence. P4-04 proves selective real-Qdrant indexing/readback with idempotent immutable evidence semantics while keeping Qdrant vector bytes explicitly rebuildable. P4-05 adds the deterministic versioned labeled Recall@10 benchmark over those typed indexed scenes.
-
-All three explicit Bible gate requirements now have evidence: query schema, indexed scenes, and a labeled Recall@10 baseline. P4-06 should therefore be an evidence reconciliation/phase closure unless that audit exposes a missing requirement. Hybrid weighting, reranking, duplicate-control policy and editorial judgment remain deferred to Phase 5.
+Phase 5 has started by authority only; no hybrid/reranking implementation is claimed yet. The first planned slice is a versioned hybrid retrieval policy contract that keeps the P4 baseline as control and pins all representation/weighting revisions. Quality gain and duplicate-control requirements remain explicit future gates rather than inferred successes.
