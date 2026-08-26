@@ -61,6 +61,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned indexed-scene document | `packages/contracts/src/indexed-scene-document.contract.ts` | verified on `94573491`; CI `32950451152` job `98120424232`; exact scene/native-PTS lineage + pinned representation/embedding evidence |
 | Immutable indexed-scene document persistence | `packages/indexed-scene-library/src/index.ts` | verified on `f9ee0a20`; CI `32955835977` job `98137171731`; idempotent semantic registration and fail-closed immutable revision conflicts |
 | Real Qdrant indexed-scene durability | `packages/indexed-scene-library/src/qdrant.ts` + `infra/verify-qdrant-indexed-scene-runtime.mts` | verified on repaired `19f3fbe0`; CI `32961921478` job `98155939002`; real Qdrant/local-stack `32961921586` job `98155939837`; source embedding digest is immutable evidence while cosine-normalized Qdrant bytes remain rebuildable state |
+| Labeled Recall@10 retrieval baseline | `packages/indexed-scene-library/src/recall-baseline.ts` + versioned benchmark fixture | verified on `3e3571ab`; CI `32965904224` job `98168207773`; Macro Recall@10 `0.8333333333333334`, Micro Recall@10 `0.75`; no acceptance threshold invented |
 
 ## Phase 1 closure
 
@@ -90,6 +91,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 4 status
 
-P4-01 establishes the versioned baseline query schema. P4-02 establishes versioned indexed-scene document evidence. P4-03 establishes immutable indexed-scene metadata persistence. P4-04 now proves selective real-Qdrant indexing/readback with idempotent immutable evidence semantics while keeping Qdrant vector bytes explicitly rebuildable.
+P4-01 establishes the versioned baseline query schema. P4-02 establishes versioned indexed-scene document evidence. P4-03 establishes immutable indexed-scene metadata persistence. P4-04 proves selective real-Qdrant indexing/readback with idempotent immutable evidence semantics while keeping Qdrant vector bytes explicitly rebuildable. P4-05 adds the deterministic versioned labeled Recall@10 benchmark over those typed indexed scenes.
 
-The remaining explicit Phase-4 gate is the labeled Recall@10 baseline over actual indexed scenes. Hybrid weighting, reranking and editorial judgment remain deferred to Phase 5.
+All three explicit Bible gate requirements now have evidence: query schema, indexed scenes, and a labeled Recall@10 baseline. P4-06 should therefore be an evidence reconciliation/phase closure unless that audit exposes a missing requirement. Hybrid weighting, reranking, duplicate-control policy and editorial judgment remain deferred to Phase 5.
