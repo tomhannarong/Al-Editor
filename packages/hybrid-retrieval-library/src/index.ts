@@ -4,6 +4,8 @@ import {
   type HybridRetrievalRepresentationPolicy,
 } from '../../contracts/src/hybrid-retrieval-policy.contract.js';
 
+export * from './execution.js';
+
 export class HybridRetrievalPolicyPersistenceInvariantError extends Error {
   constructor(message: string) {
     super(message);
