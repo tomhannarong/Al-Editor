@@ -15,6 +15,8 @@ on:
       - 'infra/verify-postgres-keyframe-library-runtime.mts'
       - 'infra/verify-postgres-transcript-library-runtime.mts'
       - 'infra/verify-postgres-editorial-segment-library-runtime.mts'
+      - 'infra/verify-qdrant-indexed-scene-runtime.mts'
+      - 'packages/indexed-scene-library/src/qdrant.ts'
       - 'infra/verify-real-proxy-generation-runtime.mts'
       - 'infra/verify-real-keyframe-extraction-runtime.mts'
       - 'apps/api/health-server.mjs'
@@ -59,6 +61,9 @@ jobs:
       - name: Install PostgreSQL runtime verifier dependencies
         id: runtime_deps
         run: npm install --ignore-scripts --no-audit --no-fund --no-save pg tsx
+      - name: Verify real Qdrant indexed-scene durability
+        id: qdrant_index
+        run: npx --no-install tsx infra/verify-qdrant-indexed-scene-runtime.mts
       - name: Verify PostgreSQL media, scene, derivative, transcript and editorial-segment runtime
         id: media_catalog
         run: |
@@ -86,17 +91,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           STACK_OUTCOME: ${{ steps.stack.outcome }}
           RUNTIME_DEPS_OUTCOME: ${{ steps.runtime_deps.outcome }}
+          QDRANT_INDEX_OUTCOME: ${{ steps.qdrant_index.outcome }}
           MEDIA_CATALOG_OUTCOME: ${{ steps.media_catalog.outcome }}
           DERIVATIVE_GENERATION_OUTCOME: ${{ steps.derivative_generation.outcome }}
           API_HEALTH_OUTCOME: ${{ steps.api_health.outcome }}
         run: |
           state=success
           context='ai-editor-local-stack/all'
-          description='PostgreSQL, Qdrant, media/transcript/segment persistence, derivatives and API runtime gates passed'
+          description='PostgreSQL, Qdrant index, media/transcript/segment persistence, derivatives and API runtime gates passed'
           if [ "$STACK_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/runtime'; description='PostgreSQL or Qdrant runtime gate failed'
           elif [ "$RUNTIME_DEPS_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/media-catalog-deps'; description='media runtime verifier dependency install failed'
+          elif [ "$QDRANT_INDEX_OUTCOME" != 'success' ]; then
+            state=failure; context='ai-editor-local-stack/qdrant-index'; description='Qdrant indexed-scene durability gate failed'
           elif [ "$MEDIA_CATALOG_OUTCOME" != 'success' ]; then
             state=failure; context='ai-editor-local-stack/media-catalog'; description='PostgreSQL media, scene, derivative, transcript or editorial-segment persistence gate failed'
           elif [ "$DERIVATIVE_GENERATION_OUTCOME" != 'success' ]; then
