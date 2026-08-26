@@ -65,6 +65,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Phase-4 gate reconciliation | P4-01..P4-05 exact evidence + checkpoint 0077 | verified; query schema, indexed scenes and labeled Recall@10 baseline satisfied without redundant Actions run |
 | Versioned hybrid retrieval policy | `packages/contracts/src/hybrid-retrieval-policy.contract.ts` | verified on `92e06e99`; CI `32977400310` job `98205379475`; exact benchmark-control revision + pinned representation/embedding/model revisions + deterministic basis-point weights; no quality-gain claim |
 | Immutable hybrid retrieval policy persistence | `packages/hybrid-retrieval-library/src/index.ts` | verified on `3a0efdd4`; CI `32983383147` job `98225313631`; semantic re-registration idempotent, immutable conflicts fail closed, representation ordering normalized deterministically |
+| Deterministic hybrid retrieval execution | `packages/hybrid-retrieval-library/src/execution.ts` | implemented on `e8299175`, serialization-safety repair `0dd6179e`; targeted strict TypeScript harness passed; exact repository CI/status pending because connector writes emitted no workflow run; not yet verified |
 
 ## Phase 1 closure
 
@@ -100,6 +101,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 5 status
 
-P5-01 and P5-02 are verified. P5-01 defines the versioned hybrid retrieval policy boundary. P5-02 provides immutable/idempotent persistence for that policy while keeping runtime candidate state and editorial judgment outside the immutable policy store.
+P5-01 and P5-02 are verified. P5-03 implementation is present on `main` with deterministic weighted-cosine execution and fail-closed immutable evidence validation, but exact repository validation is still pending and it is not counted as verified.
 
 The Bible gate still requires measurable quality gain on the same Phase-4 benchmark plus duplicate-control evidence. No quality gain has been claimed yet.
