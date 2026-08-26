@@ -25,7 +25,7 @@ try {
   assert.equal(schema.rows[0]?.revisions, 'editorial_segment_revisions');
   assert.equal(schema.rows[0]?.segments, 'editorial_segments');
 
-  const digest = 'c'.repeat(64);
+  const digest = 'f'.repeat(64);
   const assetId = `sha256:${digest}`;
   const streamId = `${assetId}:stream:1`;
   const catalog = new PostgresMediaCatalog(client);
