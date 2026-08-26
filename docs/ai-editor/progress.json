@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 4,
-  "currentTask": "P4-02-versioned-indexed-scene-document-contract",
+  "currentTask": "P4-03-immutable-indexed-scene-document-persistence-idempotency",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 57,
-    "standaloneRevalidatedPercent": 35.19
+    "standaloneRevalidated": 58,
+    "standaloneRevalidatedPercent": 35.8
   },
   "phase0": {
     "total": 22,
@@ -99,12 +99,13 @@
     "next": "Phase 3 gate is verified complete"
   },
   "phase4": {
-    "standaloneRevalidated": 1,
+    "standaloneRevalidated": 2,
     "state": "in-progress",
     "implementedSlices": [
-      {"id":"P4-01-baseline-scene-retrieval-query-schema-contract","implementationCommit":"22db5e278b96d8a064c0fd50ef96894d1f72c1a4","status":"verified","evidence":["packages/contracts/src/baseline-scene-retrieval-query.contract.ts","packages/contracts/src/baseline-scene-retrieval-query.contract.test.ts","AI Editor CI run 32945732425 job 98105919843 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["query schema is versioned and immutable-evidence friendly through queryId/revisionId","query scope binds exact sceneSetId/sceneSetRevisionId plus immutable asset/stream/index/source time base","scope rational time bases are normalized for exact identity comparisons","queryText and topK are bounded validated data","hybrid weights, reranker policy and editorial scoring are deliberately absent from the Phase-4 baseline query contract"]}
+      {"id":"P4-01-baseline-scene-retrieval-query-schema-contract","implementationCommit":"22db5e278b96d8a064c0fd50ef96894d1f72c1a4","status":"verified","evidence":["packages/contracts/src/baseline-scene-retrieval-query.contract.ts","packages/contracts/src/baseline-scene-retrieval-query.contract.test.ts","AI Editor CI run 32945732425 job 98105919843 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["query schema is versioned and immutable-evidence friendly through queryId/revisionId","query scope binds exact sceneSetId/sceneSetRevisionId plus immutable asset/stream/index/source time base","scope rational time bases are normalized for exact identity comparisons","queryText and topK are bounded validated data","hybrid weights, reranker policy and editorial scoring are deliberately absent from the Phase-4 baseline query contract"]},
+      {"id":"P4-02-versioned-indexed-scene-document-contract","implementationCommit":"94573491cdd7626967a0961a3dab2aa2090c4567","status":"verified","evidence":["packages/contracts/src/indexed-scene-document.contract.ts","packages/contracts/src/indexed-scene-document.contract.test.ts","AI Editor CI run 32950451152 job 98120424232 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["indexed document binds exact sceneSetId/sceneSetRevisionId/sceneId plus immutable asset/stream/index/native PTS interval","source time base is rational and exact; no decimal timing authority is introduced","representationRevisionId and embeddingRevisionId are explicit immutable-friendly evidence","embedding modelVersion must be pinned and vector dimensions/digest are validated","hybrid features, reranker scores and editorial judgment are deliberately absent"]}
     ],
-    "next": "P4-02-versioned-indexed-scene-document-contract"
+    "next": "P4-03-immutable-indexed-scene-document-persistence-idempotency"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},

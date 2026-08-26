@@ -58,6 +58,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Deterministic transcript correction revision builder | `packages/transcript-library/src/correction-revision.ts` | verified on `02d5c273`; CI `32936036706` job `98077317683`; additive correction preserves immutable source + stable word identity/native timing |
 | Phase-3 gate reconciliation | P3-01..P3-08 exact evidence + checkpoint 0071 | verified; immutable ASR/corrections, stable word timing and editorial segments all satisfied without redundant Actions run |
 | Baseline scene retrieval query schema | `packages/contracts/src/baseline-scene-retrieval-query.contract.ts` | verified on `22db5e27`; CI `32945732425` job `98105919843`; exact `ai-editor-ci/all = success` |
+| Versioned indexed-scene document | `packages/contracts/src/indexed-scene-document.contract.ts` | verified on `94573491`; CI `32950451152` job `98120424232`; exact scene/native-PTS lineage + pinned representation/embedding evidence |
 
 ## Phase 1 closure
 
@@ -89,4 +90,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 P4-01 establishes the versioned baseline query schema. Retrieval requests are bounded validated text plus exact scene-set/source scope; duplicate scopes are normalized and rejected, and mutable source identity cannot enter the contract. Hybrid weights, reranker policy and editorial judgment remain out of Phase 4.
 
-The next smallest missing slice is P4-02: a versioned indexed-scene document contract bound to exact scene-set revision + scene ID + immutable source lineage and explicit embedding/model revision metadata. The remaining Phase-4 gate still requires actual indexed scenes and a labeled Recall@10 baseline.
+P4-02 establishes versioned indexed-scene document evidence bound to exact scene-set revision + scene + immutable asset/stream/native-PTS lineage, plus explicit representation and embedding/model revisions. The vector itself remains rebuildable index state, while its digest and pinned model metadata make the index entry reproducible/auditable.
+
+The next smallest missing slice is P4-03: immutable indexed-scene document persistence/idempotency. The remaining Phase-4 gate still requires actual indexed scenes and a labeled Recall@10 baseline.
