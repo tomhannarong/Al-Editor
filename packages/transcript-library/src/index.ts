@@ -15,6 +15,13 @@ export {
   type AlignedAsrWordInput,
 } from './asr-alignment.js';
 
+export {
+  TranscriptCorrectionRevisionError,
+  buildTranscriptCorrectionRevision,
+  type BuildTranscriptCorrectionRevisionInput,
+  type TranscriptWordCorrection,
+} from './correction-revision.js';
+
 export class TranscriptPersistenceInvariantError extends Error {
   constructor(message: string) {
     super(message);
