@@ -63,6 +63,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Real Qdrant indexed-scene durability | `packages/indexed-scene-library/src/qdrant.ts` + `infra/verify-qdrant-indexed-scene-runtime.mts` | verified on repaired `19f3fbe0`; CI `32961921478` job `98155939002`; real Qdrant/local-stack `32961921586` job `98155939837`; source embedding digest is immutable evidence while cosine-normalized Qdrant bytes remain rebuildable state |
 | Labeled Recall@10 retrieval baseline | `packages/indexed-scene-library/src/recall-baseline.ts` + versioned benchmark fixture | verified on `3e3571ab`; CI `32965904224` job `98168207773`; Macro Recall@10 `0.8333333333333334`, Micro Recall@10 `0.75`; no acceptance threshold invented |
 | Phase-4 gate reconciliation | P4-01..P4-05 exact evidence + checkpoint 0077 | verified; query schema, indexed scenes and labeled Recall@10 baseline satisfied without redundant Actions run |
+| Versioned hybrid retrieval policy | `packages/contracts/src/hybrid-retrieval-policy.contract.ts` | verified on `92e06e99`; CI `32977400310` job `98205379475`; exact benchmark-control revision + pinned representation/embedding/model revisions + deterministic basis-point weights; no quality-gain claim |
 
 ## Phase 1 closure
 
@@ -98,4 +99,6 @@ Phase 0 is complete: 22/22. Phase 1 is complete: 14/14. Phase 2 is complete: 11/
 
 ## Phase 5 status
 
-Phase 5 has started by authority only; no hybrid/reranking implementation is claimed yet. The first planned slice is a versioned hybrid retrieval policy contract that keeps the P4 baseline as control and pins all representation/weighting revisions. Quality gain and duplicate-control requirements remain explicit future gates rather than inferred successes.
+P5-01 is verified. It defines the versioned hybrid retrieval policy boundary while preserving the Phase-4 benchmark as control. At least two representation/model revisions must be pinned; deterministic integer weights must sum to 10,000 basis points; the fusion method and candidate pool are versioned policy evidence.
+
+No reranker, duplicate-control behavior or editorial scoring is included yet. The Bible gate still requires measurable quality gain on the same benchmark and duplicate-control evidence before Phase 5 may close.

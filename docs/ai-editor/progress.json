@@ -12,13 +12,13 @@
   },
   "status": "in-progress",
   "currentPhase": 5,
-  "currentTask": "P5-01-versioned-hybrid-retrieval-policy-contract",
+  "currentTask": "P5-02-immutable-hybrid-retrieval-policy-persistence-idempotency",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 62,
-    "standaloneRevalidatedPercent": 38.27
+    "standaloneRevalidated": 63,
+    "standaloneRevalidatedPercent": 38.89
   },
   "phase0": {
     "total": 22,
@@ -119,10 +119,12 @@
     "next": "Phase 4 gate is verified complete"
   },
   "phase5": {
-    "standaloneRevalidated": 0,
+    "standaloneRevalidated": 1,
     "state": "in-progress",
-    "implementedSlices": [],
-    "next": "P5-01-versioned-hybrid-retrieval-policy-contract"
+    "implementedSlices": [
+      {"id":"P5-01-versioned-hybrid-retrieval-policy-contract","implementationCommit":"92e06e995290568d82632a1259a3b51c369dcf82","status":"verified","evidence":["packages/contracts/src/hybrid-retrieval-policy.contract.ts","packages/contracts/src/hybrid-retrieval-policy.contract.test.ts","AI Editor CI run 32977400310 job 98205379475 success","ai-editor-ci/all success on exact implementation commit"],"invariants":["policy binds exact Phase-4 benchmark control revision without changing the control","at least two representation revisions and their embedding/model versions are explicitly pinned","weights are positive safe-integer basis points summing exactly to 10000","fusion method and candidate pool are explicit bounded policy evidence","reranking, duplicate-control behavior and editorial scoring are deliberately absent","no measurable quality-gain claim is made by the policy contract alone"]}
+    ],
+    "next": "P5-02-immutable-hybrid-retrieval-policy-persistence-idempotency"
   },
   "phase0Items": [
     {"id":"P0-01","name":"Repository structure committed","standaloneStatus":"verified"},

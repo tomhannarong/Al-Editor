@@ -2,37 +2,42 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 5 — Hybrid Retrieval + Reranking  
-**Current task:** P5-01 — Versioned hybrid retrieval policy contract
+**Current task:** P5-02 — Immutable hybrid retrieval policy persistence/idempotency
 
 ```text
-Standalone verified: 62 / 162 = 38.27%
+Standalone verified: 63 / 162 = 38.89%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
 Phase 3:              9 / 9   = 100.00% COMPLETE + GATE VERIFIED
 Phase 4:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
+Phase 5:              1 verified slice; denominator not invented before checklist authority
 ```
 
-## Phase 4 — gate reconciled and closed
+## Phase 5 — P5-01 verified
 
-P4-06 reconciles the exact P4-01 through P4-05 evidence against `PROJECT_BIBLE.md`. The Phase-4 gate requires three proofs before advancing: a versioned query schema, indexed scenes, and a labeled Recall@10 baseline. All three are independently verified in this repository on exact implementation commits.
+P5-01 establishes a versioned hybrid retrieval policy contract without altering the Phase-4 baseline control. `packages/contracts/src/hybrid-retrieval-policy.contract.ts` pins the exact benchmark control revision, representation revisions, embedding revisions, model IDs/versions, deterministic integer basis-point weights, fusion method and bounded candidate pool size.
 
-- Query schema: P4-01, `packages/contracts/src/baseline-scene-retrieval-query.contract.ts`, CI `32945732425` / job `98105919843`.
-- Indexed scenes: P4-02/P4-03 immutable indexed-scene contracts/persistence plus P4-04 real-Qdrant indexing/readback, final runtime repair `19f3fbe097a4b626be8136534e226a54ece49f9b`, CI `32961921478` / job `98155939002`, Local Stack `32961921586` / job `98155939837`.
-- Labeled Recall@10 baseline: P4-05, `packages/indexed-scene-library/src/recall-baseline.ts` and `docs/ai-editor/benchmarks/phase4-labeled-recall-at-10-baseline-v1.md`, CI `32965904224` / job `98168207773`. Baseline v1 measures Macro Recall@10 `0.8333333333333334` and Micro Recall@10 `0.75`; these remain measurements, not acceptance thresholds.
+The policy requires at least two pinned representations and weights summing exactly to 10,000 basis points. It intentionally contains no reranker, duplicate-control behavior or editorial scoring; those remain later Phase-5 slices. The contract makes no quality-gain claim by itself.
 
-No code capability was added for P4-06 and no GitHub Actions run was spent on reconciliation. The immediately preceding implementation SHA `3e3571abb4627d3d1ac68f65c184ecb1a7be5242` has exact `ai-editor-ci/all = success`; the preceding docs-only HEAD intentionally has no status checks because documentation-only path filters avoided CI.
+## Exact evidence
+
+Implementation commit `92e06e995290568d82632a1259a3b51c369dcf82` was committed directly to `main` as one batched code/test/export change.
+
+AI Editor CI run `32977400310`, job `98205379475`, passed dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status publication. Exact commit status is `ai-editor-ci/all = success`.
+
+Local validation was attempted first, but this execution environment could not resolve `github.com`; this is not counted as a pass or code failure. No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or rerun was used because P5-01 is a deterministic contract-only slice.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, Phase-2 scene/proxy/keyframe evidence and Phase-3 transcript/editorial-segment evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, Phase-1 media durability, Phase-2 scene/proxy/keyframe evidence, Phase-3 transcript/editorial-segment evidence and the Phase-4 single-vector Recall@10 baseline remain unchanged.
 
-Retrieval relevance remains separate from editorial judgment. Phase 4 stays a single-vector baseline. Hybrid weighting, reranking and duplicate-control policy begin only in Phase 5 and must be evaluated on the same versioned benchmark before any upgrade is accepted.
+Retrieval relevance remains separate from editorial judgment. The Phase-4 benchmark remains the comparison control; P5-01 only defines versioned hybrid retrieval policy evidence and does not claim measurable improvement.
 
-## Phase 5 entry rule
+## Phase 5 gate state
 
-Phase 5 may now begin because the Phase-4 gate is closed by exact evidence. The smallest independent next slice is P5-01: define a versioned hybrid retrieval policy contract that references the existing baseline query/index evidence, pins representation/weighting revisions, and does not yet claim quality improvement. Reranking, duplicate control, and before/after benchmark acceptance remain subsequent evidence-gated slices.
+The Bible requires measurable quality gain on the same benchmark plus duplicate control before Phase 5 may advance. P5-01 supplies only the versioned policy prerequisite. Hybrid execution, immutable policy persistence, duplicate-control evidence, reranking and before/after benchmark acceptance remain unfinished.
 
 ## Next task
 
-P5-01 — versioned hybrid retrieval policy contract. Preserve the P4 baseline unchanged as the comparison control; do not mark any hybrid/reranking upgrade accepted until the same benchmark demonstrates measurable quality gain and duplicate-control evidence required by the Bible.
+P5-02 — immutable hybrid retrieval policy persistence/idempotency. Exact semantic re-registration of a policy revision must be idempotent; reuse of a `revisionId` with changed benchmark control, representation/model revisions, weights, fusion method, candidate pool or creation evidence must fail closed before mutation. Do not claim benchmark quality gain yet.
