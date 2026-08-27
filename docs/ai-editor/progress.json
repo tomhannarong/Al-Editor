@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 8,
-  "currentTask": "P8-04-versioned-editorial-brain-planning-policy-contract",
+  "currentTask": "P8-05-deterministic-editorial-brain-planning-execution",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 81,
-    "standaloneRevalidatedPercent": 50
+    "standaloneRevalidated": 82,
+    "standaloneRevalidatedPercent": 50.62
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0097-phase8-editorial-quality-baseline-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0098-phase8-editorial-brain-planning-policy-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -56,13 +56,13 @@
   },
   "phase8": {
     "state": "started",
-    "standaloneRevalidated": 2,
+    "standaloneRevalidated": 3,
     "audit": {
       "state": "complete",
       "checkpoint": "0095-phase8-editorial-brain-style-profile-audit-complete.md",
       "findings": [
         "Style Profile v1 is already verified and includes duration, continuity/variety-oriented scoring, movement, transitions and duplicate-control preferences.",
-        "No standalone Editorial Brain/planner package exists at the audited main HEAD.",
+        "No standalone Editorial Brain/planner package existed at the audited main HEAD.",
         "No pre-P8-02 Phase-8 benchmark existed for pacing, continuity, variety or repeat rate; retrieval Recall and HAR evidence do not substitute for editorial-quality evidence.",
         "No exact Phase-8 checklist denominator is present in current standalone authority; do not invent one."
       ]
@@ -81,11 +81,18 @@
         "ciRun": 33052281824,
         "ciJob": 98450459738,
         "evidence": "phase8-editorial-quality-baseline:v1 freezes exact control fixture phase8-editorial-quality-fixture:v1 / plan-a:r1 / Style Profile travel-soft-v1 1.0.0 with pacing 11/18, continuity 0.5, variety 0 and repeat rate 1/3; baseline is measurement only, not threshold"
+      },
+      {
+        "item": "P8-04-versioned-editorial-brain-planning-policy-contract",
+        "implementationSha": "873aabecb018bf5342694e10583110a4ecbc4892",
+        "ciRun": 33056587221,
+        "ciJob": 98464793797,
+        "evidence": "versioned deterministic planning policy binds frozen Phase-8 baseline, exact Style Profile authority, bounded candidate work and explicit pacing/continuity/variety/repeat-control objectives without duplicating retrieval or timing authority"
       }
     ],
-    "next": "P8-04-versioned-editorial-brain-planning-policy-contract",
+    "next": "P8-05-deterministic-editorial-brain-planning-execution",
     "requiredGate": ["pacing/continuity/variety improvements","lower repeat rate"],
-    "note": "P8-03 freezes the pre-upgrade control. The next policy/planner slice must bind explicitly to this baseline and cannot be accepted as an improvement until a distinct immutable after-plan is measured on the exact same fixture/style authority."
+    "note": "P8-04 defines the planner policy but makes no quality claim. P8-05 must produce a distinct immutable after-plan on the exact P8-03 fixture/style authority; P8-02 must then measure before/after results before any upgrade is accepted."
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",
