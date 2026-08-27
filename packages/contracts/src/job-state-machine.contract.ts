@@ -10,6 +10,7 @@ export type JobCommandV1 =
  | {type:'succeed'; token:string; now:string}
  | {type:'fail-retryable'; token:string; now:string; errorCode:string; nextAttemptAt:string}
  | {type:'fail-terminal'; token:string; now:string; errorCode:string}
+ | {type:'recover-expired'; now:string}
  | {type:'requeue'; now:string}
  | {type:'cancel'; now:string};
 export interface JobTransitionResult { ok:boolean; job:DurableJobV1; error?:string; }
@@ -48,6 +49,17 @@ export function transitionDurableJobV1(job:DurableJobV1, command:JobCommandV1):J
     if(job.attempt>=job.maxAttempts) return fail('job has exhausted maxAttempts');
     if(!command.ownerId.trim()||!command.token.trim()||parse(command.leaseExpiresAt)<=now) return fail('lease identity/expiry is invalid');
     next.state='leased'; next.attempt+=1; next.lease={ownerId:command.ownerId,token:command.token,acquiredAt:command.now,heartbeatAt:command.now,expiresAt:command.leaseExpiresAt}; next.updatedAt=command.now; return {ok:true,job:next};
+  }
+  if(command.type==='recover-expired'){
+    if(job.state!=='leased'&&job.state!=='running') return fail('only leased/running jobs may recover an expired lease');
+    if(!job.lease) return fail('recover-expired requires persisted lease evidence');
+    if(now<parse(job.lease.expiresAt)) return fail('active lease cannot be recovered');
+    next.lease=null;
+    next.nextAttemptAt=null;
+    next.updatedAt=command.now;
+    if(job.attempt>=job.maxAttempts){next.state='failed';next.lastErrorCode='LEASE_EXPIRED_MAX_ATTEMPTS';}
+    else {next.state='queued';next.lastErrorCode='LEASE_EXPIRED';}
+    return {ok:true,job:next};
   }
   if(command.type==='requeue'){
     if(job.state!=='retry-wait') return fail('only retry-wait jobs may be requeued');
