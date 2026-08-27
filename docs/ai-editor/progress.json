@@ -6,9 +6,9 @@
   "migrationSource": {"repository":"tomhannarong/creator-intelligence-os","branch":"agent/ai-local-footage-editor-bible-phase0","historicalVerified":20,"historicalChecklistItems":162,"historicalVerifiedPercent":12.35},
   "status": "in-progress",
   "currentPhase": 11,
-  "currentTask": "P11-03-measure-lightweight-temporal-baseline-runtime-cost",
-  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":95,"standaloneRevalidatedPercent":58.64},
-  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0110-phase11-lightweight-temporal-baseline-verified.md"},
+  "currentTask": "P11-04-advanced-temporal-candidate-same-fixture-win-and-cost",
+  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":96,"standaloneRevalidatedPercent":59.26},
+  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0111-phase11-lightweight-runtime-cost-verified.md"},
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase2": {"total":11,"standaloneRevalidated":11,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
@@ -34,14 +34,15 @@
   },
   "phase11": {
     "state": "started",
-    "standaloneRevalidated": 2,
-    "next": "P11-03-measure-lightweight-temporal-baseline-runtime-cost",
+    "standaloneRevalidated": 3,
+    "next": "P11-04-advanced-temporal-candidate-same-fixture-win-and-cost",
     "requiredGate": ["benchmark win", "measured cost vs lightweight baseline"],
     "verifiedEvidence": {
       "versionedTemporalBenchmarkComparisonContract": ["P11-01 implementation 58428ef0bf2cc8e3a228decc9873806e8554b4ba","AI Editor CI run 33101970738 job 98621741385 success","exact ai-editor-ci/all success"],
-      "frozenLightweightTemporalBaseline": ["P11-02 repaired implementation HEAD 7a312917ba8f20bd4d7fdabad03aebb8955c9851","AI Editor CI run 33102483362 job 98623560207 success","exact ai-editor-ci/all success","quality temporal-recall-at-10=5/6, ordered-sequence-completion-rate=2/3, duplicate-occupancy=1/10","runtime cost intentionally pending"]
+      "frozenLightweightTemporalBaseline": ["P11-02 repaired implementation HEAD 7a312917ba8f20bd4d7fdabad03aebb8955c9851","AI Editor CI run 33102483362 job 98623560207 success","exact ai-editor-ci/all success","quality temporal-recall-at-10=5/6, ordered-sequence-completion-rate=2/3, duplicate-occupancy=1/10"],
+      "measuredLightweightTemporalRuntimeCost": ["P11-03 repair c34ba453f8778d888eb132a712026f8f2df97092","initial implementation 31945c090bf7bdbb5fd8143dd1e360dbededc635 failed strict TypeScript TS2542; no unchanged rerun","AI Editor CI run 33104422868 job 98630326740 success","exact ai-editor-ci/all success","Node v22.23.2 linux x64 median wallClockMsPerEvaluation=0.017220343","computeUnitDefinition=ranked-scene-evaluation:v1","computeUnitsPerEvaluation=10","5 samples x 1000 evaluations; totalMeasuredWallClockMs=78.21754; totalMeasuredComputeUnits=50000"]
     },
-    "note": "P11-02 freezes exact native-PTS temporal labels and lightweight ranking quality without inventing runtime cost. Next measure the exact control cost before implementing an advanced temporal candidate."
+    "note": "P11-03 measures the exact frozen lightweight workload with a bounded monotonic-clock protocol. Runtime milliseconds are telemetry/evaluation evidence only, never editorial timing authority. Candidate work should compare baseline and candidate in the same runtime/process where practical and must show a real same-fixture quality win while reporting measured cost."
   },
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }
