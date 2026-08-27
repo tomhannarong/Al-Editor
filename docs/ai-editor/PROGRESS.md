@@ -2,7 +2,7 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 10 — OTIO / DaVinci Interchange  
-**Current task:** P10-03 — deterministic OTIO / DaVinci export fixture and relink validation
+**Current task:** P10-03 — exact repository validation pending for deterministic OTIO / DaVinci relink fixture
 
 ```text
 Standalone verified: 91 / 162 = 56.17%
@@ -16,35 +16,28 @@ Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 8:              6 verified slices; GATE VERIFIED
 Phase 9:              5 verified slices; GATE VERIFIED
-Phase 10:             1 verified implementation slice; denominator intentionally unspecified
+Phase 10:             P10-02 verified; P10-03 implemented, exact validation pending
 ```
 
-## P10-02 verified — versioned OTIO / DaVinci interchange manifest contract
+## P10-03 implemented — deterministic OTIO / DaVinci relink fixture
 
-Starting Phase-10 audit evidence remained valid: the repository had no OTIO/DaVinci interchange implementation, exact target-NLE fixture or relink-path proof. P10-02 therefore added the smallest contract boundary without introducing a second timeline authority.
+Implementation SHA `429b68457b8ae500082dd802c560c2d2ff16d9c2` adds `packages/otio-davinci-interchange/src/index.ts` and deterministic tests.
 
-The new `otio-davinci-interchange.contract.ts` pins:
+The boundary consumes canonical timeline v2 plus the verified P10-02 manifest and emits deterministic OTIO-shaped DaVinci adapter evidence. It derives OTIO `RationalTime` from native PTS + rational source time base but does not promote OTIO time values into canonical authority.
 
-- exact target `davinci-resolve` + interchange format `otio`;
-- immutable target profile ID/version and interchange revision;
-- exact canonical timeline ID/revision + canonical manifest SHA-256;
-- content-addressed asset identity and explicit stream identity/index;
-- native `sourceStartPts` / `sourceEndPts` + rational source time base as verification evidence only;
-- confined `project-relative-posix` relink paths.
+Round-trip validation binds the exported fixture back to exact canonical timeline/revision identity and manifest revision, then checks one clip per canonical media item, confined project-relative relink path, content-addressed asset identity, stream index, native source PTS and normalized source time base. Tampered relink/native-PTS evidence fails closed.
 
-`validateOtioDavinciManifestAgainstCanonicalTimelineV2(...)` requires one mapping for every canonical media item and rejects extra mappings or any asset/stream/native-PTS/time-base divergence. Project-frame fields, decimal seconds and NLE-generated state remain outside the interchange manifest, so canonical timeline v2 remains authoritative.
+## Validation state
 
-## Correctness evidence
+Immediately after pushing implementation SHA `429b68457b8ae500082dd802c560c2d2ff16d9c2`, exact GitHub workflow/status inspection returned no workflow run and no published commit status. Therefore P10-03 is **not marked verified** and the overall count remains unchanged. This is not treated as runner failure or code pass.
 
-Implementation SHA `c9302e0d379d38cd5a6d85e6a388aa894f8f638c` triggered AI Editor CI run `33096000143`, job `98600952482`. Install passed, but strict TypeScript failed because `Array.filter(...)` had not narrowed `CanonicalTimelineItemV2` to media items; Vitest/migration/contract gates were skipped. This failed SHA was not rerun unchanged.
+P10-02 remains exactly verified: repair SHA `863a14819e6371e82f64b1c73efc24ca40bfbbd9`, AI Editor CI run `33096151060`, job `98601477037`, `ai-editor-ci/all = success`.
 
-Repair SHA `863a14819e6371e82f64b1c73efc24ca40bfbbd9` added an explicit canonical-media-item type guard and changed no contract semantics. Final AI Editor CI run `33096151060`, job `98601477037` passed dependency install, TypeScript strict, Vitest, deterministic migrations, contract/policy gates and status publication. Exact commit status is `ai-editor-ci/all = success`.
-
-Local clone/test was attempted first, but the execution environment could not resolve `github.com`; that is not counted as a local pass or code failure.
+No PostgreSQL/Qdrant/FFmpeg heavyweight gate or unchanged rerun was used for this deterministic slice.
 
 ## Phase 10 gate status
 
-P10-02 is verified as a standalone contract slice. The explicit Bible gate remains open: an exact target-NLE fixture and verified relink path still need proof. No Phase-10 denominator is invented.
+The Bible requires `tested exact target NLE fixture and relink path`. P10-03 supplies the deterministic export/relink boundary but still needs exact repository validation, and deterministic OTIO-shaped evidence alone is not being claimed as actual DaVinci target proof. Phase 10 therefore remains open.
 
 ## Preserved contracts
 
@@ -52,4 +45,4 @@ Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-n
 
 ## Next task
 
-P10-03 — build the deterministic OTIO/DaVinci export fixture boundary against the P10-02 manifest contract, with exact relink-path validation and canonical source-lineage round-trip evidence. Keep actual target-NLE/DaVinci validation selective/manual if it requires heavyweight external tooling; do not claim the Phase-10 gate until exact target-NLE evidence exists.
+Inspect exact CI/status for `429b68457b8ae500082dd802c560c2d2ff16d9c2`. If it passes, mark deterministic relink/source-lineage fixture validation verified. Then add only the smallest selective/manual exact DaVinci target fixture validation required by the explicit Phase-10 gate.
