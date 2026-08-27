@@ -51,7 +51,8 @@ describe('Phase-11 lightweight temporal runtime cost', () => {
 
     measurement.benchmarkRevisionId = 'temporal-benchmark:phase11:r2';
     measurement.quality[0]!.value = 1;
-    measurement.sampleWallClockMsPerEvaluation[0] = -1;
+    const mutableSamples = measurement.sampleWallClockMsPerEvaluation as number[];
+    mutableSamples[0] = -1;
     measurement.computeUnitsPerEvaluation = 9;
     measurement.totalMeasuredComputeUnits = 1;
 
