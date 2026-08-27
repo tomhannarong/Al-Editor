@@ -78,6 +78,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | First valid Human Acceptance Rate measurement | `packages/human-review-library/src/har-measurement.ts` + `docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md` | verified on `15c0eed5480cbad576c422611107592371608786`; AI Editor CI `33038039987` job `98405091769`; HAR `0.50` over 4 reviewed decisions, review coverage `0.6666666666666666`, publish-without-edit `0.80`; unreviewed eligible decisions are not HAR rejects |
 | Versioned editorial-quality evaluation boundary | `packages/editorial-quality-library/src/editorial-quality-evaluation.ts` | verified on `21f0996c`; AI Editor CI `33048153705` job `98436945559`; deterministic same-fixture/style evaluation for pacing, continuity, variety and repeat rate; frame/rational timing authority preserved |
 | Versioned Editorial Brain planning policy | `packages/contracts/src/editorial-brain-planning-policy.contract.ts` | verified on `873aabec`; AI Editor CI `33056587221` job `98464793797`; frozen Phase-8 baseline + exact Style Profile authority + deterministic bounded objectives/tie-break, with retrieval and timing authority kept separate |
+| Deterministic Editorial Brain planning execution | `packages/editorial-brain-library/src/execution.ts` | verified on `1dd19c37`; AI Editor CI `33061567916` job `98481330705`; bounded deterministic style-guided selection preserves project-frame/rational-FPS authority and keeps retrieval scoring upstream |
+| Same-fixture Editorial Brain quality evaluation | `packages/editorial-brain-library/src/execution.test.ts` + `docs/ai-editor/benchmarks/phase8-editorial-brain-quality-evaluation-v1.md` | verified on `ec8144a5`; AI Editor CI `33061744128` job `98481929429`; pacing `11/18 -> 1`, continuity `0.5 -> 1`, variety `0 -> 1`, repeat rate `1/3 -> 0` on exact frozen Phase-8 fixture |
 
 ## Phase 1 closure
 
@@ -109,10 +111,10 @@ Phase 5 contains seven verified slices including evidence reconciliation. The ex
 
 Phase 6 contains four verified slices including evidence reconciliation. Exact frame/source mapping goldens plus preview/final delivery validation are verified, including real FFmpeg/FFprobe/loudness/caption runtime proof recorded in checkpoint 0089.
 
-## Phase 7 status
+## Phase 7 closure
 
-P7-01 through P7-05 are verified. Human-review decisions have a versioned contract, immutable/idempotent persistence semantics and real PostgreSQL durability. Canonical replace/trim/lock actions create explicit immutable child revisions while preserving timeline v2 timing/source authority. The first valid HAR measurement is also verified: its denominator is reviewed decisions only, with review coverage and publish-without-edit reported separately. Both explicit Bible Phase-7 proof requirements are now satisfied; evidence reconciliation remains before advancing to Phase 8.
+Phase 7 contains six verified slices including evidence reconciliation. Human-review replace/trim/lock/revision semantics are durable and exact, and the first valid HAR measurement uses reviewed decisions only with coverage and publish-without-edit reported separately.
 
-## Phase 8 status
+## Phase 8 closure
 
-P8-01 audited the existing Style Profile and identified the missing evaluation dependency. P8-02 verified the versioned editorial-quality evaluator. P8-03 froze `phase8-editorial-quality-baseline:v1` as the immutable pre-upgrade control. P8-04 is now verified: the versioned Editorial Brain planning policy binds that frozen benchmark and Style Profile v1 explicitly, bounds candidate work and pins deterministic pacing/continuity/variety/repeat-control objectives without duplicating retrieval relevance or timing authority. No Phase-8 improvement is claimed yet; P8-05 must execute a distinct immutable after-plan and the verified evaluator must compare it against the exact P8-03 control.
+P8-01 audited the existing Style Profile and identified the missing evaluation dependency. P8-02 verified the versioned editorial-quality evaluator, P8-03 froze `phase8-editorial-quality-baseline:v1`, and P8-04 pinned the deterministic Editorial Brain policy. P8-05 executes that policy over bounded candidate evidence, and P8-06 measures the actual planner output on the exact frozen fixture. The measured result improves pacing, continuity and variety while lowering repeat rate, satisfying the explicit Phase-8 gate. Checkpoint 0099 reconciles the evidence and advances the project to Phase 9 without an additional Actions run.
