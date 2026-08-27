@@ -74,6 +74,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned human-review decision contract | `packages/contracts/src/human-review-decision.contract.ts` | verified on `eb251d88`; AI Editor CI `33028653803` job `98375803554`; reviewed AI decisions bind to immutable revision/item IDs and replace/trim/lock require distinct resulting revisions |
 | Immutable human-review decision persistence | `packages/human-review-library/src/index.ts` | verified on repaired `77e8286f`; initial CI `33032229718` job `98387102598` failed strict optional test typing; repair CI `33032302244` job `98387336237` passed all gates |
 | PostgreSQL human-review decision persistence | migration 0008 + `packages/human-review-library/src/postgres.ts` + runtime verifier | verified on `8c9f2e0e`; CI `33032518077` job `98388036444`; real PostgreSQL/local-stack `33032518131` job `98388036546`; exact `ai-editor-ci/all` and `ai-editor-local-stack/all` success |
+| Canonical human-review replace/trim/lock revisions | `packages/timeline-revision/src/index.ts` | verified on `dbcf7975`; AI Editor CI `33035221247` job `98396369016`; replace preserves project placement + exact source duration while changing lineage, trim preserves exact native-PTS/project-frame rate, revision-bound lock sidecar blocks later media edits |
 
 ## Phase 1 closure
 
@@ -107,4 +108,4 @@ Phase 6 contains four verified slices including evidence reconciliation. Exact f
 
 ## Phase 7 status
 
-P7-01 through P7-03 are verified. Human-review decisions now have a versioned contract, immutable/idempotent persistence semantics and real PostgreSQL durability. The remaining Phase-7 gate requires explicit canonical replace/trim/lock revision semantics plus the first valid HAR measurement. UI controls alone remain insufficient evidence.
+P7-01 through P7-04 are verified. Human-review decisions have a versioned contract, immutable/idempotent persistence semantics and real PostgreSQL durability. Canonical replace/trim/lock actions now create explicit immutable child revisions while preserving timeline v2 timing/source authority; lock state is revision-bound sidecar evidence. The remaining explicit Phase-7 gate is the first valid HAR measurement over reviewed decisions, with review coverage and publish-without-edit rate reported separately.

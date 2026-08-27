@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 7,
-  "currentTask": "P7-04-replace-trim-lock-canonical-revision-semantics-audit",
+  "currentTask": "P7-05-first-valid-human-acceptance-rate-measurement",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 76,
-    "standaloneRevalidatedPercent": 46.91
+    "standaloneRevalidated": 77,
+    "standaloneRevalidatedPercent": 47.53
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0091-phase7-human-review-durable-persistence-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0092-phase7-canonical-review-revision-semantics-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -45,18 +45,20 @@
   },
   "phase7": {
     "state": "in-progress",
-    "standaloneRevalidated": 3,
-    "next": "P7-04-replace-trim-lock-canonical-revision-semantics-audit",
+    "standaloneRevalidated": 4,
+    "next": "P7-05-first-valid-human-acceptance-rate-measurement",
     "requiredGate": ["replace/trim/lock/revision semantics","first valid HAR measurement"],
     "evidence": {
       "P7-01": ["versioned human-review decision contract on eb251d888766c590c12fd3a4fdfb5a39ec62e96b","AI Editor CI run 33028653803 job 98375803554 success"],
       "P7-02": ["immutable human-review decision store on 6fdf23406df4ea60064819ec577511e4cc751aa2","initial CI run 33032229718 job 98387102598 failed strict TypeScript test-fixture typing","repair 77e8286f3ac6427c8ec38a548ba3d40aff73cd49","repair CI run 33032302244 job 98387336237 success"],
-      "P7-03": ["PostgreSQL durable human-review persistence on 8c9f2e0e99e23dbac2772c72817766aae9d7832e","AI Editor CI run 33032518077 job 98388036444 success","AI Editor Local Stack Gate run 33032518131 job 98388036546 success","exact ai-editor-ci/all and ai-editor-local-stack/all success"]
+      "P7-03": ["PostgreSQL durable human-review persistence on 8c9f2e0e99e23dbac2772c72817766aae9d7832e","AI Editor CI run 33032518077 job 98388036444 success","AI Editor Local Stack Gate run 33032518131 job 98388036546 success","exact ai-editor-ci/all and ai-editor-local-stack/all success"],
+      "P7-04": ["canonical replace/trim/lock child-revision semantics on dbcf7975c539bf0ea8d479d5f804596bfad42419","AI Editor CI run 33035221247 job 98396369016 success","exact ai-editor-ci/all success"]
     },
     "audit": {
       "reviewUi": "apps/studio still exposes disabled replace/trim/lock/create-revision controls only; UI presence is not durable semantics evidence",
-      "existingRevisionSemantics": "timeline-revision proves immutable child revision/source-window edit; next audit must prove or add explicit replace/trim/lock canonical revision semantics before HAR",
-      "durableReviewEvidence": "human review decisions are now versioned, immutable/idempotent and durable in real PostgreSQL without duplicating canonical timing/source authority"
+      "canonicalRevisionSemantics": "verified: replace preserves project placement and exact media duration while changing source lineage; trim moves project/native-PTS boundaries proportionally; revision-bound lock sidecar blocks later media edits to locked items",
+      "durableReviewEvidence": "human review decisions are versioned, immutable/idempotent and durable in real PostgreSQL without duplicating canonical timing/source authority",
+      "remainingGate": "first valid HAR measurement over reviewed decisions, with review coverage and publish-without-edit reported separately"
     }
   },
   "rules": {
