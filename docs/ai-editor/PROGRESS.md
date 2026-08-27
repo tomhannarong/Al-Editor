@@ -2,7 +2,7 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 10 — OTIO / DaVinci Interchange  
-**Current task:** P10-01 — OTIO / DaVinci interchange evidence audit
+**Current task:** P10-02 — versioned OTIO / DaVinci interchange manifest contract
 
 ```text
 Standalone verified: 90 / 162 = 55.56%
@@ -16,30 +16,32 @@ Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 8:              6 verified slices; GATE VERIFIED
 Phase 9:              5 verified slices; GATE VERIFIED
-Phase 10:             started; denominator intentionally unspecified pending checklist authority
+Phase 10:             started; P10-01 audit complete; denominator intentionally unspecified
 ```
 
-## P9-05 verified — deterministic regression-gate execution
+## P10-01 complete — OTIO / DaVinci interchange evidence audit
 
-Implementation `46ef6cdaf0f3f4eaace1af730c252208d266588a` adds `packages/regression-gate-library/src/execution.ts` and deterministic tests.
+Audit starting HEAD: `9e32ec1f74686619f5a1bdf2ac5c26457ff2053e`.
 
-The evaluator consumes a validated P9-04 gate plus exact benchmark/control and candidate-result metric evidence. It requires exact benchmark revision, control revision, optional fixture revision, experiment/result revision and result SHA-256 compatibility before evaluating any metric.
+The Phase-10 Bible gate requires a **tested exact target NLE fixture** and a **verified relink path**. The repository audit found no standalone OTIO/OpenTimelineIO implementation, no DaVinci Resolve/NLE interchange adapter, no exact target-NLE fixture and no relink-path fixture at the audited HEAD.
 
-Metric evidence fails closed when an expected metric is missing, duplicated, unexpected or non-finite. Every rule is evaluated in the immutable gate order with the existing explicit absolute-tolerance semantics and emits structured per-metric decisions plus a deterministic overall pass/fail result.
+The root package dependency surface also contains no OTIO/NLE interchange runtime dependency. This means Phase 10 has a genuine implementation gap; there is no existing interchange capability that can honestly be marked verified or reused as hidden authority.
 
-Exact final-confidence evidence: AI Editor CI run `33085663965`, job `98564484467`; dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status publication all succeeded. Exact commit status `ai-editor-ci/all = success` is published for `46ef6cda...`.
+The implementation must nevertheless reuse existing verified authority rather than create a parallel timeline model:
 
-No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or rerun was used because this slice adds no runtime dependency.
+- canonical timeline v2 remains the editorial timeline authority;
+- project timing remains integer project frames + rational FPS;
+- source timing remains native PTS + rational stream time base;
+- stable asset/stream identity and immutable source lineage remain authoritative;
+- renderer-neutral adapter and immutable revision/render evidence remain unchanged.
 
-## Phase 9 gate closed
+P10-01 is an evidence audit only, so it does not increase the standalone verified count and does not require a GitHub Actions run.
 
-The explicit Phase-9 Bible gate is now satisfied without adding parallel registries:
+## Phase 10 gap
 
-- versioned benchmark evidence already exists and remains immutable/versioned;
-- P9-02/P9-03 provide versioned immutable experiment identity and idempotent fail-closed registration;
-- P9-04/P9-05 provide a versioned regression-gate definition plus deterministic execution against exact immutable metric evidence.
+The smallest dependency-correct next slice is a versioned interchange manifest/contract that adapts canonical timeline v2 to an explicit DaVinci Resolve target profile while preserving exact source lineage and relink identity. The tested target-NLE fixture and real relink-path proof remain later selective gate evidence; they must not be claimed from contract presence alone.
 
-The gate reconciliation is documentation/evidence-only and does not require another Actions run.
+No Phase-10 checklist denominator exists in current standalone authority, so none is invented.
 
 ## Preserved contracts
 
@@ -47,4 +49,4 @@ Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-n
 
 ## Next task
 
-P10-01 — audit existing OTIO / DaVinci interchange evidence against the Phase-10 Bible gate: a tested exact target NLE fixture and a verified relink path. Reuse canonical timeline v2 and renderer-neutral/source-lineage contracts; do not create a parallel timeline authority or invent a Phase-10 denominator without checklist evidence.
+P10-02 — define the smallest versioned OTIO / DaVinci interchange manifest contract. Bind an explicit target NLE/profile, exact canonical timeline revision, stable asset/stream identity, native source PTS/time base and relink identity/path evidence without introducing a second timing or timeline authority. Do not count Phase 10 verified until exact test/CI evidence appropriate to the slice exists.
