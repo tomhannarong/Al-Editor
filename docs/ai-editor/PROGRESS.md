@@ -2,7 +2,7 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 9 — Evaluation + Preference Learning  
-**Current task:** P9-01 — evaluation / experiment-registry / regression-gate evidence audit
+**Current task:** P9-02 — versioned experiment-registry contract
 
 ```text
 Standalone verified: 85 / 162 = 52.47%
@@ -15,90 +15,44 @@ Phase 5:              7 / 7   = 100.00% COMPLETE + GATE VERIFIED
 Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 8:              6 verified slices; GATE VERIFIED
-Phase 9:              started; denominator intentionally unspecified pending checklist authority
+Phase 9:              started; P9-01 audit complete; denominator intentionally unspecified pending checklist authority
 ```
 
-## Phase 8 closed — deterministic Editorial Brain + same-fixture quality gain
+## Phase 9 audit complete — evaluation, experiment registry, regression gate
 
-P8-05 implemented the first standalone deterministic Editorial Brain execution boundary in `packages/editorial-brain-library`.
+P9-01 audited the exact `main` HEAD `b7c5372f708b68ffa294dd4a325eb160d5c4b73a` before making any Phase-9 capability change.
 
-Execution semantics:
+The Bible requires three Phase-9 proofs before advance:
 
-- validates the exact P8-04 planning-policy and Style Profile identities before planning;
-- consumes bounded candidate evidence only;
-- keeps retrieval relevance upstream as `candidateRank` rather than reimplementing retrieval scoring;
-- applies repeat control, adjacent continuity, shot/movement variety and Style Profile duration-fit objectives deterministically;
-- uses candidate rank then scene ID only after editorial score ties;
-- outputs a distinct immutable after-plan revision;
-- persists only integer project-frame timing + rational FPS in plan evidence; Style Profile milliseconds remain transient planner preferences.
+- versioned benchmark;
+- experiment registry;
+- regression gate.
 
-Exact P8-05 validation:
+### Existing evidence to reuse
 
-- implementation SHA `1dd19c375e39e81112e0557dd907caedf5252b83`
-- AI Editor CI run `33061567916`
-- job `98481330705`
-- dependency install ✅
-- TypeScript strict gate ✅
-- Vitest behavioral gate ✅
-- deterministic migration gate ✅
-- contract/policy gates ✅
-- observable status publication ✅
-- overall conclusion `success` ✅
+Versioned benchmark evidence already exists and is exact/repository-bound across multiple frozen evaluations, including:
 
-P8-06 then evaluated the actual planner output, not a manually authored after-plan, against the exact frozen P8-03 control fixture.
+- `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`;
+- `docs/ai-editor/benchmarks/phase4-labeled-recall-at-10-baseline-v1.md`;
+- `docs/ai-editor/benchmarks/phase5-hybrid-duplicate-control-evaluation-v1.md`;
+- `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md`;
+- `docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md`;
+- Phase-8 frozen editorial-quality control and same-fixture planner evaluation.
 
-Same-fixture result:
+The existing `packages/contracts/src/ai-model-registry.contract.ts` also already provides pinned model, prompt and execution-profile identities, including decoding-policy and optional scoring-policy versions. Phase 9 must reuse these identities rather than create another model/prompt registry.
 
-```text
-Control plan revision: plan-a:r1
-Planner plan revision: plan-a:r2
-Fixture:               phase8-editorial-quality-fixture:v1
-Style Profile:          travel-soft-v1 / 1.0.0
+### Genuine gaps
 
-Pacing:                 0.6111111111111112 -> 1.0
-Continuity:             0.5 -> 1.0
-Variety:                0.0 -> 1.0
-Repeat rate:            0.3333333333333333 -> 0.0
+The audited standalone package inventory contains no experiment-registry package/contract and no regression-gate package/contract. Therefore these are genuine Phase-9 gaps rather than evidence that can be reconciled from prior phases.
 
-Pacing delta:           +0.3888888888888889
-Continuity delta:       +0.5
-Variety delta:          +1.0
-Repeat-rate delta:      -0.3333333333333333
-```
+No Phase-9 checklist denominator is present in current standalone authority, so no denominator is invented.
 
-Benchmark evidence is recorded at `docs/ai-editor/benchmarks/phase8-editorial-brain-quality-evaluation-v1.md`.
-
-Exact P8-06 validation:
-
-- benchmark/test SHA `ec8144a51d099603c95994753c53bf14003abebb`
-- AI Editor CI run `33061744128`
-- job `98481929429`
-- TypeScript strict ✅
-- Vitest ✅
-- migrations ✅
-- contract/policy gates ✅
-- observable status publication ✅
-- overall conclusion `success` ✅
-
-No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or unchanged rerun was used for either slice. Local clone validation was attempted first during P8-05 but the execution environment could not resolve `github.com`; that was not treated as a pass or code failure.
-
-## Phase-8 gate reconciliation
-
-The Bible requires evidence of:
-
-- pacing improvement ✅
-- continuity improvement ✅
-- variety improvement ✅
-- lower repeat rate ✅
-
-All four are now measured on the exact same frozen fixture/style/evaluation authority, so Phase 8 is gate-verified without an additional Actions run for reconciliation.
-
-The benchmark demonstrates deterministic improvement for this exact fixture/policy pair. It is not a claim of generalization to unseen footage; broader benchmark coverage, experiment registration and regression governance are Phase-9 responsibilities.
+P9-01 is an audit/evidence closure only and does not increase the standalone verified count.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-neutral v2 adapter boundary, immutable media/revision/render evidence, Style Profile v1, Delivery Profile v1, structured logging, provenance/rights, retrieval/editorial separation and all verified Phase-0 through Phase-7 evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-neutral v2 adapter boundary, immutable media/revision/render evidence, Style Profile v1, Delivery Profile v1, structured logging, provenance/rights, retrieval/editorial separation and all verified Phase-0 through Phase-8 evidence remain unchanged.
 
 ## Next task
 
-P9-01 — audit existing evaluation benchmarks, model/prompt registry and any experiment/regression infrastructure against the Phase-9 gate: **versioned benchmark, experiment registry, regression gate**. Reuse verified capabilities where possible and add only the smallest missing standalone boundary.
+P9-02 — implement the smallest additive **versioned experiment-registry contract**. It must bind an experiment revision to an exact versioned benchmark/control, candidate policy/model/prompt/execution-profile evidence and immutable result/evaluation references without duplicating the existing model registry or silently accepting mutable aliases. Regression gating remains a later Phase-9 slice.
