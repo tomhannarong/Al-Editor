@@ -9,6 +9,9 @@ import {
 } from './editorial-quality-evaluation.js';
 import type { EditorialStyleProfileV1 } from '../../contracts/src/editorial-style-profile.contract.js';
 
+const PHASE8_EDITORIAL_QUALITY_BASELINE_REVISION =
+  'phase8-editorial-quality-baseline:v1' as const;
+
 const styleProfile: EditorialStyleProfileV1 = {
   schemaVersion: '1.0',
   profileId: 'travel-soft-v1',
@@ -120,6 +123,30 @@ const afterPlan: EditorialPlanEvidenceV1 = {
 };
 
 describe('editorial quality evaluation v1', () => {
+  it('freezes the versioned Phase-8 control baseline before planner upgrades', () => {
+    const baseline = measureEditorialQualityV1(beforePlan, styleProfile);
+
+    expect(PHASE8_EDITORIAL_QUALITY_BASELINE_REVISION).toBe(
+      'phase8-editorial-quality-baseline:v1',
+    );
+    expect(baseline.fixtureRevisionId).toBe('phase8-editorial-quality-fixture:v1');
+    expect(baseline.planRevisionId).toBe('plan-a:r1');
+    expect(baseline.evaluationPolicyRevision).toBe(
+      EDITORIAL_QUALITY_EVALUATION_POLICY_REVISION,
+    );
+    expect(baseline.styleProfileId).toBe('travel-soft-v1');
+    expect(baseline.styleProfileVersion).toBe('1.0.0');
+    expect(baseline.shotCount).toBe(3);
+    expect(baseline.pacingScore).toBeCloseTo(11 / 18);
+    expect(baseline.pacingWithinBoundsRate).toBe(1);
+    expect(baseline.continuityScore).toBe(0.5);
+    expect(baseline.varietyScore).toBe(0);
+    expect(baseline.shotTypeChangeRate).toBe(0);
+    expect(baseline.movementChangeRate).toBe(0);
+    expect(baseline.repeatRate).toBeCloseTo(1 / 3);
+    expect(baseline.repeatedShotCount).toBe(1);
+  });
+
   it('measures pacing, continuity, variety and repeat rate deterministically', () => {
     const before = measureEditorialQualityV1(beforePlan, styleProfile);
     const after = measureEditorialQualityV1(afterPlan, styleProfile);
