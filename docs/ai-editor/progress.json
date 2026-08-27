@@ -6,9 +6,9 @@
   "migrationSource": {"repository":"tomhannarong/creator-intelligence-os","branch":"agent/ai-local-footage-editor-bible-phase0","historicalVerified":20,"historicalChecklistItems":162,"historicalVerifiedPercent":12.35},
   "status": "in-progress",
   "currentPhase": 13,
-  "currentTask": "P13-01-audit-production-hardening-recovery-restore-quota-slo-evidence",
-  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":100,"standaloneRevalidatedPercent":61.73},
-  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0115-phase12-existing-capability-bindings-gate-verified.md"},
+  "currentTask": "P13-02-expired-lease-recovery-semantics-and-drill",
+  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":101,"standaloneRevalidatedPercent":62.35},
+  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0116-phase13-production-hardening-audit-verified.md"},
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase2": {"total":11,"standaloneRevalidated":11,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
@@ -21,16 +21,14 @@
   "phase9": {"state":"verified-complete","standaloneRevalidated":5,"evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints 0100-0104"},
   "phase10": {"state":"started-blocked-on-external-runtime","standaloneRevalidated":3,"next":"P10-05-selective-exact-davinci-target-runtime-proof","requiredGate":["tested exact target NLE fixture","relink path"],"blocker":"Real DaVinci Resolve import/relink/re-export runtime evidence is unavailable in this execution environment. Do not close Phase 10 from static evidence alone."},
   "phase11": {"state":"verified-complete","standaloneRevalidated":4,"requiredGate":["benchmark win","measured cost vs lightweight baseline"]},
-  "phase12": {
-    "state": "verified-complete",
-    "standaloneRevalidated": 3,
-    "requiredGate": ["orchestrates existing APIs only", "no hidden parallel workflow"],
-    "verifiedEvidence": {
-      "contentAgentOrchestrationBoundary": ["P12-01 implementation 50046158c41a3f359fcedae00b1a2ddbedefcf9a","AI Editor CI run 33111452483 job 98655043624 success","orchestration-only authority with pinned declared capability revisions and ordered dependencies"],
-      "deterministicContentAgentExecutor": ["P12-02 implementation 4329192e4041ca31063485efd63c5df6f8e3380b","AI Editor CI run 33115656065 job 98669509629 success","strict TypeScript success","70 Vitest files / 381 tests success","adapter capability/revision/output mismatch fails closed","sequential dependency evidence only; no capability implementation imported"],
-      "representativeExistingCapabilityBindings": ["P12-03 initial implementation fe999d0ea3ab4b58d88d01168a7ad6d0742f19ea","initial AI Editor CI run 33120020062 job 98684297830 failed strict TypeScript TS7006; unchanged SHA not rerun","repair 66038bc371c17f6498b81005cf0b5b2bfe86d794","AI Editor CI run 33120088643 job 98684525801 success","71 Vitest files / 384 tests success","representative adapters call existing executeEditorialBrainPlanningV1 and validateFinalDeliveryAgainstProfileV1 surfaces","invalid delivery evidence is rejected by the existing validator and propagated through the adapter","Phase-12 gate reconciled: orchestration delegates to existing capability implementations and introduces no parallel capability algorithm"]
-    }
+  "phase12": {"state":"verified-complete","standaloneRevalidated":3,"requiredGate":["orchestrates existing APIs only","no hidden parallel workflow"]},
+  "phase13": {
+    "state":"started",
+    "standaloneRevalidated":1,
+    "next":"P13-02-expired-lease-recovery-semantics-and-drill",
+    "requiredGate":["recovery evidence","restore drill","quotas","cost/SLO evidence"],
+    "audit":{"state":"verified","evidence":"docs/ai-editor/audits/phase13-production-hardening-audit-v1.md"},
+    "knownGaps":["expired/stale lease reclamation recovery drill","versioned backup/restore ownership and RPO/RTO with clean-target restore drill","versioned quota/admission policy and evaluator","versioned SLO/cost-budget policy and evaluator"]
   },
-  "phase13": {"state":"not-started","standaloneRevalidated":0,"next":"P13-01-audit-production-hardening-recovery-restore-quota-slo-evidence","requiredGate":["recovery evidence","restore drill","quotas","cost/SLO evidence"]},
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }

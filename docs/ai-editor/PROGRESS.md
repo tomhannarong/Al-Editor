@@ -3,10 +3,10 @@
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Active implementation phase:** 13 — Production Scale / Hardening  
 **Blocked external gate:** Phase 10 exact DaVinci Resolve runtime proof  
-**Current task:** P13-01 — audit production hardening, recovery/restore, quota and SLO evidence
+**Current task:** P13-02 — expired/stale lease recovery semantics and deterministic recovery drill
 
 ```text
-Standalone verified: 100 / 162 = 61.73%
+Standalone verified: 101 / 162 = 62.35%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -20,34 +20,33 @@ Phase 9:              5 verified slices; GATE VERIFIED
 Phase 10:             3 verified slices; GATE OPEN on real Resolve runtime proof
 Phase 11:             4 verified slices; GATE VERIFIED
 Phase 12:             3 verified slices; GATE VERIFIED
-Phase 13:             0 verified slices; NOT STARTED
+Phase 13:             1 verified slice; GATE OPEN
 ```
 
 ## Phase 10 blocker remains exact and narrow
 
 P10-05 still requires a real DaVinci Resolve import + project-relative relink + OTIO re-export capture. Static evidence is not substituted for the exact target-NLE runtime gate.
 
-## Phase 12 gate verified — Content Agent delegates to existing capabilities
+## P13-01 verified — production-hardening evidence audit
 
-P12-03 binds the orchestration executor to two already-verified standalone capability surfaces through `packages/content-agent-library/src/existing-capability-adapters.ts`:
+Audit evidence is recorded in `docs/ai-editor/audits/phase13-production-hardening-audit-v1.md` against starting HEAD `5d6771c110fbf8f45d305f11ccff6637d4eaecc5`.
 
-- `editorial.plan` delegates to the existing `executeEditorialBrainPlanningV1` implementation;
-- `final.validate` delegates to the existing `validateFinalDeliveryAgainstProfileV1` implementation.
+The audit preserves and recognizes existing foundations:
 
-The adapters resolve versioned input references, call those existing implementations, and return only stable output/evidence references. They contain no copied editorial-planning or final-delivery-validation algorithm. Invalid measured delivery evidence is rejected by the existing validator and the adapter propagates that failure rather than recreating validation rules.
+- durable job state machine v1 already has idempotency keys, leases, heartbeat, bounded attempts, retry-wait and terminal states;
+- PostgreSQL/Qdrant standalone runtime evidence and persistent local-stack volumes already exist for earlier capability gates;
+- stage cost/performance telemetry v1 already records wall/cpu/gpu usage, bytes/media/tokens, optional priced cost, pinned version references and stable failures.
 
-Initial implementation SHA `fe999d0ea3ab4b58d88d01168a7ad6d0742f19ea` triggered AI Editor CI run `33120020062`, job `98684297830`. Dependency install succeeded, then strict TypeScript failed with `TS7006` because the two adapter `execute(request)` parameters lacked explicit request types. Unit/migration/policy gates were therefore skipped. The unchanged failed SHA was not rerun.
+The Phase-13 gate remains open because these foundations do **not** yet prove production hardening. Exact missing evidence is:
 
-Repair SHA `66038bc371c17f6498b81005cf0b5b2bfe86d794` adds the explicit `ContentAgentAdapterRequestV1` type annotations and changes no capability algorithm. AI Editor CI run `33120088643`, job `98684525801`, passed:
+1. stale/expired lease reclamation plus a deterministic recovery drill;
+2. versioned backup/restore ownership, RPO/RTO and a clean-target restore drill;
+3. versioned quota/admission limits plus a fail-closed evaluator;
+4. versioned SLO/cost-budget policy plus deterministic evaluation evidence.
 
-- dependency install;
-- strict TypeScript;
-- Vitest: `71` files / `384` tests, including `3` existing-capability adapter tests;
-- deterministic migration verification/self-test;
-- Style/Delivery/registry/telemetry/logging/job/API-health contract-policy gates;
-- exact observable `ai-editor-ci/all = success`.
+Persistent volumes are not counted as backups. Retry `maxAttempts` is not counted as a resource quota. Raw telemetry is not counted as an SLO.
 
-This satisfies the explicit Phase-12 gate: Content Agent orchestration calls existing capability implementations and does not introduce a hidden parallel ingest/retrieval/planning/timeline/render workflow.
+No source code or canonical contract changed for P13-01. The current main HEAD before this audit was documentation-only and had no Actions run, while the immediately preceding substantive Phase-12 repair SHA `66038bc371c17f6498b81005cf0b5b2bfe86d794` retains successful AI Editor CI run `33120088643`. No redundant GitHub Actions run is required for this static audit.
 
 ## Preserved contracts
 
@@ -55,4 +54,4 @@ Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS autho
 
 ## Next task
 
-P13-01 — audit existing recovery, backup/restore, job recovery, quota, telemetry and SLO surfaces against the Phase-13 gate. Record exact gaps first; do not invent production-readiness claims or trigger heavyweight runtime jobs until the missing proof is explicit.
+P13-02 — add explicit fenced expired-lease recovery semantics to the existing durable job state machine and deterministic tests proving abandoned work can be reclaimed while active leases, terminal jobs, exhausted attempts and stale lease tokens fail closed. Keep job v1 shape compatible and make the change additive.
