@@ -11,20 +11,20 @@
     "historicalVerifiedPercent": 12.35
   },
   "status": "in-progress",
-  "currentPhase": 7,
-  "currentTask": "P7-06-phase7-gate-reconciliation",
+  "currentPhase": 8,
+  "currentTask": "P8-01-editorial-brain-style-profile-evidence-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 78,
-    "standaloneRevalidatedPercent": 48.15
+    "standaloneRevalidated": 79,
+    "standaloneRevalidatedPercent": 48.77
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0093-phase7-first-valid-har-measurement-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0094-phase7-gate-reconciled-and-closed.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -44,24 +44,22 @@
     }
   },
   "phase7": {
-    "state": "in-progress-gate-ready",
-    "standaloneRevalidated": 5,
-    "next": "P7-06-phase7-gate-reconciliation",
-    "requiredGate": ["replace/trim/lock/revision semantics","first valid HAR measurement"],
-    "evidence": {
-      "P7-01": ["versioned human-review decision contract on eb251d888766c590c12fd3a4fdfb5a39ec62e96b","AI Editor CI run 33028653803 job 98375803554 success"],
-      "P7-02": ["immutable human-review decision store on 6fdf23406df4ea60064819ec577511e4cc751aa2","initial CI run 33032229718 job 98387102598 failed strict TypeScript test-fixture typing","repair 77e8286f3ac6427c8ec38a548ba3d40aff73cd49","repair CI run 33032302244 job 98387336237 success"],
-      "P7-03": ["PostgreSQL durable human-review persistence on 8c9f2e0e99e23dbac2772c72817766aae9d7832e","AI Editor CI run 33032518077 job 98388036444 success","AI Editor Local Stack Gate run 33032518131 job 98388036546 success","exact ai-editor-ci/all and ai-editor-local-stack/all success"],
-      "P7-04": ["canonical replace/trim/lock child-revision semantics on dbcf7975c539bf0ea8d479d5f804596bfad42419","AI Editor CI run 33035221247 job 98396369016 success","exact ai-editor-ci/all success"],
-      "P7-05": ["deterministic versioned HAR evaluator on 15c0eed5480cbad576c422611107592371608786","docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md","HAR 0.5 over 4 reviewed decisions; review coverage 0.6666666666666666 over 6 eligible decisions; publish-without-edit rate 0.8 over 5 published decisions","AI Editor CI run 33038039987 job 98405091769 success","exact ai-editor-ci/all success"]
-    },
-    "audit": {
-      "reviewUi": "apps/studio still exposes disabled replace/trim/lock/create-revision controls only; UI presence is not durable semantics evidence",
-      "canonicalRevisionSemantics": "verified: replace preserves project placement and exact media duration while changing source lineage; trim moves project/native-PTS boundaries proportionally; revision-bound lock sidecar blocks later media edits to locked items",
-      "durableReviewEvidence": "human review decisions are versioned, immutable/idempotent and durable in real PostgreSQL without duplicating canonical timing/source authority",
-      "harMeasurement": "verified deterministic v1 measurement: denominator is reviewed AI decisions only; review coverage and publish-without-edit are separate metrics; unreviewed eligible decisions are not HAR rejects",
-      "remainingGate": "explicit Phase-7 proof requirements are satisfied; evidence reconciliation remains before advancing to Phase 8"
+    "total": 6,
+    "standaloneRevalidated": 6,
+    "standaloneRevalidatedPercent": 100,
+    "state": "verified-complete",
+    "gateEvidence": {
+      "replaceTrimLockRevisionSemantics": ["P7-01 through P7-04 exact standalone evidence","canonical replace/trim/lock child-revision semantics on dbcf7975c539bf0ea8d479d5f804596bfad42419","AI Editor CI run 33035221247 job 98396369016 success"],
+      "firstValidHarMeasurement": ["P7-05 deterministic HAR evaluator on 15c0eed5480cbad576c422611107592371608786","docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md","HAR 0.5 over 4 reviewed decisions; review coverage 0.6666666666666666; publish-without-edit 0.8","AI Editor CI run 33038039987 job 98405091769 success"],
+      "reconciliation": ["checkpoint 0094 Phase-7 gate reconciliation"]
     }
+  },
+  "phase8": {
+    "state": "started",
+    "standaloneRevalidated": 0,
+    "next": "P8-01-editorial-brain-style-profile-evidence-audit",
+    "requiredGate": ["pacing/continuity/variety improvements","lower repeat rate"],
+    "note": "Do not invent a Phase-8 denominator until exact checklist authority is established. Audit existing style-profile and editorial-planning evidence before adding capability."
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",
