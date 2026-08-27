@@ -76,6 +76,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | PostgreSQL human-review decision persistence | migration 0008 + `packages/human-review-library/src/postgres.ts` + runtime verifier | verified on `8c9f2e0e`; CI `33032518077` job `98388036444`; real PostgreSQL/local-stack `33032518131` job `98388036546`; exact `ai-editor-ci/all` and `ai-editor-local-stack/all` success |
 | Canonical human-review replace/trim/lock revisions | `packages/timeline-revision/src/index.ts` | verified on `dbcf7975`; AI Editor CI `33035221247` job `98396369016`; replace preserves project placement + exact source duration while changing lineage, trim preserves exact native-PTS/project-frame rate, revision-bound lock sidecar blocks later media edits |
 | First valid Human Acceptance Rate measurement | `packages/human-review-library/src/har-measurement.ts` + `docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md` | verified on `15c0eed5480cbad576c422611107592371608786`; AI Editor CI `33038039987` job `98405091769`; HAR `0.50` over 4 reviewed decisions, review coverage `0.6666666666666666`, publish-without-edit `0.80`; unreviewed eligible decisions are not HAR rejects |
+| Versioned editorial-quality evaluation boundary | `packages/editorial-quality-library/src/editorial-quality-evaluation.ts` | verified on `21f0996c`; AI Editor CI `33048153705` job `98436945559`; deterministic same-fixture/style evaluation for pacing, continuity, variety and repeat rate; frame/rational timing authority preserved |
 
 ## Phase 1 closure
 
@@ -110,3 +111,7 @@ Phase 6 contains four verified slices including evidence reconciliation. Exact f
 ## Phase 7 status
 
 P7-01 through P7-05 are verified. Human-review decisions have a versioned contract, immutable/idempotent persistence semantics and real PostgreSQL durability. Canonical replace/trim/lock actions create explicit immutable child revisions while preserving timeline v2 timing/source authority. The first valid HAR measurement is also verified: its denominator is reviewed decisions only, with review coverage and publish-without-edit reported separately. Both explicit Bible Phase-7 proof requirements are now satisfied; evidence reconciliation remains before advancing to Phase 8.
+
+## Phase 8 status
+
+P8-01 audited the existing Style Profile and identified the missing evaluation dependency. P8-02 is now verified: `editorial-quality-evaluation-policy:v1` measures pacing, continuity, variety and repeat rate from immutable plan evidence while binding the exact Style Profile revision and preserving integer-frame/rational-FPS timing authority. No Phase-8 improvement is claimed yet; a versioned baseline benchmark is the next dependency before any Editorial Brain/planning policy upgrade.

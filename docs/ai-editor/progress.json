@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 8,
-  "currentTask": "P8-02-versioned-editorial-quality-evaluation-boundary",
+  "currentTask": "P8-03-versioned-editorial-quality-baseline-benchmark",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 79,
-    "standaloneRevalidatedPercent": 48.77
+    "standaloneRevalidated": 80,
+    "standaloneRevalidatedPercent": 49.38
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0095-phase8-editorial-brain-style-profile-audit-complete.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0096-phase8-editorial-quality-evaluation-boundary-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -56,20 +56,29 @@
   },
   "phase8": {
     "state": "started",
-    "standaloneRevalidated": 0,
+    "standaloneRevalidated": 1,
     "audit": {
       "state": "complete",
       "checkpoint": "0095-phase8-editorial-brain-style-profile-audit-complete.md",
       "findings": [
         "Style Profile v1 is already verified and includes duration, continuity/variety-oriented scoring, movement, transitions and duplicate-control preferences.",
         "No standalone Editorial Brain/planner package exists at the audited main HEAD.",
-        "No Phase-8 benchmark exists for pacing, continuity, variety or repeat rate; retrieval Recall and HAR evidence do not substitute for editorial-quality evidence.",
+        "No pre-P8-02 Phase-8 benchmark existed for pacing, continuity, variety or repeat rate; retrieval Recall and HAR evidence do not substitute for editorial-quality evidence.",
         "No exact Phase-8 checklist denominator is present in current standalone authority; do not invent one."
       ]
     },
-    "next": "P8-02-versioned-editorial-quality-evaluation-boundary",
+    "verified": [
+      {
+        "item": "P8-02-versioned-editorial-quality-evaluation-boundary",
+        "implementationSha": "21f0996c91327ccc962f59f079d8f05c3cbe8212",
+        "ciRun": 33048153705,
+        "ciJob": 98436945559,
+        "evidence": "deterministic/versioned same-fixture evaluator for pacing, continuity, variety and repeat rate; Style Profile v1 bound explicitly; project timing remains integer frames + rational FPS"
+      }
+    ],
+    "next": "P8-03-versioned-editorial-quality-baseline-benchmark",
     "requiredGate": ["pacing/continuity/variety improvements","lower repeat rate"],
-    "note": "Build the deterministic/versioned evaluation boundary before any Editorial Brain scoring/model upgrade. Preserve style-profile v1 and canonical timeline timing authority; do not claim improvement until the same labeled fixture measures before/after plans."
+    "note": "P8-02 provides the measurement boundary only and does not claim an Editorial Brain improvement. Establish a versioned baseline benchmark on immutable plan evidence before adding or accepting any planner/scoring/model upgrade."
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",
