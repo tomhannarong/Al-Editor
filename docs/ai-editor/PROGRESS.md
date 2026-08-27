@@ -3,10 +3,10 @@
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Active implementation phase:** 12 — Content Agent  
 **Blocked external gate:** Phase 10 exact DaVinci Resolve runtime proof  
-**Current task:** P12-01 — audit existing orchestration surfaces and freeze the content-agent boundary
+**Current task:** P12-02 — implement the smallest deterministic Content Agent executor over injected existing-capability adapters
 
 ```text
-Standalone verified: 97 / 162 = 59.88%
+Standalone verified: 98 / 162 = 60.49%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -19,53 +19,27 @@ Phase 8:              6 verified slices; GATE VERIFIED
 Phase 9:              5 verified slices; GATE VERIFIED
 Phase 10:             3 verified slices; GATE OPEN on real Resolve runtime proof
 Phase 11:             4 verified slices; GATE VERIFIED
-Phase 12:             not started
+Phase 12:             1 verified slice; GATE OPEN
 ```
 
 ## Phase 10 blocker remains exact and narrow
 
 P10-02 through P10-04 remain verified. P10-05 still requires a real DaVinci Resolve import + project-relative relink + OTIO re-export capture. Static evidence is not substituted for this exact target-NLE runtime gate.
 
-## Phase 11 closure — advanced temporal video intelligence
+## P12-01 verified — Content Agent orchestration boundary
 
-P11-01 established a versioned same-fixture benchmark comparison contract. P11-02 froze the lightweight control. P11-03 measured its real bounded runtime cost. P11-04 now provides a deterministic advanced temporal candidate based on native source adjacency plus overlap suppression, without using expected benchmark labels as candidate-ranking input.
+Exact implementation SHA `50046158c41a3f359fcedae00b1a2ddbedefcf9a` adds `packages/contracts/src/content-agent-orchestration.contract.ts` and deterministic tests.
 
-Exact successful repair SHA: `096863f2930b3ab6e5a96e7c2ab8f4e6daa124c3`.
+The audit found that the standalone API surface currently exposes health/readiness only, while verified product capabilities live behind versioned contracts/libraries. The new boundary therefore does not invent a second API stack. It defines a versioned `orchestration-only` plan that may reference only an explicit allowlist of existing capabilities: media ingest, scene index/retrieve/rerank, voice alignment, editorial planning, canonical timeline revision, preview render, final validation, human-review recording and interchange export.
 
-AI Editor CI run `33106247598`, job `98636758233` passed:
+The contract requires pinned capability revisions, explicit capability declaration, unique ordered steps, non-empty input/output references and dependency edges that reference earlier steps only. This prevents undeclared capability execution and prevents a plan from encoding a hidden forward/parallel workflow that bypasses existing authorities.
 
-- dependency install;
-- strict TypeScript;
-- `68` Vitest files / `372` tests;
-- deterministic migrations;
-- contract/policy gates;
-- observable status publication;
-- exact `ai-editor-ci/all = success`.
-
-The initial implementation SHA `b70015ee6c2bf1ddefbd320c2328abff5fac0c2d` passed TypeScript but failed three test assertions because the test expected `12` candidate ranked-scene evaluations while the deterministic implementation correctly produced `11`, and expected an unnecessary `a3` expansion after `a2` had already been inserted. The failed SHA was not rerun unchanged. Repair `096863f2...` changed only those assertions.
-
-### Same-process benchmark result
-
-Frozen lightweight baseline -> temporal adjacency candidate:
-
-```text
-temporal Recall@10:                 0.8333333333333334 -> 1.0
-ordered sequence completion rate:   0.6666666666666666 -> 1.0
-duplicate occupancy:                0.1 -> 0.0
-
-median wall-clock ms/evaluation:     0.014320703 -> 0.048893583
-ranked-scene compute units/eval:     10 -> 11
-wall-clock ratio:                    ~3.414x
-```
-
-The comparison was measured in the same Node `v22.23.2` Linux x64 test process with the same 50 warmups, 5 samples and 1000 measured evaluations/sample. No arbitrary acceptable cost threshold was introduced. Quality improved on every metric, and cost is reported explicitly rather than hidden.
-
-The candidate remains deterministic and bounded: it expands the nearest valid non-overlapping native-PTS successor on exact asset/stream lineage, suppresses high-IoU duplicates, caps ranking output at 10, and preserves all existing timeline/media-time authority boundaries.
+AI Editor CI run `33111452483`, job `98655043624`, passed dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status publication on exact SHA `50046158...`. No matrix, heavyweight media workflow, or unchanged rerun was used.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational time-base authority, renderer-neutral adapters, immutable revision evidence, Style/Delivery/Profile/provenance contracts, human review semantics, and retrieval/editorial separation remain unchanged.
+Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational time-base authority, renderer-neutral adapters, immutable revision evidence, job semantics, Style/Delivery/Profile/provenance contracts, human review semantics, retrieval/editorial separation and all Phase 0–11 verified evidence remain unchanged. Content Agent remains an orchestration layer and gains no persistence/render/timing authority.
 
 ## Next task
 
-P12-01 — audit existing API/orchestration surfaces and define the smallest versioned Content Agent contract that only coordinates already verified capabilities. The agent must not create a hidden parallel ingest/retrieval/planning/render workflow or bypass canonical timeline, job, validation, provenance, or human-review boundaries.
+P12-02 — implement the smallest deterministic executor that consumes only a validated Content Agent plan and invokes injected adapters for the declared existing capabilities. It must preserve step order, fail closed on adapter/result mismatch, and return references/evidence only; it must not contain ingest/retrieval/planning/timeline/render implementations itself.

@@ -6,9 +6,9 @@
   "migrationSource": {"repository":"tomhannarong/creator-intelligence-os","branch":"agent/ai-local-footage-editor-bible-phase0","historicalVerified":20,"historicalChecklistItems":162,"historicalVerifiedPercent":12.35},
   "status": "in-progress",
   "currentPhase": 12,
-  "currentTask": "P12-01-audit-content-agent-orchestration-boundary",
-  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":97,"standaloneRevalidatedPercent":59.88},
-  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0112-phase11-temporal-candidate-gate-verified.md"},
+  "currentTask": "P12-02-implement-content-agent-executor-over-existing-capability-adapters",
+  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":98,"standaloneRevalidatedPercent":60.49},
+  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0113-phase12-content-agent-boundary-verified.md"},
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase2": {"total":11,"standaloneRevalidated":11,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
@@ -19,29 +19,24 @@
   "phase7": {"total":6,"standaloneRevalidated":6,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase8": {"state":"verified-complete","standaloneRevalidated":6,"evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints 0095-0099"},
   "phase9": {"state":"verified-complete","standaloneRevalidated":5,"evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints 0100-0104"},
-  "phase10": {
-    "state": "started-blocked-on-external-runtime",
-    "standaloneRevalidated": 3,
-    "next": "P10-05-selective-exact-davinci-target-runtime-proof",
-    "requiredGate": ["tested exact target NLE fixture", "relink path"],
-    "blocker": "Real DaVinci Resolve import/relink/re-export runtime evidence is unavailable in this execution environment. Do not close Phase 10 from static evidence alone."
-  },
-  "phase11": {
-    "state": "verified-complete",
-    "standaloneRevalidated": 4,
-    "requiredGate": ["benchmark win", "measured cost vs lightweight baseline"],
-    "verifiedEvidence": {
-      "versionedTemporalBenchmarkComparisonContract": ["P11-01 implementation 58428ef0bf2cc8e3a228decc9873806e8554b4ba","AI Editor CI run 33101970738 job 98621741385 success"],
-      "frozenLightweightTemporalBaseline": ["P11-02 repaired implementation 7a312917ba8f20bd4d7fdabad03aebb8955c9851","AI Editor CI run 33102483362 job 98623560207 success"],
-      "measuredLightweightTemporalRuntimeCost": ["P11-03 repair c34ba453f8778d888eb132a712026f8f2df97092","AI Editor CI run 33104422868 job 98630326740 success"],
-      "advancedTemporalCandidateWinAndCost": ["P11-04 initial b70015ee6c2bf1ddefbd320c2328abff5fac0c2d passed TypeScript but failed three test expectations; no unchanged rerun","P11-04 repair 096863f2930b3ab6e5a96e7c2ab8f4e6daa124c3","AI Editor CI run 33106247598 job 98636758233 success","exact ai-editor-ci/all success","quality recall 0.8333333333333334->1, ordered completion 0.6666666666666666->1, duplicate occupancy 0.1->0","same-process median wallClockMsPerEvaluation baseline=0.014320703 candidate=0.048893583","computeUnits baseline=10 candidate=11 ranked-scene-evaluation:v1"]
-    }
-  },
+  "phase10": {"state":"started-blocked-on-external-runtime","standaloneRevalidated":3,"next":"P10-05-selective-exact-davinci-target-runtime-proof","requiredGate":["tested exact target NLE fixture","relink path"],"blocker":"Real DaVinci Resolve import/relink/re-export runtime evidence is unavailable in this execution environment. Do not close Phase 10 from static evidence alone."},
+  "phase11": {"state":"verified-complete","standaloneRevalidated":4,"requiredGate":["benchmark win","measured cost vs lightweight baseline"]},
   "phase12": {
-    "state": "not-started",
-    "standaloneRevalidated": 0,
-    "next": "P12-01-audit-content-agent-orchestration-boundary",
-    "requiredGate": ["orchestrates existing APIs only", "no hidden parallel workflow"]
+    "state": "started",
+    "standaloneRevalidated": 1,
+    "next": "P12-02-implement-content-agent-executor-over-existing-capability-adapters",
+    "requiredGate": ["orchestrates existing APIs only", "no hidden parallel workflow"],
+    "verifiedEvidence": {
+      "contentAgentOrchestrationBoundary": [
+        "P12-01 implementation 50046158c41a3f359fcedae00b1a2ddbedefcf9a",
+        "AI Editor CI run 33111452483 job 98655043624 success",
+        "strict TypeScript success",
+        "Vitest success",
+        "deterministic migrations success",
+        "contract/policy gates success",
+        "orchestration-only authority with pinned declared capability revisions and ordered dependencies"
+      ]
+    }
   },
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }
