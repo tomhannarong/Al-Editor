@@ -69,14 +69,15 @@ describe('immutable human-review decision persistence', () => {
   it('allows additive decisions without mutating prior review evidence', () => {
     const store = new InMemoryHumanReviewDecisionStore();
     const original = store.registerDecision(decision()).decision;
-    const next = store.registerDecision(decision({
+    const accepted = decision({
       decisionId: 'review-decision:002',
       reviewSessionId: 'review-session:002',
       reviewedRevisionId: 'timeline-revision:002',
       action: 'accept',
-      resultingRevisionId: undefined,
       reviewedAt: '2026-08-27T02:05:00.000Z',
-    })).decision;
+    });
+    delete accepted.resultingRevisionId;
+    const next = store.registerDecision(accepted).decision;
 
     expect(next.decisionId).not.toBe(original.decisionId);
     expect(store.getDecision(original.decisionId)).toEqual(original);
