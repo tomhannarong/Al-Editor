@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 10,
-  "currentTask": "P10-02-versioned-otio-davinci-interchange-manifest-contract",
+  "currentTask": "P10-03-deterministic-otio-davinci-export-fixture-and-relink-validation",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 90,
-    "standaloneRevalidatedPercent": 55.56
+    "standaloneRevalidated": 91,
+    "standaloneRevalidatedPercent": 56.17
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0105-phase10-otio-davinci-interchange-audit-complete.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0106-phase10-versioned-interchange-manifest-contract-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -55,7 +55,8 @@
   },
   "phase10": {
     "state": "started",
-    "next": "P10-02-versioned-otio-davinci-interchange-manifest-contract",
+    "standaloneRevalidated": 1,
+    "next": "P10-03-deterministic-otio-davinci-export-fixture-and-relink-validation",
     "requiredGate": ["tested exact target NLE fixture", "relink path"],
     "audit": {
       "state": "complete",
@@ -69,7 +70,15 @@
         "No Phase-10 checklist denominator is present in standalone authority; do not invent one."
       ]
     },
-    "note": "P10-01 evidence audit is complete but is not counted as a verified implementation slice. P10-02 should define the smallest versioned OTIO/DaVinci interchange manifest contract before target-NLE fixture/relink validation."
+    "verifiedEvidence": {
+      "versionedInterchangeManifestContract": [
+        "P10-02 contract/test/export implementation c9302e0d379d38cd5a6d85e6a388aa894f8f638c",
+        "strict type-narrowing repair 863a14819e6371e82f64b1c73efc24ca40bfbbd9",
+        "AI Editor CI run 33096151060 job 98601477037 success",
+        "exact ai-editor-ci/all success on 863a14819e6371e82f64b1c73efc24ca40bfbbd9"
+      ]
+    },
+    "note": "P10-02 is verified as a contract slice only. It pins DaVinci/OTIO profile identity, exact canonical timeline revision/SHA, content-addressed asset identity, stream identity/index, native source PTS/time base and confined project-relative relink paths. The target-NLE fixture/relink gate remains open."
   },
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }
