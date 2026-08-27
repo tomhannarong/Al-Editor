@@ -10,6 +10,7 @@ import {
   type FinalDeliveryMeasurementV1,
 } from '../../final-delivery-validator/src/index.js';
 import type {
+  ContentAgentAdapterRequestV1,
   ContentAgentCapabilityAdapterV1,
   ContentAgentAdapterResultV1,
 } from './execution.js';
@@ -63,7 +64,7 @@ function createEditorialPlanAdapter(
   return Object.freeze({
     capability: 'editorial.plan',
     contractRevision: CONTENT_AGENT_EDITORIAL_PLAN_ADAPTER_REVISION,
-    async execute(request): Promise<ContentAgentAdapterResultV1> {
+    async execute(request: ContentAgentAdapterRequestV1): Promise<ContentAgentAdapterResultV1> {
       const input = inputs.get(request.inputRef);
       if (!input) throw new ExistingCapabilityAdapterInvariantError(`editorial.plan input ${request.inputRef} was not resolved`);
       if (!input.evidenceRef.trim()) throw new ExistingCapabilityAdapterInvariantError('editorial.plan evidenceRef is required');
@@ -85,7 +86,7 @@ function createFinalValidationAdapter(
   return Object.freeze({
     capability: 'final.validate',
     contractRevision: CONTENT_AGENT_FINAL_VALIDATE_ADAPTER_REVISION,
-    async execute(request): Promise<ContentAgentAdapterResultV1> {
+    async execute(request: ContentAgentAdapterRequestV1): Promise<ContentAgentAdapterResultV1> {
       const input = inputs.get(request.inputRef);
       if (!input) throw new ExistingCapabilityAdapterInvariantError(`final.validate input ${request.inputRef} was not resolved`);
       if (!input.evidenceRef.trim()) throw new ExistingCapabilityAdapterInvariantError('final.validate evidenceRef is required');
