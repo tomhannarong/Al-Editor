@@ -71,6 +71,9 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Same-benchmark hybrid + duplicate-control evaluation | `packages/hybrid-retrieval-library/src/benchmark-evaluation.ts` + `docs/ai-editor/benchmarks/phase5-hybrid-duplicate-control-evaluation-v1.md` | verified on `699615af`; CI `33003534039` job `98291207703`; Macro Recall@10 `0.8333333333333334 -> 1.0`, Micro `0.75 -> 1.0`; exact Phase-4 benchmark revision; duplicate occupancy measured `0.0` on the non-overlapping control fixture |
 | Exact canonical frame/source mapping golden | `packages/preview-renderer/src/index.test.ts` + `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md` | verified on `72780c37`; CI `33013977827` job `98327280374`; exact `90` project frames at `30000/1001` map to `90090` native PTS at `1/30000` from non-zero source origin; preview uses the same absolute PTS boundaries |
 | Final delivery profile compliance validator | `packages/final-delivery-validator/src/index.ts` | verified on `6d645c87`; CI `33017556928` job `98339605165`; exact profile identity/version plus video/audio/color/bitrate/loudness/caption measurement checks without adding timing authority |
+| Versioned human-review decision contract | `packages/contracts/src/human-review-decision.contract.ts` | verified on `eb251d88`; AI Editor CI `33028653803` job `98375803554`; reviewed AI decisions bind to immutable revision/item IDs and replace/trim/lock require distinct resulting revisions |
+| Immutable human-review decision persistence | `packages/human-review-library/src/index.ts` | verified on repaired `77e8286f`; initial CI `33032229718` job `98387102598` failed strict optional test typing; repair CI `33032302244` job `98387336237` passed all gates |
+| PostgreSQL human-review decision persistence | migration 0008 + `packages/human-review-library/src/postgres.ts` + runtime verifier | verified on `8c9f2e0e`; CI `33032518077` job `98388036444`; real PostgreSQL/local-stack `33032518131` job `98388036546`; exact `ai-editor-ci/all` and `ai-editor-local-stack/all` success |
 
 ## Phase 1 closure
 
@@ -98,6 +101,10 @@ Phase 4 contains six verified slices including evidence reconciliation. The vers
 
 Phase 5 contains seven verified slices including evidence reconciliation. The exact Phase-4 benchmark control improves from Macro Recall@10 `0.8333333333333334` to `1.0` and Micro `0.75` to `1.0`, while P5-04/P5-05 provide versioned deterministic duplicate control.
 
-## Phase 6 status
+## Phase 6 closure
 
-P6-01 and P6-02 are verified. Existing checkpoint 0033 proves real preview and immutable rerender behavior with FFmpeg/FFprobe. P6-02 adds the deterministic final-delivery compliance boundary. The remaining Phase-6 gate gap is selective real final-output measurement evidence (FFprobe plus loudness/caption inspection) that passes P6-02; P6-03 will provide that without moving heavyweight media validation into normal CI.
+Phase 6 contains four verified slices including evidence reconciliation. Exact frame/source mapping goldens plus preview/final delivery validation are verified, including real FFmpeg/FFprobe/loudness/caption runtime proof recorded in checkpoint 0089.
+
+## Phase 7 status
+
+P7-01 through P7-03 are verified. Human-review decisions now have a versioned contract, immutable/idempotent persistence semantics and real PostgreSQL durability. The remaining Phase-7 gate requires explicit canonical replace/trim/lock revision semantics plus the first valid HAR measurement. UI controls alone remain insufficient evidence.
