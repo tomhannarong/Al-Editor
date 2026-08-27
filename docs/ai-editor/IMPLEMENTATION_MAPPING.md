@@ -84,6 +84,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Immutable experiment-registry persistence | `packages/experiment-registry-library/src/index.ts` | verified on `0890b33c`; AI Editor CI `33074640900` job `98525532483`; exact re-registration idempotent, immutable conflicts fail closed, defensive copies preserve historical evidence |
 | Versioned regression gate | `packages/contracts/src/regression-gate.contract.ts` | verified on `45af396a`; AI Editor CI `33079312344` job `98541839414`; exact benchmark/control + experiment/result binding with explicit higher/lower-is-better absolute regression tolerance semantics |
 | Deterministic regression-gate execution | `packages/regression-gate-library/src/execution.ts` | verified on `46ef6cda`; AI Editor CI `33085663965` job `98564484467`; exact benchmark/control/candidate identity checks, fail-closed metric evidence validation and deterministic structured pass/fail output |
+| Versioned OTIO / DaVinci interchange manifest | `packages/contracts/src/otio-davinci-interchange.contract.ts` | verified on repaired `863a1481`; initial CI `33096000143` job `98600952482` failed strict TypeScript narrowing; repair CI `33096151060` job `98601477037` passed all gates; exact `ai-editor-ci/all = success`; canonical v2/native-PTS authority preserved and project-relative relink paths are confined |
 
 ## Phase 1 closure
 
@@ -126,3 +127,7 @@ P8-01 audited the existing Style Profile and identified the missing evaluation d
 ## Phase 9 closure
 
 P9-01 audited the existing versioned benchmarks and AI model registry. P9-02/P9-03 establish versioned immutable experiment identity and idempotent fail-closed registration semantics without duplicating model/prompt/benchmark payloads. P9-04 defines the pinned regression-gate contract and exact higher/lower-is-better tolerance semantics. P9-05 executes the validated gate deterministically against exact control/candidate metric evidence, fails closed on identity/metric inconsistencies, and emits structured pass/fail evidence. Together these satisfy the Bible Phase-9 gate: versioned benchmark, experiment registry, and regression gate.
+
+## Phase 10 in progress
+
+P10-01 audited the absence of a standalone OTIO/DaVinci interchange implementation and identified the exact target-NLE fixture + relink-path gap. P10-02 establishes a versioned manifest over the existing canonical timeline v2/source-lineage authority, pins DaVinci/OTIO target profile identity, and validates confined relink evidence without introducing a second timing model. The explicit Phase-10 gate remains open until P10-03+ provides exact target-NLE fixture and relink-path proof.
