@@ -3,6 +3,11 @@ import { describe, expect, it } from 'vitest';
 import type { EditorialBrainPlanningPolicy } from '../../contracts/src/editorial-brain-planning-policy.contract.js';
 import type { EditorialStyleProfileV1 } from '../../contracts/src/editorial-style-profile.contract.js';
 import {
+  compareEditorialQualityV1,
+  measureEditorialQualityV1,
+  type EditorialPlanEvidenceV1,
+} from '../../editorial-quality-library/src/editorial-quality-evaluation.js';
+import {
   EditorialBrainExecutionInvariantError,
   executeEditorialBrainPlanningV1,
   type EditorialBrainPlanningExecutionRequestV1,
@@ -69,6 +74,45 @@ const policy: EditorialBrainPlanningPolicy = {
   },
   tieBreak: 'candidate-rank-then-scene-id-v1',
   createdAt: '2026-08-27T01:00:00.000Z',
+};
+
+const beforePlan: EditorialPlanEvidenceV1 = {
+  schemaVersion: '1.0',
+  fixtureRevisionId: 'phase8-editorial-quality-fixture:v1',
+  planId: 'plan-a',
+  revisionId: 'plan-a:r1',
+  styleProfileId: styleProfile.profileId,
+  styleProfileVersion: styleProfile.profileVersion,
+  frameRate: { numerator: 30, denominator: 1 },
+  shots: [
+    {
+      shotId: 'shot-1',
+      sourceSceneId: 'scene-a',
+      shotType: 'wide',
+      movementType: 'static',
+      continuityGroupId: 'location-a',
+      startFrame: 0,
+      endFrame: 90,
+    },
+    {
+      shotId: 'shot-2',
+      sourceSceneId: 'scene-a',
+      shotType: 'wide',
+      movementType: 'static',
+      continuityGroupId: 'location-b',
+      startFrame: 90,
+      endFrame: 180,
+    },
+    {
+      shotId: 'shot-3',
+      sourceSceneId: 'scene-c',
+      shotType: 'wide',
+      movementType: 'static',
+      continuityGroupId: 'location-b',
+      startFrame: 180,
+      endFrame: 270,
+    },
+  ],
 };
 
 const request: EditorialBrainPlanningExecutionRequestV1 = {
@@ -192,6 +236,32 @@ describe('deterministic Editorial Brain planning execution v1', () => {
         },
       ],
     });
+  });
+
+  it('proves the actual planner output improves every frozen Phase-8 gate metric', () => {
+    const afterPlan = executeEditorialBrainPlanningV1(request, policy, styleProfile);
+    const before = measureEditorialQualityV1(beforePlan, styleProfile);
+    const after = measureEditorialQualityV1(afterPlan, styleProfile);
+    const comparison = compareEditorialQualityV1(before, after);
+
+    expect(before.pacingScore).toBeCloseTo(11 / 18);
+    expect(before.continuityScore).toBe(0.5);
+    expect(before.varietyScore).toBe(0);
+    expect(before.repeatRate).toBeCloseTo(1 / 3);
+
+    expect(after.pacingScore).toBe(1);
+    expect(after.continuityScore).toBe(1);
+    expect(after.varietyScore).toBe(1);
+    expect(after.repeatRate).toBe(0);
+
+    expect(comparison.pacingDelta).toBeCloseTo(7 / 18);
+    expect(comparison.continuityDelta).toBe(0.5);
+    expect(comparison.varietyDelta).toBe(1);
+    expect(comparison.repeatRateDelta).toBeCloseTo(-1 / 3);
+    expect(comparison.pacingImproved).toBe(true);
+    expect(comparison.continuityImproved).toBe(true);
+    expect(comparison.varietyImproved).toBe(true);
+    expect(comparison.repeatRateLowered).toBe(true);
   });
 
   it('is deterministic when candidate input ordering changes', () => {
