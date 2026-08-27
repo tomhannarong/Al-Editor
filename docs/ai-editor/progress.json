@@ -1,3 +1,47 @@
 {
-  "schemaVersion": "1.2"
+  "schemaVersion": "1.2",
+  "bibleRevision": "1.2-standalone-ai-editor",
+  "repository": "tomhannarong/Al-Editor",
+  "workingBranch": "main",
+  "migrationSource": {"repository":"tomhannarong/creator-intelligence-os","branch":"agent/ai-local-footage-editor-bible-phase0","historicalVerified":20,"historicalChecklistItems":162,"historicalVerifiedPercent":12.35},
+  "status": "in-progress",
+  "currentPhase": 11,
+  "currentTask": "P11-03-measure-lightweight-temporal-baseline-runtime-cost",
+  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":95,"standaloneRevalidatedPercent":58.64},
+  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0110-phase11-lightweight-temporal-baseline-verified.md"},
+  "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase2": {"total":11,"standaloneRevalidated":11,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase3": {"total":9,"standaloneRevalidated":9,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase4": {"total":6,"standaloneRevalidated":6,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase5": {"total":7,"standaloneRevalidated":7,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase6": {"total":4,"standaloneRevalidated":4,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase7": {"total":6,"standaloneRevalidated":6,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
+  "phase8": {"state":"verified-complete","standaloneRevalidated":6,"evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints 0095-0099"},
+  "phase9": {"state":"verified-complete","standaloneRevalidated":5,"evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints 0100-0104"},
+  "phase10": {
+    "state": "started-blocked-on-external-runtime",
+    "standaloneRevalidated": 3,
+    "next": "P10-05-selective-exact-davinci-target-runtime-proof",
+    "requiredGate": ["tested exact target NLE fixture", "relink path"],
+    "audit": {"state":"complete","checkpoint":"0105-phase10-otio-davinci-interchange-audit-complete.md","auditedMainHead":"9e32ec1f74686619f5a1bdf2ac5c26457ff2053e"},
+    "verifiedEvidence": {
+      "versionedInterchangeManifestContract": ["P10-02 repair 863a14819e6371e82f64b1c73efc24ca40bfbbd9","AI Editor CI run 33096151060 job 98601477037 success","exact ai-editor-ci/all success"],
+      "deterministicRelinkSourceLineageFixture": ["P10-03 implementation 429b68457b8ae500082dd802c560c2d2ff16d9c2","AI Editor CI run 33099890670 job 98614453521 success","exact ai-editor-ci/all success"],
+      "resolveTargetOtioSerializerAndManualHarness": ["P10-04 implementation 6c6e461845676fe51be6a12e47cb96cfc60b7b48","repair 0fa85a0dc864e432c0c358efad1f8bad3aa88901","AI Editor CI run 33101367742 job 98619633747 success","exact ai-editor-ci/all success"]
+    },
+    "blocker": "Real DaVinci Resolve import/relink/re-export runtime evidence is unavailable in this execution environment. Do not close Phase 10 from static evidence alone."
+  },
+  "phase11": {
+    "state": "started",
+    "standaloneRevalidated": 2,
+    "next": "P11-03-measure-lightweight-temporal-baseline-runtime-cost",
+    "requiredGate": ["benchmark win", "measured cost vs lightweight baseline"],
+    "verifiedEvidence": {
+      "versionedTemporalBenchmarkComparisonContract": ["P11-01 implementation 58428ef0bf2cc8e3a228decc9873806e8554b4ba","AI Editor CI run 33101970738 job 98621741385 success","exact ai-editor-ci/all success"],
+      "frozenLightweightTemporalBaseline": ["P11-02 repaired implementation HEAD 7a312917ba8f20bd4d7fdabad03aebb8955c9851","AI Editor CI run 33102483362 job 98623560207 success","exact ai-editor-ci/all success","quality temporal-recall-at-10=5/6, ordered-sequence-completion-rate=2/3, duplicate-occupancy=1/10","runtime cost intentionally pending"]
+    },
+    "note": "P11-02 freezes exact native-PTS temporal labels and lightweight ranking quality without inventing runtime cost. Next measure the exact control cost before implementing an advanced temporal candidate."
+  },
+  "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }
