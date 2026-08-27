@@ -11,20 +11,20 @@
     "historicalVerifiedPercent": 12.35
   },
   "status": "in-progress",
-  "currentPhase": 8,
-  "currentTask": "P8-05-deterministic-editorial-brain-planning-execution",
+  "currentPhase": 9,
+  "currentTask": "P9-01-evaluation-experiment-regression-evidence-audit",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 82,
-    "standaloneRevalidatedPercent": 50.62
+    "standaloneRevalidated": 85,
+    "standaloneRevalidatedPercent": 52.47
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0098-phase8-editorial-brain-planning-policy-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0099-phase8-editorial-brain-quality-gate-verified-and-closed.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -55,8 +55,8 @@
     }
   },
   "phase8": {
-    "state": "started",
-    "standaloneRevalidated": 3,
+    "state": "verified-complete",
+    "standaloneRevalidated": 6,
     "audit": {
       "state": "complete",
       "checkpoint": "0095-phase8-editorial-brain-style-profile-audit-complete.md",
@@ -67,32 +67,33 @@
         "No exact Phase-8 checklist denominator is present in current standalone authority; do not invent one."
       ]
     },
-    "verified": [
-      {
-        "item": "P8-02-versioned-editorial-quality-evaluation-boundary",
-        "implementationSha": "21f0996c91327ccc962f59f079d8f05c3cbe8212",
-        "ciRun": 33048153705,
-        "ciJob": 98436945559,
-        "evidence": "deterministic/versioned same-fixture evaluator for pacing, continuity, variety and repeat rate; Style Profile v1 bound explicitly; project timing remains integer frames + rational FPS"
-      },
-      {
-        "item": "P8-03-versioned-editorial-quality-baseline-benchmark",
-        "implementationSha": "94018535f20fc376ece3349c472a3eb5d0bc0f54",
-        "ciRun": 33052281824,
-        "ciJob": 98450459738,
-        "evidence": "phase8-editorial-quality-baseline:v1 freezes exact control fixture phase8-editorial-quality-fixture:v1 / plan-a:r1 / Style Profile travel-soft-v1 1.0.0 with pacing 11/18, continuity 0.5, variety 0 and repeat rate 1/3; baseline is measurement only, not threshold"
-      },
-      {
-        "item": "P8-04-versioned-editorial-brain-planning-policy-contract",
-        "implementationSha": "873aabecb018bf5342694e10583110a4ecbc4892",
-        "ciRun": 33056587221,
-        "ciJob": 98464793797,
-        "evidence": "versioned deterministic planning policy binds frozen Phase-8 baseline, exact Style Profile authority, bounded candidate work and explicit pacing/continuity/variety/repeat-control objectives without duplicating retrieval or timing authority"
-      }
-    ],
-    "next": "P8-05-deterministic-editorial-brain-planning-execution",
-    "requiredGate": ["pacing/continuity/variety improvements","lower repeat rate"],
-    "note": "P8-04 defines the planner policy but makes no quality claim. P8-05 must produce a distinct immutable after-plan on the exact P8-03 fixture/style authority; P8-02 must then measure before/after results before any upgrade is accepted."
+    "gateEvidence": {
+      "versionedEvaluationAndControl": [
+        "P8-02 versioned editorial-quality evaluator",
+        "P8-03 frozen phase8-editorial-quality-baseline:v1 control"
+      ],
+      "versionedPlanner": [
+        "P8-04 planning policy on 873aabecb018bf5342694e10583110a4ecbc4892; CI 33056587221 job 98464793797 success",
+        "P8-05 deterministic Editorial Brain execution on 1dd19c375e39e81112e0557dd907caedf5252b83; CI 33061567916 job 98481330705 success"
+      ],
+      "sameFixtureQualityGain": [
+        "P8-06 benchmark phase8-editorial-brain-quality-evaluation:v1 on exact phase8-editorial-quality-fixture:v1",
+        "pacing 0.6111111111111112 -> 1.0",
+        "continuity 0.5 -> 1.0",
+        "variety 0.0 -> 1.0",
+        "repeat rate 0.3333333333333333 -> 0.0",
+        "AI Editor CI run 33061744128 job 98481929429 success"
+      ],
+      "reconciliation": ["checkpoint 0099 Phase-8 gate reconciliation"]
+    },
+    "note": "Phase-8 gate is verified on the frozen same-fixture control. The result is exact deterministic evidence for this benchmark/policy pair; generalization and regression governance belong to Phase 9."
+  },
+  "phase9": {
+    "state": "started",
+    "standaloneRevalidated": 0,
+    "next": "P9-01-evaluation-experiment-regression-evidence-audit",
+    "requiredGate": ["versioned benchmark", "experiment registry", "regression gate"],
+    "note": "Audit existing benchmark/model registry/evaluation evidence first; do not create parallel experiment or regression infrastructure if a verified standalone capability already exists."
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",

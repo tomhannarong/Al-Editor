@@ -1,11 +1,11 @@
 # AI Local Footage Editor — Progress
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
-**Phase:** 8 — Editorial Brain + Style Profiles  
-**Current task:** P8-05 — deterministic Editorial Brain planning execution
+**Phase:** 9 — Evaluation + Preference Learning  
+**Current task:** P9-01 — evaluation / experiment-registry / regression-gate evidence audit
 
 ```text
-Standalone verified: 82 / 162 = 50.62%
+Standalone verified: 85 / 162 = 52.47%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -14,61 +14,91 @@ Phase 4:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 5:              7 / 7   = 100.00% COMPLETE + GATE VERIFIED
 Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
-Phase 8:              3 verified slices; denominator intentionally unspecified pending checklist authority
+Phase 8:              6 verified slices; GATE VERIFIED
+Phase 9:              started; denominator intentionally unspecified pending checklist authority
 ```
 
-## P8-04 verified — versioned Editorial Brain planning-policy contract
+## Phase 8 closed — deterministic Editorial Brain + same-fixture quality gain
 
-The first standalone Editorial Brain policy boundary is now versioned and explicitly pinned to the already-frozen Phase-8 comparison authority.
+P8-05 implemented the first standalone deterministic Editorial Brain execution boundary in `packages/editorial-brain-library`.
 
-Policy authority:
+Execution semantics:
 
-- schema version: `1.0`
-- baseline revision: `phase8-editorial-quality-baseline:v1`
-- immutable fixture: `phase8-editorial-quality-fixture:v1`
-- control plan: `plan-a:r1`
-- evaluation policy: `editorial-quality-evaluation-policy:v1`
-- Style Profile: `travel-soft-v1` / `1.0.0`
-- planning method: `deterministic-style-guided-greedy-v1`
-- bounded candidate pool
-- deterministic tie-break: candidate rank then scene ID
-- explicit objectives for pacing, continuity, variety and source-scene repeat control
+- validates the exact P8-04 planning-policy and Style Profile identities before planning;
+- consumes bounded candidate evidence only;
+- keeps retrieval relevance upstream as `candidateRank` rather than reimplementing retrieval scoring;
+- applies repeat control, adjacent continuity, shot/movement variety and Style Profile duration-fit objectives deterministically;
+- uses candidate rank then scene ID only after editorial score ties;
+- outputs a distinct immutable after-plan revision;
+- persists only integer project-frame timing + rational FPS in plan evidence; Style Profile milliseconds remain transient planner preferences.
 
-The contract remains separate from retrieval relevance and contains no alternate project-frame/native-PTS/millisecond timing authority. Style Profile duration values remain planner preferences only.
+Exact P8-05 validation:
 
-P8-04 is a policy contract, not an improvement claim. A distinct immutable after-plan still has to be generated and evaluated against the exact frozen P8-03 control.
-
-## Exact validation evidence
-
-AI Editor CI ran once as the final confidence gate on exact SHA `873aabecb018bf5342694e10583110a4ecbc4892`:
-
-- run `33056587221`
-- job `98464793797`
+- implementation SHA `1dd19c375e39e81112e0557dd907caedf5252b83`
+- AI Editor CI run `33061567916`
+- job `98481330705`
 - dependency install ✅
 - TypeScript strict gate ✅
 - Vitest behavioral gate ✅
 - deterministic migration gate ✅
 - contract/policy gates ✅
-- observable commit-status publication ✅
-- overall job conclusion `success` ✅
+- observable status publication ✅
+- overall conclusion `success` ✅
 
-No PostgreSQL/Qdrant local-stack, FFmpeg/media integration, matrix or rerun was used because this slice adds only a deterministic versioned contract and tests.
+P8-06 then evaluated the actual planner output, not a manually authored after-plan, against the exact frozen P8-03 control fixture.
+
+Same-fixture result:
+
+```text
+Control plan revision: plan-a:r1
+Planner plan revision: plan-a:r2
+Fixture:               phase8-editorial-quality-fixture:v1
+Style Profile:          travel-soft-v1 / 1.0.0
+
+Pacing:                 0.6111111111111112 -> 1.0
+Continuity:             0.5 -> 1.0
+Variety:                0.0 -> 1.0
+Repeat rate:            0.3333333333333333 -> 0.0
+
+Pacing delta:           +0.3888888888888889
+Continuity delta:       +0.5
+Variety delta:          +1.0
+Repeat-rate delta:      -0.3333333333333333
+```
+
+Benchmark evidence is recorded at `docs/ai-editor/benchmarks/phase8-editorial-brain-quality-evaluation-v1.md`.
+
+Exact P8-06 validation:
+
+- benchmark/test SHA `ec8144a51d099603c95994753c53bf14003abebb`
+- AI Editor CI run `33061744128`
+- job `98481929429`
+- TypeScript strict ✅
+- Vitest ✅
+- migrations ✅
+- contract/policy gates ✅
+- observable status publication ✅
+- overall conclusion `success` ✅
+
+No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or unchanged rerun was used for either slice. Local clone validation was attempted first during P8-05 but the execution environment could not resolve `github.com`; that was not treated as a pass or code failure.
+
+## Phase-8 gate reconciliation
+
+The Bible requires evidence of:
+
+- pacing improvement ✅
+- continuity improvement ✅
+- variety improvement ✅
+- lower repeat rate ✅
+
+All four are now measured on the exact same frozen fixture/style/evaluation authority, so Phase 8 is gate-verified without an additional Actions run for reconciliation.
+
+The benchmark demonstrates deterministic improvement for this exact fixture/policy pair. It is not a claim of generalization to unseen footage; broader benchmark coverage, experiment registration and regression governance are Phase-9 responsibilities.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, immutable originals/revisions/renders, Style Profile v1, Delivery Profile v1, structured logging, provenance/rights evidence and all verified Phase-1 through Phase-7 evidence remain unchanged.
-
-## Phase-8 gate
-
-Phase 8 still requires actual same-fixture before/after evidence of:
-
-- pacing improvement;
-- continuity improvement;
-- variety improvement;
-- lower repeat rate.
-
-P8-02 supplies the evaluator, P8-03 freezes the control, and P8-04 now pins the planning policy. None of these alone claims an Editorial Brain improvement.
+Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-neutral v2 adapter boundary, immutable media/revision/render evidence, Style Profile v1, Delivery Profile v1, structured logging, provenance/rights, retrieval/editorial separation and all verified Phase-0 through Phase-7 evidence remain unchanged.
 
 ## Next task
 
-P8-05 — implement deterministic Editorial Brain planning execution over bounded candidate evidence using the P8-04 policy, producing a distinct immutable after-plan on `phase8-editorial-quality-fixture:v1`. The generated plan must preserve integer-frame/rational-FPS timing authority and remain separate from retrieval scoring; it cannot be accepted as an upgrade until P8-02 measures it against the frozen P8-03 control.
+P9-01 — audit existing evaluation benchmarks, model/prompt registry and any experiment/regression infrastructure against the Phase-9 gate: **versioned benchmark, experiment registry, regression gate**. Reuse verified capabilities where possible and add only the smallest missing standalone boundary.
