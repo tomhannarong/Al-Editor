@@ -68,7 +68,7 @@ describe('OTIO DaVinci timeline document serializer', () => {
     const candidate = timeline();
     const first = candidate.items[0]!;
     if (first.kind !== 'asset-video') throw new Error('fixture drift');
-    candidate.items = [first, { ...first, itemId: 'clip:002', startFrame: 60, endFrame: 120 }];
+    candidate.items = [first, { ...first, itemId: 'clip:002', startFrame: 30, endFrame: 120 }];
     const m = manifest();
     m.mediaMappings = [...m.mediaMappings, { ...m.mediaMappings[0]!, itemId: 'clip:002', relinkPath: { kind: 'project-relative-posix', value: 'Media/Originals/clip-002.mov' } }];
     expect(() => buildOtioDavinciTimelineDocumentV1(candidate, m)).toThrow('does not allow overlapping items on track v1');
