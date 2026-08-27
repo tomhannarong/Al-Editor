@@ -2,6 +2,7 @@ import {
   normalizeCanonicalRational,
   validateCanonicalTimelineV2,
   type CanonicalRational,
+  type CanonicalTimelineAssetItemV2,
   type CanonicalTimelineV2,
 } from './canonical-timeline.contract.js';
 
@@ -78,6 +79,10 @@ function validProjectRelativePosixPath(value: string): boolean {
   return segments.every((segment) => segment.length > 0 && segment !== '.' && segment !== '..');
 }
 
+function isCanonicalMediaItem(item: CanonicalTimelineV2['items'][number]): item is CanonicalTimelineAssetItemV2 {
+  return item.kind === 'asset-video' || item.kind === 'source-audio';
+}
+
 export function validateOtioDavinciInterchangeManifestV1(
   manifest: OtioDavinciInterchangeManifestV1,
 ): OtioDavinciInterchangeValidationResult {
@@ -149,9 +154,7 @@ export function validateOtioDavinciManifestAgainstCanonicalTimelineV2(
     errors.push('manifest timeline SHA-256 must match canonical timeline manifest evidence');
   }
 
-  const canonicalMediaItems = timeline.items.filter(
-    (item) => item.kind === 'asset-video' || item.kind === 'source-audio',
-  );
+  const canonicalMediaItems = timeline.items.filter(isCanonicalMediaItem);
   const mappingByItemId = new Map(manifest.mediaMappings.map((mapping) => [mapping.itemId, mapping]));
 
   for (const item of canonicalMediaItems) {
