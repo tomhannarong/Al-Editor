@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 9,
-  "currentTask": "P9-03-immutable-experiment-registry-persistence-idempotency",
+  "currentTask": "P9-04-versioned-regression-gate-contract",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 86,
-    "standaloneRevalidatedPercent": 53.09
+    "standaloneRevalidated": 87,
+    "standaloneRevalidatedPercent": 53.70
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0101-phase9-versioned-experiment-registry-contract-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0102-phase9-immutable-experiment-registry-persistence-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -43,12 +43,12 @@
   },
   "phase9": {
     "state": "started",
-    "standaloneRevalidated": 1,
+    "standaloneRevalidated": 2,
     "audit": {"state":"complete","checkpoint":"0100-phase9-evaluation-experiment-regression-audit-complete.md","auditedMainHead":"b7c5372f708b68ffa294dd4a325eb160d5c4b73a","findings":["Versioned benchmark evidence already exists across scene-boundary, retrieval, HAR, frame/source mapping and editorial-quality benchmark documents and deterministic test fixtures.","The existing AI model registry pins model, prompt, execution-profile, decoding-policy and optional scoring-policy versions and therefore should be reused as experiment input identity rather than duplicated.","No standalone experiment-registry package/contract is present in the audited package inventory.","No standalone regression-gate package/contract is present in the audited package inventory.","Phase-9 checklist denominator is not present in current standalone authority; do not invent one."]},
-    "verifiedEvidence": ["P9-02 versioned experiment-registry contract on 00c8d0a97145031d33d9eb94657284e03f019605","AI Editor CI run 33069149168 job 98506625635 success","exact ai-editor-ci/all success"],
-    "next": "P9-03-immutable-experiment-registry-persistence-idempotency",
+    "verifiedEvidence": ["P9-02 versioned experiment-registry contract on 00c8d0a97145031d33d9eb94657284e03f019605","AI Editor CI run 33069149168 job 98506625635 success","P9-03 immutable experiment-registry persistence on 0890b33caaf3573f3491aa3f344edf966524ab67","AI Editor CI run 33074640900 job 98525532483 success","exact ai-editor-ci/all success on 0890b33caaf3573f3491aa3f344edf966524ab67"],
+    "next": "P9-04-versioned-regression-gate-contract",
     "requiredGate": ["versioned benchmark", "experiment registry", "regression gate"],
-    "note": "P9-02 establishes the immutable versioned experiment identity boundary while reusing existing model/prompt/execution-profile registry identities. Durable/idempotent experiment registration is the next smallest gap; regression gating remains subsequent."
+    "note": "P9-02/P9-03 now provide versioned immutable experiment identity plus idempotent fail-closed registration semantics while reusing existing model/prompt/execution-profile registry identities. The smallest remaining Phase-9 gate gap is a versioned regression-gate contract."
   },
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }

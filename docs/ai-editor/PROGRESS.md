@@ -2,10 +2,10 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 9 — Evaluation + Preference Learning  
-**Current task:** P9-03 — immutable experiment-registry persistence/idempotency
+**Current task:** P9-04 — versioned regression-gate contract
 
 ```text
-Standalone verified: 86 / 162 = 53.09%
+Standalone verified: 87 / 162 = 53.70%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -15,30 +15,24 @@ Phase 5:              7 / 7   = 100.00% COMPLETE + GATE VERIFIED
 Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 8:              6 verified slices; GATE VERIFIED
-Phase 9:              1 verified slice; denominator intentionally unspecified pending checklist authority
+Phase 9:              2 verified slices; denominator intentionally unspecified pending checklist authority
 ```
 
-## P9-02 verified — versioned experiment-registry contract
+## P9-03 verified — immutable experiment-registry persistence/idempotency
 
-Implementation `00c8d0a97145031d33d9eb94657284e03f019605` adds `packages/contracts/src/experiment-registry.contract.ts`, deterministic tests and the contracts barrel export.
+Implementation `0890b33caaf3573f3491aa3f344edf966524ab67` adds `packages/experiment-registry-library/src/index.ts` and deterministic tests.
 
-The contract binds each immutable experiment revision to:
+The persistence boundary validates every revision before mutation, treats exact semantic re-registration of the same `revisionId` as idempotent, returns deep defensive copies, preserves additive historical revisions, and fails closed when the same immutable revision identity is reused with changed benchmark/control, candidate policy/model/prompt/execution-profile, evaluation/result evidence, or execution timestamps.
 
-- exact benchmark, benchmark revision and control revision, with optional pinned fixture revision;
-- exact candidate policy identity/revision;
-- exact model ID/version, optional prompt ID/version and execution-profile ID/version, reusing the existing AI model registry identities rather than embedding raw model or prompt artifacts;
-- exact evaluation-policy version plus immutable result ID/revision/artifact identity and SHA-256 digest;
-- explicit started/completed/created timestamps with chronological validation.
+Raw model artifacts, prompt templates, benchmark/result payloads and credentials remain outside the registry; P9-03 persists only the pinned experiment evidence references established by P9-02.
 
-Mutable aliases such as `latest`, `main`, `stable`, `default`, `current` and `head` are rejected for revision/version fields. Raw model artifacts, prompt templates, credentials, benchmark payloads and result payloads are intentionally outside this contract.
-
-Exact final-confidence evidence: AI Editor CI run `33069149168`, job `98506625635`; dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status publication all succeeded. Exact commit status `ai-editor-ci/all = success` is published for `00c8d0a9...`.
+Exact final-confidence evidence: AI Editor CI run `33074640900`, job `98525532483`; dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status publication all succeeded. Exact commit status `ai-editor-ci/all = success` is published for `0890b33c...`.
 
 No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or unchanged rerun was used because this slice adds no runtime dependency.
 
 ## Phase 9 audit retained
 
-P9-01 established that versioned benchmark evidence already exists and that the existing AI model registry must be reused. The genuine remaining Phase-9 gaps are durable experiment registration and regression gating. No Phase-9 denominator is invented.
+P9-01 established that versioned benchmark evidence already exists and that the existing AI model registry must be reused. P9-02/P9-03 now cover versioned experiment identity and immutable idempotent registration semantics. The genuine remaining explicit Phase-9 gate gap is regression gating. No Phase-9 denominator is invented.
 
 ## Preserved contracts
 
@@ -46,4 +40,4 @@ Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-n
 
 ## Next task
 
-P9-03 — implement immutable experiment-registry persistence/idempotency. Exact semantic re-registration of a revision must be idempotent; reusing a `revisionId` with different benchmark/control, candidate registry identities, evaluation/result evidence or timestamps must fail closed before mutation. Regression gating remains a subsequent independent Phase-9 slice.
+P9-04 — implement the smallest versioned regression-gate contract. It must bind an exact benchmark/control plus candidate experiment/result revision, define explicit metric direction/tolerance semantics, reject mutable aliases, and remain an evaluation decision boundary rather than creating a parallel benchmark/model registry. Execution/persistence of the gate remains subsequent evidence if required.

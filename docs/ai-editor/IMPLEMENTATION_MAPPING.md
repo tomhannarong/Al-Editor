@@ -80,6 +80,8 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Versioned Editorial Brain planning policy | `packages/contracts/src/editorial-brain-planning-policy.contract.ts` | verified on `873aabec`; AI Editor CI `33056587221` job `98464793797`; frozen Phase-8 baseline + exact Style Profile authority + deterministic bounded objectives/tie-break, with retrieval and timing authority kept separate |
 | Deterministic Editorial Brain planning execution | `packages/editorial-brain-library/src/execution.ts` | verified on `1dd19c37`; AI Editor CI `33061567916` job `98481330705`; bounded deterministic style-guided selection preserves project-frame/rational-FPS authority and keeps retrieval scoring upstream |
 | Same-fixture Editorial Brain quality evaluation | `packages/editorial-brain-library/src/execution.test.ts` + `docs/ai-editor/benchmarks/phase8-editorial-brain-quality-evaluation-v1.md` | verified on `ec8144a5`; AI Editor CI `33061744128` job `98481929429`; pacing `11/18 -> 1`, continuity `0.5 -> 1`, variety `0 -> 1`, repeat rate `1/3 -> 0` on exact frozen Phase-8 fixture |
+| Versioned experiment-registry contract | `packages/contracts/src/experiment-registry.contract.ts` | verified on `00c8d0a9`; AI Editor CI `33069149168` job `98506625635`; pinned benchmark/control + candidate model/prompt/profile/policy + immutable result evidence |
+| Immutable experiment-registry persistence | `packages/experiment-registry-library/src/index.ts` | verified on `0890b33c`; AI Editor CI `33074640900` job `98525532483`; exact re-registration idempotent, immutable conflicts fail closed, defensive copies preserve historical evidence |
 
 ## Phase 1 closure
 
@@ -118,3 +120,7 @@ Phase 7 contains six verified slices including evidence reconciliation. Human-re
 ## Phase 8 closure
 
 P8-01 audited the existing Style Profile and identified the missing evaluation dependency. P8-02 verified the versioned editorial-quality evaluator, P8-03 froze `phase8-editorial-quality-baseline:v1`, and P8-04 pinned the deterministic Editorial Brain policy. P8-05 executes that policy over bounded candidate evidence, and P8-06 measures the actual planner output on the exact frozen fixture. The measured result improves pacing, continuity and variety while lowering repeat rate, satisfying the explicit Phase-8 gate. Checkpoint 0099 reconciles the evidence and advances the project to Phase 9 without an additional Actions run.
+
+## Phase 9 active mapping
+
+P9-01 audited the existing versioned benchmarks and AI model registry. P9-02 establishes versioned immutable experiment identity; P9-03 adds idempotent fail-closed experiment registration semantics without duplicating model/prompt/benchmark payloads. The remaining explicit gate gap is versioned regression gating.
