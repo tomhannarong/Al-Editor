@@ -82,6 +82,7 @@ Active repository: `tomhannarong/Al-Editor`, branch `main`. A blocked task block
 | Same-fixture Editorial Brain quality evaluation | `packages/editorial-brain-library/src/execution.test.ts` + `docs/ai-editor/benchmarks/phase8-editorial-brain-quality-evaluation-v1.md` | verified on `ec8144a5`; AI Editor CI `33061744128` job `98481929429`; pacing `11/18 -> 1`, continuity `0.5 -> 1`, variety `0 -> 1`, repeat rate `1/3 -> 0` on exact frozen Phase-8 fixture |
 | Versioned experiment-registry contract | `packages/contracts/src/experiment-registry.contract.ts` | verified on `00c8d0a9`; AI Editor CI `33069149168` job `98506625635`; pinned benchmark/control + candidate model/prompt/profile/policy + immutable result evidence |
 | Immutable experiment-registry persistence | `packages/experiment-registry-library/src/index.ts` | verified on `0890b33c`; AI Editor CI `33074640900` job `98525532483`; exact re-registration idempotent, immutable conflicts fail closed, defensive copies preserve historical evidence |
+| Versioned regression gate | `packages/contracts/src/regression-gate.contract.ts` | verified on `45af396a`; AI Editor CI `33079312344` job `98541839414`; exact benchmark/control + experiment/result binding with explicit higher/lower-is-better absolute regression tolerance semantics |
 
 ## Phase 1 closure
 
@@ -123,4 +124,4 @@ P8-01 audited the existing Style Profile and identified the missing evaluation d
 
 ## Phase 9 active mapping
 
-P9-01 audited the existing versioned benchmarks and AI model registry. P9-02 establishes versioned immutable experiment identity; P9-03 adds idempotent fail-closed experiment registration semantics without duplicating model/prompt/benchmark payloads. The remaining explicit gate gap is versioned regression gating.
+P9-01 audited the existing versioned benchmarks and AI model registry. P9-02 establishes versioned immutable experiment identity; P9-03 adds idempotent fail-closed experiment registration semantics without duplicating model/prompt/benchmark payloads. P9-04 adds the pinned regression-gate contract and exact direction/tolerance semantics. Deterministic execution against exact benchmark/control and candidate result metrics remains the smallest proof needed before Phase-9 gate reconciliation.

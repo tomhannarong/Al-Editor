@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 9,
-  "currentTask": "P9-04-versioned-regression-gate-contract",
+  "currentTask": "P9-05-deterministic-regression-gate-execution",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 87,
-    "standaloneRevalidatedPercent": 53.70
+    "standaloneRevalidated": 88,
+    "standaloneRevalidatedPercent": 54.32
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0102-phase9-immutable-experiment-registry-persistence-verified.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0103-phase9-versioned-regression-gate-contract-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -43,12 +43,12 @@
   },
   "phase9": {
     "state": "started",
-    "standaloneRevalidated": 2,
+    "standaloneRevalidated": 3,
     "audit": {"state":"complete","checkpoint":"0100-phase9-evaluation-experiment-regression-audit-complete.md","auditedMainHead":"b7c5372f708b68ffa294dd4a325eb160d5c4b73a","findings":["Versioned benchmark evidence already exists across scene-boundary, retrieval, HAR, frame/source mapping and editorial-quality benchmark documents and deterministic test fixtures.","The existing AI model registry pins model, prompt, execution-profile, decoding-policy and optional scoring-policy versions and therefore should be reused as experiment input identity rather than duplicated.","No standalone experiment-registry package/contract is present in the audited package inventory.","No standalone regression-gate package/contract is present in the audited package inventory.","Phase-9 checklist denominator is not present in current standalone authority; do not invent one."]},
-    "verifiedEvidence": ["P9-02 versioned experiment-registry contract on 00c8d0a97145031d33d9eb94657284e03f019605","AI Editor CI run 33069149168 job 98506625635 success","P9-03 immutable experiment-registry persistence on 0890b33caaf3573f3491aa3f344edf966524ab67","AI Editor CI run 33074640900 job 98525532483 success","exact ai-editor-ci/all success on 0890b33caaf3573f3491aa3f344edf966524ab67"],
-    "next": "P9-04-versioned-regression-gate-contract",
+    "verifiedEvidence": ["P9-02 versioned experiment-registry contract on 00c8d0a97145031d33d9eb94657284e03f019605","AI Editor CI run 33069149168 job 98506625635 success","P9-03 immutable experiment-registry persistence on 0890b33caaf3573f3491aa3f344edf966524ab67","AI Editor CI run 33074640900 job 98525532483 success","exact ai-editor-ci/all success on 0890b33caaf3573f3491aa3f344edf966524ab67","P9-04 versioned regression-gate contract on 45af396ae304d81afd7d417fc8f194098fdb03c8","AI Editor CI run 33079312344 job 98541839414 success","exact ai-editor-ci/all success on 45af396ae304d81afd7d417fc8f194098fdb03c8"],
+    "next": "P9-05-deterministic-regression-gate-execution",
     "requiredGate": ["versioned benchmark", "experiment registry", "regression gate"],
-    "note": "P9-02/P9-03 now provide versioned immutable experiment identity plus idempotent fail-closed registration semantics while reusing existing model/prompt/execution-profile registry identities. The smallest remaining Phase-9 gate gap is a versioned regression-gate contract."
+    "note": "P9-02/P9-03 provide versioned immutable experiment identity and registration semantics. P9-04 adds a pinned regression-gate contract with explicit higher/lower-is-better absolute-tolerance semantics. The smallest remaining proof is deterministic execution against exact benchmark/control and candidate result metrics before Phase-9 gate reconciliation."
   },
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }
