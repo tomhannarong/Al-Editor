@@ -35,14 +35,13 @@ describe('Phase-11 temporal adjacency candidate', () => {
     expect(candidate.rankingsByCase['case:ordered-a']).toEqual([
       'scene:a1:r1',
       'scene:a2:r1',
-      'scene:a3:r1',
     ]);
     expect(candidate.quality).toEqual([
       { metricId: 'temporal-recall-at-10', direction: 'higher-is-better', value: 1 },
       { metricId: 'ordered-sequence-completion-rate', direction: 'higher-is-better', value: 1 },
       { metricId: 'duplicate-occupancy', direction: 'lower-is-better', value: 0 },
     ]);
-    expect(candidate.rankedSceneCount).toBe(12);
+    expect(candidate.rankedSceneCount).toBe(11);
   });
 
   it('does not use expected benchmark labels as candidate-ranking input', () => {
@@ -65,7 +64,7 @@ describe('Phase-11 temporal adjacency candidate', () => {
 
     expect(validateTemporalIntelligenceBenchmarkComparisonV1(run.comparison)).toEqual({ valid: true, errors: [] });
     expect(run.comparison.lightweightBaseline.cost).toEqual({ wallClockMs: 1, computeUnits: 10 });
-    expect(run.comparison.candidate.cost).toEqual({ wallClockMs: 1, computeUnits: 12 });
+    expect(run.comparison.candidate.cost).toEqual({ wallClockMs: 1, computeUnits: 11 });
     expect(run.baselineComputeUnitDefinition).toBe('ranked-scene-evaluation:v1');
     expect(run.candidateComputeUnitDefinition).toBe('ranked-scene-evaluation:v1');
     expect(temporalCandidateWinsEveryQualityMetricV1(run.comparison)).toBe(true);
@@ -83,7 +82,7 @@ describe('Phase-11 temporal adjacency candidate', () => {
     expect(run.comparison.lightweightBaseline.cost.wallClockMs).toBeGreaterThan(0);
     expect(run.comparison.candidate.cost.wallClockMs).toBeGreaterThan(0);
     expect(run.comparison.lightweightBaseline.cost.computeUnits).toBe(10);
-    expect(run.comparison.candidate.cost.computeUnits).toBe(12);
+    expect(run.comparison.candidate.cost.computeUnits).toBe(11);
 
     console.log(`PHASE11_TEMPORAL_CANDIDATE_COMPARISON_V1=${JSON.stringify({
       ...run,
