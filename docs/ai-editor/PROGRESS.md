@@ -2,7 +2,7 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 7 — Human Review  
-**Current task:** P7-01 — Human-review semantics evidence audit
+**Current task:** P7-01 — Human-review decision contract repository validation pending
 
 ```text
 Standalone verified: 73 / 162 = 45.06%
@@ -16,27 +16,28 @@ Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              started — denominator not invented without checklist authority
 ```
 
-## Phase-6 closure
+## Phase-7 audit result
 
-P6-01 established the cross-layer exact frame/source mapping golden: integer project-frame spans map to exact native source PTS/rational time-base spans and the renderer uses the same absolute source boundaries. Evidence: implementation `72780c37b5456fa4a31fdfdacca8023c6e79fcd2`; AI Editor CI `33013977827`, job `98327280374`.
+The Bible requires durable replace / trim / lock / revision semantics plus the first valid HAR measurement before leaving Phase 7.
 
-Existing checkpoint 0033 already proves real preview plus immutable edit/rerender behavior. P6-02 adds deterministic final-delivery compliance validation against the exact immutable Delivery Profile. Evidence: implementation `6d645c87a6079c657e0507fd9e4ff5fe5feed5e8`; AI Editor CI `33017556928`, job `98339605165`.
+`apps/studio` exposes replace, trim, lock and create-revision controls, but they remain disabled and the Studio README explicitly says immutable revision APIs are not yet wired. UI presence therefore does not satisfy the durable semantics gate.
 
-P6-03 closes the runtime half of delivery validation using a real 1080x1920 H.264/AAC render, real FFprobe metadata, real FFmpeg loudness measurement and caption evidence fed into the P6-02 validator. Evidence: exact runtime SHA `37bd9bde7ccaf4f578f78d97d0c00f9cc1b68f40`; AI Editor Local Stack Gate `33021782671`, job `98353642048`; exact `ai-editor-local-stack/all = success`.
+`packages/timeline-revision` already proves immutable child-revision lineage for a source-window edit, including native-PTS validation and a new manifest/revision identity. It does not prove durable human decision evidence, replace semantics or lock semantics.
 
-The Bible Phase-6 gate requires only `exact frame/source mapping goldens` plus `preview/final delivery validation`. Both requirements now have exact standalone evidence, so P6-04 closes Phase 6 by evidence reconciliation only. No extra CI/runtime run is justified for this docs-only closure.
+The smallest missing boundary was therefore implemented as `packages/contracts/src/human-review-decision.contract.ts` on `eb251d888766c590c12fd3a4fdfb5a39ec62e96b`. The v1 contract binds each reviewed AI decision to a review session, immutable reviewed revision, canonical item, reviewer and action. `accept` records the existing revision; `replace`, `trim` and `lock` require a distinct resulting child revision. It intentionally does not duplicate project frames, native source PTS or source mapping into review evidence.
+
+## Validation state
+
+Production contract source passes an isolated strict TypeScript compile using the repository compiler invariants (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`). A full repository clone/test could not run because this execution environment could not resolve `github.com`.
+
+GitHub Actions has not emitted a workflow run for implementation SHA `eb251d888766c590c12fd3a4fdfb5a39ec62e96b`. Therefore P7-01 is **implemented but not verified** and the standalone verified count remains 73. No dependent persistence or HAR work is claimed complete.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, and all verified Phase-1 through Phase-5 evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, style/delivery/provenance/model contracts, structured logging, immutable revision/render evidence, and all verified Phase-1 through Phase-6 evidence remain unchanged.
 
 Integer project frames + rational FPS and native source PTS + rational stream time base remain the only canonical timing authorities.
 
-## Phase-7 entry
+## Next task
 
-Phase 7 requires two explicit proof classes before advancing:
-
-1. durable replace / trim / lock / revision semantics; and
-2. the first valid Human Acceptance Rate measurement, whose denominator is reviewed decisions and which reports review coverage separately.
-
-The next smallest task is **P7-01 — human-review semantics evidence audit**. Existing `apps/studio` review UI evidence may be reused only where exact standalone evidence exists; no replace/trim/lock/HAR checklist item will be marked verified from UI presence alone.
+Inspect exact repository CI evidence for `eb251d888766c590c12fd3a4fdfb5a39ec62e96b`. If the gate passes, mark the human-review decision contract verified and proceed to the smallest independent durable review-decision persistence/revision-semantics slice. If it fails, repair only the observed code/config defect and do not rerun an unchanged failure.
