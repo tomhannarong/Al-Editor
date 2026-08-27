@@ -12,7 +12,7 @@
   },
   "status": "in-progress",
   "currentPhase": 8,
-  "currentTask": "P8-01-editorial-brain-style-profile-evidence-audit",
+  "currentTask": "P8-02-versioned-editorial-quality-evaluation-boundary",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
@@ -24,7 +24,7 @@
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0094-phase7-gate-reconciled-and-closed.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0095-phase8-editorial-brain-style-profile-audit-complete.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -57,9 +57,19 @@
   "phase8": {
     "state": "started",
     "standaloneRevalidated": 0,
-    "next": "P8-01-editorial-brain-style-profile-evidence-audit",
+    "audit": {
+      "state": "complete",
+      "checkpoint": "0095-phase8-editorial-brain-style-profile-audit-complete.md",
+      "findings": [
+        "Style Profile v1 is already verified and includes duration, continuity/variety-oriented scoring, movement, transitions and duplicate-control preferences.",
+        "No standalone Editorial Brain/planner package exists at the audited main HEAD.",
+        "No Phase-8 benchmark exists for pacing, continuity, variety or repeat rate; retrieval Recall and HAR evidence do not substitute for editorial-quality evidence.",
+        "No exact Phase-8 checklist denominator is present in current standalone authority; do not invent one."
+      ]
+    },
+    "next": "P8-02-versioned-editorial-quality-evaluation-boundary",
     "requiredGate": ["pacing/continuity/variety improvements","lower repeat rate"],
-    "note": "Do not invent a Phase-8 denominator until exact checklist authority is established. Audit existing style-profile and editorial-planning evidence before adding capability."
+    "note": "Build the deterministic/versioned evaluation boundary before any Editorial Brain scoring/model upgrade. Preserve style-profile v1 and canonical timeline timing authority; do not claim improvement until the same labeled fixture measures before/after plans."
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",

@@ -2,7 +2,7 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 8 — Editorial Brain + Style Profiles  
-**Current task:** P8-01 — Editorial Brain/style-profile evidence audit
+**Current task:** P8-02 — versioned editorial-quality evaluation boundary
 
 ```text
 Standalone verified: 79 / 162 = 48.77%
@@ -17,31 +17,39 @@ Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 8:              started; denominator intentionally unspecified pending checklist authority
 ```
 
-## Phase-7 closure
+## Phase-8 P8-01 audit result
 
-The Bible Phase-7 gate is fully satisfied with exact standalone evidence:
+The audit is complete and does not increment the verified checklist count because it is evidence reconciliation, not a newly verified product capability.
 
-- replace / trim / lock / revision semantics are verified by P7-01 through P7-04;
-- the first valid HAR measurement is verified by P7-05;
-- HAR uses reviewed AI decisions only as its denominator, while review coverage and publish-without-edit remain separate metrics.
+Existing reusable authority:
 
-No new human-review capability or redundant GitHub Actions run was required for P7-06 reconciliation. The exact starting `main` HEAD `277f95732410d1aca9f3f9f609cc21752ceb0934` was a documentation-only closure HEAD and had zero workflow runs.
+- Editorial Style Profile v1 is already verified. It versions duration preferences, variety limits, movement preferences, transition policy and editorial scoring weights while explicitly keeping millisecond preferences out of canonical timeline authority.
+- Phase-4/5 retrieval benchmarks measure retrieval quality, not editorial pacing/continuity/variety.
+- Phase-7 HAR measures reviewed human acceptance, not the Phase-8 editorial-quality gate.
+
+Concrete gap at the audited `main` HEAD:
+
+- no standalone Editorial Brain/planner implementation exists;
+- no versioned Phase-8 evaluator/benchmark exists for pacing, continuity, variety and repeat rate;
+- therefore no before/after evidence can currently support a scoring/model/style-planning upgrade.
+
+The smallest dependency-correct next step is an evaluation boundary, not a planner/model upgrade.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, immutable originals/revisions/renders, style profile, delivery profile, structured logging, provenance/rights evidence and all verified Phase-1 through Phase-7 runtime evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, centralized media-time authority, renderer-neutral v2 adapter boundary, immutable originals/revisions/renders, Style Profile v1, Delivery Profile v1, structured logging, provenance/rights evidence and all verified Phase-1 through Phase-7 runtime evidence remain unchanged.
 
 ## Phase-8 gate
 
-Phase 8 requires evidence of:
+Phase 8 requires versioned before/after evidence of:
 
 - pacing improvement;
 - continuity improvement;
 - variety improvement;
 - lower repeat rate.
 
-These are editorial-quality claims and must be demonstrated by versioned before/after evaluation. Existing style-profile or planning code is not sufficient by itself.
+No Phase-8 quality claim is accepted from UI presence, retrieval Recall, HAR, or a style-profile definition alone.
 
 ## Next task
 
-P8-01 — audit current style-profile, editorial-planning and evaluation evidence against the Phase-8 gate. Reuse existing versioned contracts where possible and identify the smallest genuine evidence/capability gap before adding code or spending an Actions run.
+P8-02 — implement a deterministic, versioned editorial-quality evaluation boundary that consumes immutable plan evidence plus Style Profile v1, measures pacing/continuity/variety/repeat-rate without becoming canonical timing authority, and can compare before/after plans on the exact same labeled fixture. Do not add an Editorial Brain scoring/model upgrade until this measurement boundary is verified.
