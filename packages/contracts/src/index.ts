@@ -14,3 +14,4 @@ export * from './baseline-scene-retrieval-query.contract.js';
 export * from './indexed-scene-document.contract.js';
 export * from './hybrid-retrieval-policy.contract.js';
 export * from './retrieval-duplicate-control-policy.contract.js';
+export * from './human-review-decision.contract.js';
