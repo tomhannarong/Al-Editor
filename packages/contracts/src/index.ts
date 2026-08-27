@@ -18,3 +18,4 @@ export * from './human-review-decision.contract.js';
 export * from './editorial-brain-planning-policy.contract.js';
 export * from './experiment-registry.contract.js';
 export * from './regression-gate.contract.js';
+export * from './otio-davinci-interchange.contract.js';
