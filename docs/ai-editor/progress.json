@@ -6,9 +6,9 @@
   "migrationSource": {"repository":"tomhannarong/creator-intelligence-os","branch":"agent/ai-local-footage-editor-bible-phase0","historicalVerified":20,"historicalChecklistItems":162,"historicalVerifiedPercent":12.35},
   "status": "in-progress",
   "currentPhase": 13,
-  "currentTask": "P13-02-expired-lease-recovery-semantics-and-drill",
-  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":101,"standaloneRevalidatedPercent":62.35},
-  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0116-phase13-production-hardening-audit-verified.md"},
+  "currentTask": "P13-03-backup-restore-contract-and-clean-target-drill",
+  "totals": {"checklistItems":162,"historicalVerified":20,"historicalVerifiedPercent":12.35,"standaloneRevalidated":102,"standaloneRevalidatedPercent":62.96},
+  "evidenceAuthority": {"humanProgress":"docs/ai-editor/PROGRESS.md","implementationMapping":"docs/ai-editor/IMPLEMENTATION_MAPPING.md","checkpointsDirectory":"docs/ai-editor/checkpoints","latestCheckpoint":"docs/ai-editor/checkpoints/0117-phase13-expired-lease-recovery-verified.md"},
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
   "phase2": {"total":11,"standaloneRevalidated":11,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":"retained in IMPLEMENTATION_MAPPING.md and checkpoints"},
@@ -24,11 +24,12 @@
   "phase12": {"state":"verified-complete","standaloneRevalidated":3,"requiredGate":["orchestrates existing APIs only","no hidden parallel workflow"]},
   "phase13": {
     "state":"started",
-    "standaloneRevalidated":1,
-    "next":"P13-02-expired-lease-recovery-semantics-and-drill",
+    "standaloneRevalidated":2,
+    "next":"P13-03-backup-restore-contract-and-clean-target-drill",
     "requiredGate":["recovery evidence","restore drill","quotas","cost/SLO evidence"],
     "audit":{"state":"verified","evidence":"docs/ai-editor/audits/phase13-production-hardening-audit-v1.md"},
-    "knownGaps":["expired/stale lease reclamation recovery drill","versioned backup/restore ownership and RPO/RTO with clean-target restore drill","versioned quota/admission policy and evaluator","versioned SLO/cost-budget policy and evaluator"]
+    "verifiedEvidence":{"expiredLeaseRecovery":["implementation 92193b0fb8f3d553721efd95bb13d00765f50d59","recovery drill 22ba7627a4c6748bf9957f56cdfa5246fd709984","AI Editor CI run 33127847165 job 98710140160 success","72 test files / 390 tests","exact ai-editor-ci/all success"]},
+    "knownGaps":["versioned backup/restore ownership and RPO/RTO with clean-target restore drill","versioned quota/admission policy and evaluator","versioned SLO/cost-budget policy and evaluator"]
   },
   "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }

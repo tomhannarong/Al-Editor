@@ -3,10 +3,10 @@
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Active implementation phase:** 13 — Production Scale / Hardening  
 **Blocked external gate:** Phase 10 exact DaVinci Resolve runtime proof  
-**Current task:** P13-02 — expired/stale lease recovery semantics and deterministic recovery drill
+**Current task:** P13-03 — versioned backup/restore ownership + RPO/RTO contract and clean-target restore drill
 
 ```text
-Standalone verified: 101 / 162 = 62.35%
+Standalone verified: 102 / 162 = 62.96%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -20,38 +20,50 @@ Phase 9:              5 verified slices; GATE VERIFIED
 Phase 10:             3 verified slices; GATE OPEN on real Resolve runtime proof
 Phase 11:             4 verified slices; GATE VERIFIED
 Phase 12:             3 verified slices; GATE VERIFIED
-Phase 13:             1 verified slice; GATE OPEN
+Phase 13:             2 verified slices; GATE OPEN
 ```
 
 ## Phase 10 blocker remains exact and narrow
 
 P10-05 still requires a real DaVinci Resolve import + project-relative relink + OTIO re-export capture. Static evidence is not substituted for the exact target-NLE runtime gate.
 
-## P13-01 verified — production-hardening evidence audit
+## P13-02 verified — fenced expired-lease recovery
 
-Audit evidence is recorded in `docs/ai-editor/audits/phase13-production-hardening-audit-v1.md` against starting HEAD `5d6771c110fbf8f45d305f11ccff6637d4eaecc5`.
+Durable job state machine v1 now has an additive `recover-expired` command. The persisted job shape and `stateMachineVersion = 1.0` remain unchanged.
 
-The audit preserves and recognizes existing foundations:
+Recovery semantics are intentionally fail-closed:
 
-- durable job state machine v1 already has idempotency keys, leases, heartbeat, bounded attempts, retry-wait and terminal states;
-- PostgreSQL/Qdrant standalone runtime evidence and persistent local-stack volumes already exist for earlier capability gates;
-- stage cost/performance telemetry v1 already records wall/cpu/gpu usage, bytes/media/tokens, optional priced cost, pinned version references and stable failures.
+- only `leased` or `running` jobs with persisted lease evidence may be recovered;
+- recovery is rejected before `expiresAt`;
+- recovery clears lease ownership/token atomically;
+- if attempts remain, the job returns to `queued` without incrementing `attempt` during recovery;
+- if the expired lease consumed `maxAttempts`, recovery transitions directly to terminal `failed`;
+- stale worker tokens cannot mutate the recovered queued job;
+- a fresh lease uses a new token and increments the next attempt normally.
 
-The Phase-13 gate remains open because these foundations do **not** yet prove production hardening. Exact missing evidence is:
+Implementation commit: `92193b0fb8f3d553721efd95bb13d00765f50d59`.
 
-1. stale/expired lease reclamation plus a deterministic recovery drill;
-2. versioned backup/restore ownership, RPO/RTO and a clean-target restore drill;
-3. versioned quota/admission limits plus a fail-closed evaluator;
-4. versioned SLO/cost-budget policy plus deterministic evaluation evidence.
+A dedicated deterministic recovery drill was added in `packages/contracts/src/job-state-machine.recovery-drill.test.ts` at `22ba7627a4c6748bf9957f56cdfa5246fd709984`. The drill proves: abandoned running work expires -> recovery returns it to queued -> old token is fenced -> a new worker leases/restarts -> the job succeeds under the fresh token.
 
-Persistent volumes are not counted as backups. Retry `maxAttempts` is not counted as a resource quota. Raw telemetry is not counted as an SLO.
+Local-first validation was attempted before relying on Actions, but this execution environment could not resolve `github.com`. No local pass was claimed and the DNS failure was not treated as a code failure.
 
-No source code or canonical contract changed for P13-01. The current main HEAD before this audit was documentation-only and had no Actions run, while the immediately preceding substantive Phase-12 repair SHA `66038bc371c17f6498b81005cf0b5b2bfe86d794` retains successful AI Editor CI run `33120088643`. No redundant GitHub Actions run is required for this static audit.
+The first code commit's workflow run `33127808551` was cancelled by the repository concurrency policy after the focused recovery-drill commit superseded it. It was not rerun. Final confidence evidence is AI Editor CI run `33127847165`, job `98710140160`, against exact SHA `22ba7627a4c6748bf9957f56cdfa5246fd709984`:
+
+- dependency install: success;
+- strict TypeScript: success;
+- Vitest: `72` files / `390` tests passed;
+- `job-state-machine.contract.test.ts`: `12` tests passed;
+- `job-state-machine.recovery-drill.test.ts`: `1` end-to-end deterministic recovery drill passed;
+- deterministic migration verification/self-test: success;
+- Style/Delivery/registry/telemetry/logging/job/API-health policy gates: success;
+- exact observable `ai-editor-ci/all = success`.
+
+No PostgreSQL/Qdrant/FFmpeg heavyweight workflow was required for this pure durable-state transition slice.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational time-base authority, renderer-neutral adapters, immutable revision evidence, durable job semantics, Style/Delivery/Profile/provenance contracts, human-review semantics, retrieval/editorial separation and all previously verified evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational time-base authority, renderer-neutral v2 adapters, immutable revision/render evidence, Style/Delivery/provenance contracts, human-review semantics, retrieval/editorial separation and Content Agent orchestration boundaries remain unchanged.
 
 ## Next task
 
-P13-02 — add explicit fenced expired-lease recovery semantics to the existing durable job state machine and deterministic tests proving abandoned work can be reclaimed while active leases, terminal jobs, exhausted attempts and stale lease tokens fail closed. Keep job v1 shape compatible and make the change additive.
+P13-03 — define a versioned backup/restore contract with explicit owner, durable-store scope, RPO/RTO, integrity/checksum evidence and clean-target restore requirements. Then add the smallest selective real restore drill needed to prove application-readable recovery without converting persistent volumes into a false backup claim.
