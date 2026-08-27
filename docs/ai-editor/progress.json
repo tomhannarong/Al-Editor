@@ -12,7 +12,7 @@
   },
   "status": "in-progress",
   "currentPhase": 9,
-  "currentTask": "P9-01-evaluation-experiment-regression-evidence-audit",
+  "currentTask": "P9-02-versioned-experiment-registry-contract",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
@@ -24,7 +24,7 @@
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0099-phase8-editorial-brain-quality-gate-verified-and-closed.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0100-phase9-evaluation-experiment-regression-audit-complete.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -91,9 +91,21 @@
   "phase9": {
     "state": "started",
     "standaloneRevalidated": 0,
-    "next": "P9-01-evaluation-experiment-regression-evidence-audit",
+    "audit": {
+      "state": "complete",
+      "checkpoint": "0100-phase9-evaluation-experiment-regression-audit-complete.md",
+      "auditedMainHead": "b7c5372f708b68ffa294dd4a325eb160d5c4b73a",
+      "findings": [
+        "Versioned benchmark evidence already exists across scene-boundary, retrieval, HAR, frame/source mapping and editorial-quality benchmark documents and deterministic test fixtures.",
+        "The existing AI model registry pins model, prompt, execution-profile, decoding-policy and optional scoring-policy versions and therefore should be reused as experiment input identity rather than duplicated.",
+        "No standalone experiment-registry package/contract is present in the audited package inventory.",
+        "No standalone regression-gate package/contract is present in the audited package inventory.",
+        "Phase-9 checklist denominator is not present in current standalone authority; do not invent one."
+      ]
+    },
+    "next": "P9-02-versioned-experiment-registry-contract",
     "requiredGate": ["versioned benchmark", "experiment registry", "regression gate"],
-    "note": "Audit existing benchmark/model registry/evaluation evidence first; do not create parallel experiment or regression infrastructure if a verified standalone capability already exists."
+    "note": "The versioned-benchmark prerequisite is already materially represented by exact prior benchmark evidence. Build the smallest additive experiment-registry boundary next, reusing existing model/prompt/execution-profile identities; regression gating remains a subsequent independent slice."
   },
   "rules": {
     "targetRepositoryOnly": "tomhannarong/Al-Editor",
