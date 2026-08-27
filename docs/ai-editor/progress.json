@@ -12,19 +12,19 @@
   },
   "status": "in-progress",
   "currentPhase": 9,
-  "currentTask": "P9-02-versioned-experiment-registry-contract",
+  "currentTask": "P9-03-immutable-experiment-registry-persistence-idempotency",
   "totals": {
     "checklistItems": 162,
     "historicalVerified": 20,
     "historicalVerifiedPercent": 12.35,
-    "standaloneRevalidated": 85,
-    "standaloneRevalidatedPercent": 52.47
+    "standaloneRevalidated": 86,
+    "standaloneRevalidatedPercent": 53.09
   },
   "evidenceAuthority": {
     "humanProgress": "docs/ai-editor/PROGRESS.md",
     "implementationMapping": "docs/ai-editor/IMPLEMENTATION_MAPPING.md",
     "checkpointsDirectory": "docs/ai-editor/checkpoints",
-    "latestCheckpoint": "docs/ai-editor/checkpoints/0100-phase9-evaluation-experiment-regression-audit-complete.md"
+    "latestCheckpoint": "docs/ai-editor/checkpoints/0101-phase9-versioned-experiment-registry-contract-verified.md"
   },
   "phase0": {"total":22,"standaloneRevalidated":22,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["existing Phase-0 exact standalone evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
   "phase1": {"total":14,"standaloneRevalidated":14,"standaloneRevalidatedPercent":100,"state":"verified-complete","evidence":["checkpoint 0050 Phase-1 gate reconciliation","P1-01 through P1-13 exact evidence retained in IMPLEMENTATION_MAPPING.md and checkpoints"]},
@@ -32,94 +32,23 @@
   "phase3": {"total":9,"standaloneRevalidated":9,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"immutableAsrAndCorrections":["P3-01/P3-02/P3-03/P3-08 exact evidence"],"stableWordTiming":["P3-01/P3-07/P3-08 native-PTS evidence"],"editorialSegments":["P3-04 through P3-06 exact evidence"]}},
   "phase4": {"total":6,"standaloneRevalidated":6,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"querySchema":["P4-01 exact query-schema evidence"],"indexedScenes":["P4-02/P4-03 immutable indexed-scene evidence","P4-04 real-Qdrant indexing/readback evidence"],"labeledRecallAt10Baseline":["phase4-labeled-recall-at-10:v1","macro Recall@10 0.8333333333333334","micro Recall@10 0.75","AI Editor CI run 32965904224 job 98168207773 success"]}},
   "phase5": {"total":7,"standaloneRevalidated":7,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"measurableQualityGainOnSameBenchmark":["exact benchmark phase4-labeled-recall-at-10:v1","macro Recall@10 gain 0.16666666666666663","micro Recall@10 gain 0.25","AI Editor CI run 33003534039 job 98291207703 success"],"duplicateControl":["P5-04 versioned policy","P5-05 deterministic native-PTS interval suppression","P5-06 actual same-benchmark occupancy measurement"]}},
-  "phase6": {
-    "total": 4,
-    "standaloneRevalidated": 4,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "gateEvidence": {
-      "exactFrameSourceMappingGoldens": ["P6-01 exact canonical frame/source mapping golden","docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md","AI Editor CI run 33013977827 job 98327280374 success"],
-      "previewFinalDeliveryValidation": ["checkpoint 0033 real preview + immutable rerender evidence","P6-02 deterministic final-delivery validator; AI Editor CI run 33017556928 job 98339605165 success","P6-03 real FFmpeg/FFprobe/loudness/caption runtime evidence; AI Editor Local Stack Gate run 33021782671 job 98353642048 success","exact ai-editor-local-stack/all success on 37bd9bde7ccaf4f578f78d97d0c00f9cc1b68f40"],
-      "reconciliation": ["checkpoint 0089 Phase-6 gate reconciliation"]
-    }
-  },
-  "phase7": {
-    "total": 6,
-    "standaloneRevalidated": 6,
-    "standaloneRevalidatedPercent": 100,
-    "state": "verified-complete",
-    "gateEvidence": {
-      "replaceTrimLockRevisionSemantics": ["P7-01 through P7-04 exact standalone evidence","canonical replace/trim/lock child-revision semantics on dbcf7975c539bf0ea8d479d5f804596bfad42419","AI Editor CI run 33035221247 job 98396369016 success"],
-      "firstValidHarMeasurement": ["P7-05 deterministic HAR evaluator on 15c0eed5480cbad576c422611107592371608786","docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md","HAR 0.5 over 4 reviewed decisions; review coverage 0.6666666666666666; publish-without-edit 0.8","AI Editor CI run 33038039987 job 98405091769 success"],
-      "reconciliation": ["checkpoint 0094 Phase-7 gate reconciliation"]
-    }
-  },
+  "phase6": {"total":4,"standaloneRevalidated":4,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"exactFrameSourceMappingGoldens":["P6-01 exact canonical frame/source mapping golden","docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md","AI Editor CI run 33013977827 job 98327280374 success"],"previewFinalDeliveryValidation":["checkpoint 0033 real preview + immutable rerender evidence","P6-02 deterministic final-delivery validator; AI Editor CI run 33017556928 job 98339605165 success","P6-03 real FFmpeg/FFprobe/loudness/caption runtime evidence; AI Editor Local Stack Gate run 33021782671 job 98353642048 success","exact ai-editor-local-stack/all success on 37bd9bde7ccaf4f578f78d97d0c00f9cc1b68f40"],"reconciliation":["checkpoint 0089 Phase-6 gate reconciliation"]}},
+  "phase7": {"total":6,"standaloneRevalidated":6,"standaloneRevalidatedPercent":100,"state":"verified-complete","gateEvidence":{"replaceTrimLockRevisionSemantics":["P7-01 through P7-04 exact standalone evidence","canonical replace/trim/lock child-revision semantics on dbcf7975c539bf0ea8d479d5f804596bfad42419","AI Editor CI run 33035221247 job 98396369016 success"],"firstValidHarMeasurement":["P7-05 deterministic HAR evaluator on 15c0eed5480cbad576c422611107592371608786","docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md","HAR 0.5 over 4 reviewed decisions; review coverage 0.6666666666666666; publish-without-edit 0.8","AI Editor CI run 33038039987 job 98405091769 success"],"reconciliation":["checkpoint 0094 Phase-7 gate reconciliation"]}},
   "phase8": {
     "state": "verified-complete",
     "standaloneRevalidated": 6,
-    "audit": {
-      "state": "complete",
-      "checkpoint": "0095-phase8-editorial-brain-style-profile-audit-complete.md",
-      "findings": [
-        "Style Profile v1 is already verified and includes duration, continuity/variety-oriented scoring, movement, transitions and duplicate-control preferences.",
-        "No standalone Editorial Brain/planner package existed at the audited main HEAD.",
-        "No pre-P8-02 Phase-8 benchmark existed for pacing, continuity, variety or repeat rate; retrieval Recall and HAR evidence do not substitute for editorial-quality evidence.",
-        "No exact Phase-8 checklist denominator is present in current standalone authority; do not invent one."
-      ]
-    },
-    "gateEvidence": {
-      "versionedEvaluationAndControl": [
-        "P8-02 versioned editorial-quality evaluator",
-        "P8-03 frozen phase8-editorial-quality-baseline:v1 control"
-      ],
-      "versionedPlanner": [
-        "P8-04 planning policy on 873aabecb018bf5342694e10583110a4ecbc4892; CI 33056587221 job 98464793797 success",
-        "P8-05 deterministic Editorial Brain execution on 1dd19c375e39e81112e0557dd907caedf5252b83; CI 33061567916 job 98481330705 success"
-      ],
-      "sameFixtureQualityGain": [
-        "P8-06 benchmark phase8-editorial-brain-quality-evaluation:v1 on exact phase8-editorial-quality-fixture:v1",
-        "pacing 0.6111111111111112 -> 1.0",
-        "continuity 0.5 -> 1.0",
-        "variety 0.0 -> 1.0",
-        "repeat rate 0.3333333333333333 -> 0.0",
-        "AI Editor CI run 33061744128 job 98481929429 success"
-      ],
-      "reconciliation": ["checkpoint 0099 Phase-8 gate reconciliation"]
-    },
+    "audit": {"state":"complete","checkpoint":"0095-phase8-editorial-brain-style-profile-audit-complete.md","findings":["Style Profile v1 is already verified and includes duration, continuity/variety-oriented scoring, movement, transitions and duplicate-control preferences.","No standalone Editorial Brain/planner package existed at the audited main HEAD.","No pre-P8-02 Phase-8 benchmark existed for pacing, continuity, variety or repeat rate; retrieval Recall and HAR evidence do not substitute for editorial-quality evidence.","No exact Phase-8 checklist denominator is present in current standalone authority; do not invent one."]},
+    "gateEvidence": {"versionedEvaluationAndControl":["P8-02 versioned editorial-quality evaluator","P8-03 frozen phase8-editorial-quality-baseline:v1 control"],"versionedPlanner":["P8-04 planning policy on 873aabecb018bf5342694e10583110a4ecbc4892; CI 33056587221 job 98464793797 success","P8-05 deterministic Editorial Brain execution on 1dd19c375e39e81112e0557dd907caedf5252b83; CI 33061567916 job 98481330705 success"],"sameFixtureQualityGain":["P8-06 benchmark phase8-editorial-brain-quality-evaluation:v1 on exact phase8-editorial-quality-fixture:v1","pacing 0.6111111111111112 -> 1.0","continuity 0.5 -> 1.0","variety 0.0 -> 1.0","repeat rate 0.3333333333333333 -> 0.0","AI Editor CI run 33061744128 job 98481929429 success"],"reconciliation":["checkpoint 0099 Phase-8 gate reconciliation"]},
     "note": "Phase-8 gate is verified on the frozen same-fixture control. The result is exact deterministic evidence for this benchmark/policy pair; generalization and regression governance belong to Phase 9."
   },
   "phase9": {
     "state": "started",
-    "standaloneRevalidated": 0,
-    "audit": {
-      "state": "complete",
-      "checkpoint": "0100-phase9-evaluation-experiment-regression-audit-complete.md",
-      "auditedMainHead": "b7c5372f708b68ffa294dd4a325eb160d5c4b73a",
-      "findings": [
-        "Versioned benchmark evidence already exists across scene-boundary, retrieval, HAR, frame/source mapping and editorial-quality benchmark documents and deterministic test fixtures.",
-        "The existing AI model registry pins model, prompt, execution-profile, decoding-policy and optional scoring-policy versions and therefore should be reused as experiment input identity rather than duplicated.",
-        "No standalone experiment-registry package/contract is present in the audited package inventory.",
-        "No standalone regression-gate package/contract is present in the audited package inventory.",
-        "Phase-9 checklist denominator is not present in current standalone authority; do not invent one."
-      ]
-    },
-    "next": "P9-02-versioned-experiment-registry-contract",
+    "standaloneRevalidated": 1,
+    "audit": {"state":"complete","checkpoint":"0100-phase9-evaluation-experiment-regression-audit-complete.md","auditedMainHead":"b7c5372f708b68ffa294dd4a325eb160d5c4b73a","findings":["Versioned benchmark evidence already exists across scene-boundary, retrieval, HAR, frame/source mapping and editorial-quality benchmark documents and deterministic test fixtures.","The existing AI model registry pins model, prompt, execution-profile, decoding-policy and optional scoring-policy versions and therefore should be reused as experiment input identity rather than duplicated.","No standalone experiment-registry package/contract is present in the audited package inventory.","No standalone regression-gate package/contract is present in the audited package inventory.","Phase-9 checklist denominator is not present in current standalone authority; do not invent one."]},
+    "verifiedEvidence": ["P9-02 versioned experiment-registry contract on 00c8d0a97145031d33d9eb94657284e03f019605","AI Editor CI run 33069149168 job 98506625635 success","exact ai-editor-ci/all success"],
+    "next": "P9-03-immutable-experiment-registry-persistence-idempotency",
     "requiredGate": ["versioned benchmark", "experiment registry", "regression gate"],
-    "note": "The versioned-benchmark prerequisite is already materially represented by exact prior benchmark evidence. Build the smallest additive experiment-registry boundary next, reusing existing model/prompt/execution-profile identities; regression gating remains a subsequent independent slice."
+    "note": "P9-02 establishes the immutable versioned experiment identity boundary while reusing existing model/prompt/execution-profile registry identities. Durable/idempotent experiment registration is the next smallest gap; regression gating remains subsequent."
   },
-  "rules": {
-    "targetRepositoryOnly": "tomhannarong/Al-Editor",
-    "directMainCommits": true,
-    "pullRequestsRequired": false,
-    "countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem": true,
-    "repositoryCIGateOwnedBy": "P0-20",
-    "doNotAdvanceDependentTaskAfterFailedGate": true,
-    "blockOnlyDirectDependents": true,
-    "continueIndependentPhaseItemsWhenPossible": true,
-    "noDestructiveTimelineV1Rewrite": true,
-    "hourlyContinuationReadsThisFileFirst": true,
-    "minimizeGitHubActions": true,
-    "preferLocalValidationBeforePush": true,
-    "documentationOnlyCommitsMustNotTriggerCI": true
-  }
+  "rules": {"targetRepositoryOnly":"tomhannarong/Al-Editor","directMainCommits":true,"pullRequestsRequired":false,"countStandaloneVerifiedOnlyWithEvidenceAppropriateToItem":true,"repositoryCIGateOwnedBy":"P0-20","doNotAdvanceDependentTaskAfterFailedGate":true,"blockOnlyDirectDependents":true,"continueIndependentPhaseItemsWhenPossible":true,"noDestructiveTimelineV1Rewrite":true,"hourlyContinuationReadsThisFileFirst":true,"minimizeGitHubActions":true,"preferLocalValidationBeforePush":true,"documentationOnlyCommitsMustNotTriggerCI":true}
 }

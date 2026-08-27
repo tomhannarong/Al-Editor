@@ -2,10 +2,10 @@
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Phase:** 9 — Evaluation + Preference Learning  
-**Current task:** P9-02 — versioned experiment-registry contract
+**Current task:** P9-03 — immutable experiment-registry persistence/idempotency
 
 ```text
-Standalone verified: 85 / 162 = 52.47%
+Standalone verified: 86 / 162 = 53.09%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -15,39 +15,30 @@ Phase 5:              7 / 7   = 100.00% COMPLETE + GATE VERIFIED
 Phase 6:              4 / 4   = 100.00% COMPLETE + GATE VERIFIED
 Phase 7:              6 / 6   = 100.00% COMPLETE + GATE VERIFIED
 Phase 8:              6 verified slices; GATE VERIFIED
-Phase 9:              started; P9-01 audit complete; denominator intentionally unspecified pending checklist authority
+Phase 9:              1 verified slice; denominator intentionally unspecified pending checklist authority
 ```
 
-## Phase 9 audit complete — evaluation, experiment registry, regression gate
+## P9-02 verified — versioned experiment-registry contract
 
-P9-01 audited the exact `main` HEAD `b7c5372f708b68ffa294dd4a325eb160d5c4b73a` before making any Phase-9 capability change.
+Implementation `00c8d0a97145031d33d9eb94657284e03f019605` adds `packages/contracts/src/experiment-registry.contract.ts`, deterministic tests and the contracts barrel export.
 
-The Bible requires three Phase-9 proofs before advance:
+The contract binds each immutable experiment revision to:
 
-- versioned benchmark;
-- experiment registry;
-- regression gate.
+- exact benchmark, benchmark revision and control revision, with optional pinned fixture revision;
+- exact candidate policy identity/revision;
+- exact model ID/version, optional prompt ID/version and execution-profile ID/version, reusing the existing AI model registry identities rather than embedding raw model or prompt artifacts;
+- exact evaluation-policy version plus immutable result ID/revision/artifact identity and SHA-256 digest;
+- explicit started/completed/created timestamps with chronological validation.
 
-### Existing evidence to reuse
+Mutable aliases such as `latest`, `main`, `stable`, `default`, `current` and `head` are rejected for revision/version fields. Raw model artifacts, prompt templates, credentials, benchmark payloads and result payloads are intentionally outside this contract.
 
-Versioned benchmark evidence already exists and is exact/repository-bound across multiple frozen evaluations, including:
+Exact final-confidence evidence: AI Editor CI run `33069149168`, job `98506625635`; dependency install, strict TypeScript, Vitest, deterministic migrations, contract/policy gates and observable status publication all succeeded. Exact commit status `ai-editor-ci/all = success` is published for `00c8d0a9...`.
 
-- `docs/ai-editor/benchmarks/phase2-scene-boundary-baseline-v1.md`;
-- `docs/ai-editor/benchmarks/phase4-labeled-recall-at-10-baseline-v1.md`;
-- `docs/ai-editor/benchmarks/phase5-hybrid-duplicate-control-evaluation-v1.md`;
-- `docs/ai-editor/benchmarks/phase6-frame-source-mapping-golden-v1.md`;
-- `docs/ai-editor/benchmarks/phase7-human-acceptance-rate-baseline-v1.md`;
-- Phase-8 frozen editorial-quality control and same-fixture planner evaluation.
+No PostgreSQL/Qdrant local-stack, FFmpeg/media workflow, matrix or unchanged rerun was used because this slice adds no runtime dependency.
 
-The existing `packages/contracts/src/ai-model-registry.contract.ts` also already provides pinned model, prompt and execution-profile identities, including decoding-policy and optional scoring-policy versions. Phase 9 must reuse these identities rather than create another model/prompt registry.
+## Phase 9 audit retained
 
-### Genuine gaps
-
-The audited standalone package inventory contains no experiment-registry package/contract and no regression-gate package/contract. Therefore these are genuine Phase-9 gaps rather than evidence that can be reconciled from prior phases.
-
-No Phase-9 checklist denominator is present in current standalone authority, so no denominator is invented.
-
-P9-01 is an audit/evidence closure only and does not increase the standalone verified count.
+P9-01 established that versioned benchmark evidence already exists and that the existing AI model registry must be reused. The genuine remaining Phase-9 gaps are durable experiment registration and regression gating. No Phase-9 denominator is invented.
 
 ## Preserved contracts
 
@@ -55,4 +46,4 @@ Canonical timeline v1/v2 compatibility, centralized media-time rules, renderer-n
 
 ## Next task
 
-P9-02 — implement the smallest additive **versioned experiment-registry contract**. It must bind an experiment revision to an exact versioned benchmark/control, candidate policy/model/prompt/execution-profile evidence and immutable result/evaluation references without duplicating the existing model registry or silently accepting mutable aliases. Regression gating remains a later Phase-9 slice.
+P9-03 — implement immutable experiment-registry persistence/idempotency. Exact semantic re-registration of a revision must be idempotent; reusing a `revisionId` with different benchmark/control, candidate registry identities, evaluation/result evidence or timestamps must fail closed before mutation. Regression gating remains a subsequent independent Phase-9 slice.
