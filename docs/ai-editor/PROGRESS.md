@@ -3,10 +3,10 @@
 **Repository:** `tomhannarong/Al-Editor` / `main`  
 **Active implementation phase:** 14 — Distribution / Outcome Learning  
 **Blocked external gate:** Phase 10 exact DaVinci Resolve runtime proof  
-**Current task:** P14-01 — audit distribution/outcome lineage surfaces
+**Current task:** P14-02 — versioned render-to-publication lineage contract
 
 ```text
-Standalone verified: 105 / 162 = 64.81%
+Standalone verified: 106 / 162 = 65.43%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -21,54 +21,41 @@ Phase 10:             3 verified slices; GATE OPEN on real Resolve runtime proof
 Phase 11:             4 verified slices; GATE VERIFIED
 Phase 12:             3 verified slices; GATE VERIFIED
 Phase 13:             5 verified slices; GATE VERIFIED
-Phase 14:             0 verified slices; GATE OPEN
+Phase 14:             1 verified slice; GATE OPEN
 ```
 
 ## Phase 10 blocker remains exact and narrow
 
 P10-05 still requires a real DaVinci Resolve import + project-relative relink + OTIO re-export capture. Static evidence is not substituted for the exact target-NLE runtime gate.
 
-## P13-05 verified — versioned cost/SLO policy + deterministic evaluator
+## P14-01 verified — distribution/outcome lineage audit
 
-Substantive implementation `fbea1e2bc98cccac49ae81c7af4e0769ab6233ce` adds:
+Static audit `docs/ai-editor/audits/phase14-distribution-outcome-lineage-audit-v1.md` was performed against exact `main` HEAD `cb1c9047376200c39486fa77daeb65815e026679`.
 
-- `packages/contracts/src/cost-slo-policy.contract.ts`;
-- `packages/contracts/src/cost-slo-policy.contract.test.ts`;
-- `packages/cost-slo-library/src/execution.ts`;
-- `packages/cost-slo-library/src/execution.test.ts`.
+Findings:
 
-The policy authority is explicitly `evaluation-only`, with pinned policy revision, owner, bounded stage scope, explicit evaluation window, minimum evidence requirement, project-window cost budget, p95 wall-duration limit, failure-rate limit in basis points, currency identity and optional mandatory cost evidence. It cannot become media/timeline correctness authority.
+- canonical timeline v2 already provides the correct upstream publication lineage anchor through `projectId`, immutable `revisionId`, exact `deliveryProfileVersion` and `manifestSha256`;
+- final-delivery validation already provides delivery compliance evidence but intentionally does not provide durable publication identity;
+- provenance already provides rights/publication-readiness evidence and must not be duplicated inside Phase 14;
+- repository inspection found no existing first-class provider/publication/outcome implementation that should be upgraded in place;
+- therefore the smallest correct addition is provider-neutral durable lineage, not provider-specific posting automation;
+- outcome evidence must be a separate `observation-only` boundary and must never claim causation from observational provider metrics.
 
-The evaluator consumes only validated `AiStageTelemetryV1` evidence and deterministically scopes it by exact project, stage and completion-time window. It rejects duplicate stage-run IDs, future telemetry, malformed evidence, missing required cost evidence and mixed currencies. Skipped runs remain visible for cost accounting but are excluded from latency/failure denominators. Insufficient evidence produces `insufficient-evidence` rather than a fabricated pass.
+No executable code/config changed in P14-01, so no GitHub Actions run was spent solely on this static audit. The last substantive SHA `fbea1e2bc98cccac49ae81c7af4e0769ab6233ce` retains exact `ai-editor-ci/all = success` from run `33137985365`.
 
-Local/static validation used the available TypeScript 5.8.3 compiler with repository-compatible `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` settings before publishing. Final repository confidence evidence is AI Editor CI run `33137985365`, job `98742230132`, on exact substantive SHA `fbea1e2bc98cccac49ae81c7af4e0769ab6233ce`:
+## Phase 14 dependency order
 
-- dependency install: success;
-- strict TypeScript: success;
-- Vitest: `77` test files / `412` tests passed;
-- cost/SLO policy contract: `4` tests passed;
-- cost/SLO evaluator: `5` tests passed;
-- deterministic migrations: success;
-- existing Style/Delivery/job/logging/registry/telemetry/API-health gates: success;
-- exact observable `ai-editor-ci/all = success`.
+1. P14-01 ✅ audit current surfaces and freeze the smallest additive design.
+2. P14-02 ▶ add versioned immutable render-to-publication lineage contract + deterministic validation tests.
+3. P14-03 ⏳ add separate observation-only outcome evidence contract and non-causal semantics.
+4. Reconcile the Phase-14 gate only after both exact lineage and non-causal outcome evidence are verified.
 
-No PostgreSQL/Qdrant/FFmpeg workflow, matrix or extra runtime job was required for this deterministic evaluation slice.
-
-## Phase 13 gate closure
-
-The explicit Production Scale / Hardening gate now has exact evidence for all four required dimensions:
-
-- recovery: fenced expired-lease recovery and stale-worker rejection;
-- restore: real clean-target PostgreSQL + Qdrant restore drill within pinned RTO;
-- quotas: versioned admission policy + fail-closed evaluator;
-- cost/SLO: versioned evaluation-only policy + deterministic telemetry evaluator.
-
-Phase 13 is therefore `verified-complete`. This does not alter the independent Phase-10 external Resolve blocker.
+P14-03 directly depends on P14-02 because outcome observations must bind to one exact immutable publication-record revision.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational time-base authority, renderer-neutral v2 adapters, immutable revision/render evidence, Style/Delivery/provenance contracts, human-review semantics, retrieval/editorial separation and Content Agent boundaries remain unchanged.
+Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational stream-time-base authority, renderer-neutral v2 adapters, immutable revision/render evidence, Style/Delivery/provenance contracts, human-review semantics, retrieval/editorial separation, Content Agent boundaries and Phase-13 production-hardening evidence remain unchanged.
 
 ## Next task
 
-P14-01 — audit current publication/distribution/outcome surfaces and identify the smallest additive contract needed to preserve exact render-to-publication lineage while ensuring observational outcome correlations are never represented as causal claims. This should start as a static audit and must not introduce provider-specific posting automation unless the Bible gate actually requires it.
+P14-02 — add the smallest provider-neutral versioned render-to-publication lineage contract. It must bind an immutable publication-record revision to the exact canonical timeline revision/manifest, Delivery Profile revision and rendered-artifact SHA-256, while keeping provider credentials/posting authority entirely out of the contract. Deterministic static/unit evidence should be sufficient; use one final CI confidence run only after the code/test batch is ready.
