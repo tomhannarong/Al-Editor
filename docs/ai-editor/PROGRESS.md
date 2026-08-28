@@ -1,12 +1,12 @@
 # AI Local Footage Editor — Progress
 
 **Repository:** `tomhannarong/Al-Editor` / `main`  
-**Active implementation phase:** 14 — Distribution / Outcome Learning  
-**Blocked external gate:** Phase 10 exact DaVinci Resolve runtime proof  
-**Current task:** P14-03 — observation-only outcome evidence contract
+**Active implementation phase:** 10 — OTIO / DaVinci interchange external runtime gate  
+**Completed optional phase:** 14 — Distribution / Outcome Learning  
+**Current task:** P10-05 — selective exact DaVinci target runtime proof
 
 ```text
-Standalone verified: 107 / 162 = 66.05%
+Standalone verified: 109 / 162 = 67.28%
 Phase 0:             22 / 22  = 100.00% COMPLETE
 Phase 1:             14 / 14  = 100.00% COMPLETE
 Phase 2:             11 / 11  = 100.00% COMPLETE + GATE VERIFIED
@@ -21,51 +21,55 @@ Phase 10:             3 verified slices; GATE OPEN on real Resolve runtime proof
 Phase 11:             4 verified slices; GATE VERIFIED
 Phase 12:             3 verified slices; GATE VERIFIED
 Phase 13:             5 verified slices; GATE VERIFIED
-Phase 14:             2 verified slices; GATE OPEN
+Phase 14:             4 verified slices; GATE VERIFIED
 ```
 
-## Phase 10 blocker remains exact and narrow
+## P14-03 verified — observation-only outcome evidence
 
-P10-05 still requires a real DaVinci Resolve import + project-relative relink + OTIO re-export capture. Static evidence is not substituted for the exact target-NLE runtime gate.
+Substantive implementation `28925ddbb205035f8ebbe00bd28b13cda45b9d4f` adds:
 
-## P14-02 verified — immutable render-to-publication lineage
+- `packages/contracts/src/publication-outcome-evidence.contract.ts`;
+- `packages/contracts/src/publication-outcome-evidence.contract.test.ts`.
 
-Substantive implementation `131bc0578f3ba9b9b7760fa4538afdd15a1f7574` adds:
+A follow-up code repair `3609c1b7780c6eeb4e8878518132c2848628c074` makes the metric-unit validator explicitly exhaustive before the final confidence gate. The superseded first CI run was cancelled by repository concurrency policy and was not rerun unchanged.
 
-- `packages/contracts/src/render-publication-lineage.contract.ts`;
-- `packages/contracts/src/render-publication-lineage.contract.test.ts`.
+The contract is explicitly `observation-only` with fixed semantics `correlation-not-causation`. Every outcome evidence revision binds to one exact immutable P14-02 publication record/revision and exact provider-owned publication identity. It does not carry editorial, render, ranking or causal authority.
 
-The contract is provider-neutral and explicitly `lineage-only`. It binds an immutable publication-record revision to the exact canonical timeline `projectId`, `timelineId`, immutable timeline revision, canonical manifest SHA-256 and Delivery Profile revision, plus the rendered-artifact SHA-256 and provider-owned publication identity. It contains no credentials, OAuth tokens, upload/posting authority, provider API client, outcome metrics, editorial timing or rights policy duplication.
-
-`validateRenderPublicationLineageAgainstTimelineV2` reuses canonical timeline v2 validation and fails closed when project, timeline, revision, manifest or Delivery Profile lineage drifts. Publication and artifact checksums are SHA-256 validated, mutable aliases are rejected for immutable revision/profile references, and publication-record timestamps are validated deterministically.
+Provider metric observations are bounded by deterministic rules: maximum 256 observations/revision; provider-neutral metric identifiers; finite typed value domains; publication-bounded windows; ordered observation/collection timestamps; duplicate observation rejection; and bounded provider evidence references. Count/currency-minor-unit values must be non-negative safe integers, ratios are 0..1, percentages are 0..100, and duration units are non-negative.
 
 ## Exact validation evidence
 
-One final confidence run was used after the code/test batch was committed. AI Editor CI run `33143156962`, job `98758285607`, on exact substantive SHA `131bc0578f3ba9b9b7760fa4538afdd15a1f7574` passed:
+Final confidence gate on exact repair SHA `3609c1b7780c6eeb4e8878518132c2848628c074`:
 
-- dependency install;
-- strict TypeScript;
-- Vitest: `78` test files / `417` tests;
-- render-publication-lineage contract: `5 / 5` tests;
-- deterministic migration verification/tests;
-- existing Style/Delivery/job/logging/model-registry/telemetry/API-health contract and policy gates;
+- AI Editor CI run `33147022066`;
+- job `98770210780`;
+- dependency install: success;
+- strict TypeScript: success;
+- Vitest: `79` test files / `422` tests;
+- publication-outcome-evidence contract: `5 / 5` tests;
+- deterministic migration verification/tests: success;
+- Style/Delivery/job/logging/model-registry/telemetry/API-health contract and policy gates: success;
 - exact observable status `ai-editor-ci/all = success`.
 
-No PostgreSQL/Qdrant/FFmpeg heavyweight workflow, matrix or provider runtime was needed for this deterministic lineage slice.
+No PostgreSQL/Qdrant/FFmpeg/provider runtime, matrix, posting client or heavyweight media workflow was used for this deterministic evidence slice.
 
-## Phase 14 dependency order
+## Phase 14 gate reconciliation
 
-1. P14-01 ✅ audit current surfaces and freeze the smallest additive design.
-2. P14-02 ✅ add exact immutable render-to-publication lineage.
-3. P14-03 ▶ add separate `observation-only` outcome evidence contract and non-causal semantics.
-4. Reconcile the Phase-14 gate only after P14-03 is verified.
+Phase 14 is verified-complete. Its two Bible requirements now have exact evidence:
 
-P14-03 must bind every outcome observation to one exact immutable publication-record revision and must encode observational/non-causal authority explicitly. It must not infer that an editorial/render decision caused provider outcome metrics.
+1. **Exact render -> publication lineage:** P14-02 binds immutable canonical timeline/render/delivery evidence to an immutable provider publication revision.
+2. **Correlation not confused with causation:** P14-03 fixes outcome authority to `observation-only` and semantics to `correlation-not-causation`; the contract exposes no causal/editorial/render authority channel.
+
+This is additive and provider-neutral. No provider credentials, OAuth, upload/posting client, scraping workflow, alternative editorial timing authority or duplicate rights policy was introduced.
 
 ## Preserved contracts
 
-Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational stream-time-base authority, renderer-neutral v2 adapters, immutable render/revision evidence, Style/Delivery/provenance contracts, human-review semantics, retrieval/editorial separation, Content Agent boundaries and Phase-13 production-hardening evidence remain unchanged.
+Canonical timeline v1/v2 compatibility, integer project-frame/rational-FPS authority, native source PTS/rational stream-time-base authority, renderer-neutral v2 adapters, Style Profile, Delivery Profile, structured logging, provenance/rights, immutable revision/render evidence, human-review locks, retrieval/editorial separation, Content Agent boundaries and Phase-13 hardening evidence remain unchanged.
+
+## Remaining blocker
+
+P10-05 still requires a real DaVinci Resolve import + project-relative relink + OTIO re-export capture. Static evidence is not substituted for this exact target-NLE runtime gate. The current execution environment does not provide that Resolve runtime, so Phase 10 remains open without being classified as a code failure.
 
 ## Next task
 
-P14-03 — add the smallest versioned outcome-evidence contract with explicit `observation-only` authority. It must bind to an exact publication record/revision, carry provider metric observations with bounded timestamp/value semantics, and reject causal language/authority escalation. Deterministic static/unit evidence should be sufficient; use one final CI confidence run only after the code/test batch is ready.
+P10-05 — execute the selective DaVinci runtime harness only in an environment with a real supported DaVinci Resolve installation, then validate and commit exact import/relink/re-export evidence. Do not spend Actions runs trying to replace unavailable target-NLE runtime proof.
