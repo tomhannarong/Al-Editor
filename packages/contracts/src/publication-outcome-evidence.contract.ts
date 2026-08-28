@@ -74,6 +74,7 @@ function validateMetricValue(unit: PublicationOutcomeUnitV1, value: number): boo
     case 'seconds':
       return value >= 0;
   }
+  return false;
 }
 
 function validateObservation(
