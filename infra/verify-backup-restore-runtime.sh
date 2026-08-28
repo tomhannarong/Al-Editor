@@ -7,7 +7,14 @@ pg_target='ai_editor_restore_target_v1'
 qd_source='ai_editor_restore_source_v1'
 qd_target='ai_editor_restore_target_v1'
 workdir="$(mktemp -d)"
-trap 'rm -rf "$workdir"; curl --silent --show-error -X DELETE "http://127.0.0.1:6333/collections/'"$qd_source"'" >/dev/null 2>&1 || true; curl --silent --show-error -X DELETE "http://127.0.0.1:6333/collections/'"$qd_target"'" >/dev/null 2>&1 || true; "${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE IF EXISTS '"$pg_source"';" >/dev/null 2>&1 || true; "${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE IF EXISTS '"$pg_target"';" >/dev/null 2>&1 || true' EXIT
+cleanup() {
+  rm -rf "$workdir"
+  curl --silent --show-error -X DELETE "http://127.0.0.1:6333/collections/$qd_source" >/dev/null 2>&1 || true
+  curl --silent --show-error -X DELETE "http://127.0.0.1:6333/collections/$qd_target" >/dev/null 2>&1 || true
+  "${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE IF EXISTS ${pg_source};" >/dev/null 2>&1 || true
+  "${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE IF EXISTS ${pg_target};" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
 started_ms=$(date +%s%3N)
 started_at=$(date -u +%Y-%m-%dT%H:%M:%S.000Z)
@@ -19,7 +26,8 @@ started_at=$(date -u +%Y-%m-%dT%H:%M:%S.000Z)
 "${compose[@]}" exec -T postgres psql -U ai_editor -d "$pg_source" -v ON_ERROR_STOP=1 -c "CREATE TABLE restore_probe(id integer primary key, marker text not null); INSERT INTO restore_probe VALUES (1, 'phase13-postgres');" >/dev/null
 "${compose[@]}" exec -T postgres pg_dump -U ai_editor -Fc "$pg_source" > "$workdir/postgres.dump"
 pg_sha=$(sha256sum "$workdir/postgres.dump" | awk '{print $1}')
-"${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE ${pg_source}; CREATE DATABASE ${pg_target};" >/dev/null
+"${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE ${pg_source};" >/dev/null
+"${compose[@]}" exec -T postgres psql -U ai_editor -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE ${pg_target};" >/dev/null
 cat "$workdir/postgres.dump" | "${compose[@]}" exec -T postgres pg_restore -U ai_editor -d "$pg_target" --no-owner --no-privileges
 pg_marker=$("${compose[@]}" exec -T postgres psql -U ai_editor -d "$pg_target" -Atqc "SELECT marker FROM restore_probe WHERE id=1")
 [[ "$pg_marker" == 'phase13-postgres' ]]
